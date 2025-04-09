@@ -22,17 +22,13 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "sELECT",
-    startupImage: [
-      {
-        url: "/apple-icon.png"
-      }
-    ]
+    title: "sELECT"
   },
   viewport: {
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1
+    maximumScale: 1,
+    userScalable: false
   }
 };
 
@@ -47,9 +43,22 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-title" content="sELECT" />
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" href="/icon1.png" />
+        <link rel="icon" type="image/svg+xml" href="/icon0.svg" sizes="any" />
+        <link rel="icon" type="image/png" href="/icon1.png" sizes="192x192" />
         <link rel="apple-touch-icon" href="/apple-icon.png" />
+        <style>
+          {`
+            @media (display-mode: standalone) {
+              body {
+                background-color: #ffffff;
+              }
+              /* Prevent flash of unstyled content */
+              body:not(:defined) {
+                display: none;
+              }
+            }
+          `}
+        </style>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} logo-font`}>
         {children}
