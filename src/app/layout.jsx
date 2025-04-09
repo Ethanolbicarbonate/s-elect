@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.css';
 import "./global.css";
 import BootstrapClient from '@/components/BootstrapClient.js';
+import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} logo-font`}>
         {children}
         <BootstrapClient />
+        <Analytics />
       </body>
     </html>
   );
