@@ -1,95 +1,39 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Image from 'next/image';
+import RoleSelection from '@/components/RoleSelection';
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <main
+      className="d-flex h-100 justify-content-center align-items-center"
+      style={{ backgroundImage: 'url(/assets/background-grid.svg)' }}
+    >
+      <div className="h-75 w-100 custom-width-sm-min container-md text-center m-0 p-0 rounded-3 shadow border overflow-hidden justify-content-center align-items-center noshadow-sm-max noborder-sm-max bg-white">
+        <div className="m-0 p-0 row justify-content-center h-100 overflow-hidden">
+          <div
+            className="m-0 p-0 col d-none d-lg-block bg-img-r"
+            style={{ backgroundImage: 'url(/assets/side-design.svg)' }}
+          ></div>
+          <div className="m-0 p-0 custom-width-md-max custom-height-md-max col-8 d-flex flex-column">
+            <div className="d-flex justify-content-center flex-column gap-4 align-items-center flex-shrink-0 pt-5">
+              <div className="w-75 h-100">
+                <Image
+                  src="/assets/logotext.svg"
+                  alt="sELECT"
+                  width={500}
+                  height={200}
+                  className="w-100 h-100 object-fit-contain logo-color"
+                />
+              </div>
+              <p className="text-secondary">
+                Welcome to <span className="logo-font text-primary">select</span>
+                <br />
+                Designed for clarity, built for ease.
+              </p>
+            </div>
+            <RoleSelection />
+          </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </main>
   );
 }
