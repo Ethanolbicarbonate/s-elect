@@ -72,31 +72,46 @@ a, button, .btn {
 }
 
 @media (min-width: 768px) {
-    .custom-height-sm-min {
-      height: 75% !important;
+    div.custom-height-sm-min {
+        height: 75% !important;
     }
 
-    .custom-width-sm-min {
+    div.custom-width-sm-min {
         width: 50% !important;
     }
 }
 
 @media (max-width: 768px) {
-    .noshadow-sm-max {
+    div.noshadow-sm-max {
         box-shadow: none !important;
     }
 
-    .noborder-sm-max {
+    div.noborder-sm-max {
         border: 0 !important;
     }
 }
 
 @media (max-width: 992px) {
-    .custom-height-md-max {
-      height: 100% !important;
+    div.custom-height-md-max {
+        height: 100% !important;
     }
 
-    .custom-width-md-max {
+    div.custom-width-md-max {
         width: 100% !important;
+    }
+}
+
+/* Override Bootstrap container */
+@media (min-width: 768px) {
+    .container-md.custom-width-sm-min {
+        max-width: 50% !important;
+        width: 50% !important;
+    }
+}
+
+@media (max-width: 992px) {
+    .col-8.custom-width-md-max {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }

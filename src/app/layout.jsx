@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import "./global.css";
 import 'bootstrap/dist/css/bootstrap.css';
+import "./global.css";
 import BootstrapClient from '@/components/BootstrapClient.js';
 
 const geistSans = Geist({
@@ -21,6 +21,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="apple-mobile-web-app-title" content="sELECT" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} logo-font`}>
         {children}
         <BootstrapClient />
