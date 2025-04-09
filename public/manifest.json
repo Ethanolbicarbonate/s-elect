@@ -1,0 +1,23 @@
+{
+  "name": "sELECT",
+  "short_name": "sELECT",
+  "icons": [
+    {
+      "src": "/icon1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon0.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "orientation": "portrait"
+}
