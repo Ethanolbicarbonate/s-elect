@@ -27,8 +27,7 @@ export const metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1,
-    userScalable: false
+    maximumScale: 1
   }
 };
 
@@ -43,8 +42,7 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-title" content="sELECT" />
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" type="image/svg+xml" href="/icon0.svg" sizes="any" />
-        <link rel="icon" type="image/png" href="/icon1.png" sizes="192x192" />
+        <link rel="icon" href="/icon1.png" />
         <link rel="apple-touch-icon" href="/apple-icon.png" />
         <style>
           {`
