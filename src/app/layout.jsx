@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "./global.css";
 import BootstrapClient from '@/components/BootstrapClient.js';
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +27,9 @@ export const metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1
+    maximumScale: 1,
+    userScalable: false,
+    orientation: "portrait"
   },
   icons: {
     icon: [
@@ -58,7 +61,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=portrait" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="manifest" href="/manifest.json" />
         <style>
@@ -72,6 +75,20 @@ export default function RootLayout({ children }) {
                 display: none;
               }
             }
+
+            /* Force portrait mode on mobile */
+            @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+              html {
+                transform: rotate(-90deg);
+                transform-origin: left top;
+                width: 100vh;
+                height: 100vw;
+                overflow-x: hidden;
+                position: absolute;
+                top: 100%;
+                left: 0;
+              }
+            }
           `}
         </style>
       </head>
@@ -79,6 +96,7 @@ export default function RootLayout({ children }) {
         {children}
         <BootstrapClient />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
