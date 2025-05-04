@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import RoleSelection from '@/components/LoginPage/RoleSelection';
+import AdminLoginForm from '@/components/LoginPage/AdminLoginForm';
 
 export default function Home() {
   return (
@@ -30,7 +30,7 @@ export default function Home() {
                 Designed for clarity, built for ease.
               </p>
             </div>
-            <RoleSelection />
+            <AdminLoginForm />
           </div>
         </div>
       </div>

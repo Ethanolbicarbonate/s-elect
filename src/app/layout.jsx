@@ -18,18 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "sELECT",
   description: "Software for Evaluation",
-  themeColor: "#ffffff",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "sELECT"
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    orientation: "portrait"
   },
   icons: {
     icon: [
@@ -57,11 +49,19 @@ export const metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  orientation: "portrait",
+  themeColor: "#ffffff"
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=portrait" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="manifest" href="/manifest.json" />
         <style>
