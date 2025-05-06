@@ -72,14 +72,14 @@ export default function StudentLoginForm() {
 
   return (
     <div className="flex-grow-1 d-flex flex-column align-items-center p-4 overflow-auto">
-      <h4 className="mb-4 fw-bold text-primary">Student Login</h4>
+      <h4 className="mb-4 text-primary">Student Login</h4>
       <form onSubmit={handleSubmit} className="w-100" style={{ maxWidth: '400px' }}>
         {error && (
           <div className="alert alert-danger" role="alert">
             {error}
           </div>
         )}
-        <div className="mb-3 text-start">
+        <div className="mb-3 text-start fs-7 text-secondary">
           <label htmlFor="studentEmail" className="form-label">
             WVSU Email address
           </label>
@@ -98,7 +98,7 @@ export default function StudentLoginForm() {
            {/* <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div> */}
         </div>
         <div className="mb-3 text-start">
-          <label htmlFor="studentPassword" className="form-label">
+          <label htmlFor="studentPassword" className="form-label fs-7 text-secondary">
             Password
           </label>
           <input
@@ -121,8 +121,10 @@ export default function StudentLoginForm() {
             <input type="text" className="form-control" id="student2FA" ... />
           </div>
         */}
+        <br></br>
+        <hr className='border-1 border-secondary opacity-20 my-4'></hr>
         <div className="d-grid gap-2">
-             <button type="submit" className="btn btn-primary btn-lg" disabled={isLoading}>
+             <button type="submit" className="btn btn-primary btn-lg fs-6 shadow-sm" disabled={isLoading}>
             {isLoading ? (
               <>
                 <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

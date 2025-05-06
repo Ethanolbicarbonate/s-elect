@@ -72,7 +72,7 @@ export default function AdminLoginForm() {
             {error}
           </div>
         )}
-        <div className="mb-3 text-start">
+        <div className="mb-3 text-start fs-7 text-secondary">
           <label htmlFor="adminCredential" className="form-label">
             University Credential (Email/Username)
           </label>
@@ -87,7 +87,7 @@ export default function AdminLoginForm() {
             disabled={isLoading}
           />
         </div>
-        <div className="mb-3 text-start">
+        <div className="mb-3 text-start fs-7 text-secondary">
           <label htmlFor="adminPassword" className="form-label">
             Password
           </label>
@@ -102,8 +102,10 @@ export default function AdminLoginForm() {
             disabled={isLoading}
           />
         </div>
+        <br></br>
+        <hr className='border-1 border-secondary opacity-20 my-4'></hr>
         <div className="d-grid gap-2">
-          <button type="submit" className="btn btn-primary btn-lg" disabled={isLoading}>
+          <button type="submit" className="btn btn-primary btn-lg fs-6 shadow-sm" disabled={isLoading}>
             {isLoading ? (
               <>
                 <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
