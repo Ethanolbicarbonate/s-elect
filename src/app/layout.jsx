@@ -94,22 +94,7 @@ export default function RootLayout({ children }) {
         </style>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} logo-font`}>
-        {children}
-        <BootstrapClient />
-        <Analytics />
-        <SpeedInsights />
-      </body>
-    </html>
-  );
-}
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      {/* ... head ... */}
-      <body className={`${geistSans.variable} ${geistMono.variable} logo-font`}>
-        {/* Wrap the children with AuthProvider */}
-        <AuthProvider>
+      <AuthProvider>
           {children}
           <BootstrapClient />
           <Analytics />
