@@ -4,6 +4,7 @@ import "./global.css";
 import BootstrapClient from '@/components/BootstrapClient.js';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import AuthProvider from '@/components/AuthProvider';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -97,6 +98,23 @@ export default function RootLayout({ children }) {
         <BootstrapClient />
         <Analytics />
         <SpeedInsights />
+      </body>
+    </html>
+  );
+}
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      {/* ... head ... */}
+      <body className={`${geistSans.variable} ${geistMono.variable} logo-font`}>
+        {/* Wrap the children with AuthProvider */}
+        <AuthProvider>
+          {children}
+          <BootstrapClient />
+          <Analytics />
+          <SpeedInsights />
+        </AuthProvider>
       </body>
     </html>
   );

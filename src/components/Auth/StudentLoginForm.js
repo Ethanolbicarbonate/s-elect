@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Use next/navigation for App Router
+import { signIn } from "next-auth/react";
+import { useRouter } from 'next/navigation'; //App Router
 import Link from 'next/link';
 
 export default function StudentLoginForm() {
@@ -12,62 +13,40 @@ export default function StudentLoginForm() {
   const router = useRouter();
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission
-    setError(''); // Clear previous errors
+    event.preventDefault();
+    setError('');
     setIsLoading(true);
 
-    // Basic client-side validation
-    if (!email.endsWith('@wvsu.edu.ph')) {
-      setError('Please use your official WVSU email (@wvsu.edu.ph).');
-      setIsLoading(false);
-      return;
-    }
-    if (!password) {
-        setError('Password cannot be empty.');
-        setIsLoading(false);
-        return;
-    }
-
-    // --- Placeholder for API Call ---
     try {
-      console.log('Submitting student login:', { email }); // Log data being sent (remove password logging in production)
+      const result = await signIn("student-credentials", { // Use the correct provider ID
+        redirect: false, // Don't automatically redirect, handle it manually
+        email: email,
+        password: password,
+      });
 
-      // Replace with your actual API endpoint and logic
-      // Example:
-      // const response = await fetch('/api/auth/student-login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password }),
-      // });
-
-      // const data = await response.json();
-
-      // if (!response.ok) {
-      //   throw new Error(data.message || 'Login failed. Please check your credentials.');
-      // }
-
-      // --- Mock Success & Redirect ---
-      // Simulate a successful login after 1 second
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Student login successful (mock)');
-
-      // On successful login & 2FA (handle 2FA flow based on API response)
-      // Redirect to dashboard (STD-LOG-FR-004)
-      // router.push('/dashboard'); // Assuming '/dashboard' is the student dashboard route
-
-       // TEMPORARY: Redirect back to home for now until dashboard exists
-       router.push('/');
-       alert("Mock Login Success! Redirecting... (Implement actual dashboard route later)");
-
-
+      if (result?.error) {
+         // Handle specific errors if needed, otherwise show generic message
+        console.error("Sign-in error:", result.error);
+        setError("Login failed. Please check your email and password."); // STD-LOG-FR-005, STD-LOG-FR-008
+        setIsLoading(false);
+      } else if (result?.ok) {
+        // Sign-in successful
+        console.log("Student sign-in successful");
+        // Redirect to student dashboard (STD-LOG-FR-004)
+        router.push('/dashboard'); // Make sure this matches your student dashboard route
+        // No need to setIsLoading(false) as we are navigating away
+      } else {
+         // Catch any other unexpected situations
+         setError("An unexpected error occurred during login.");
+         setIsLoading(false);
+      }
     } catch (err) {
-      console.error('Student login error:', err);
-      // Display generic error (STD-LOG-FR-008)
-      setError(err.message || 'An error occurred during login.');
-    } finally {
+       // Catch network errors or other exceptions during the signIn process
+      console.error('Login submission error:', err);
+      setError('An error occurred. Please try again.');
       setIsLoading(false);
     }
-    // --- End Placeholder ---
+    // No finally block needed for setIsLoading if navigating away on success
   };
 
   return (
@@ -121,7 +100,6 @@ export default function StudentLoginForm() {
             <input type="text" className="form-control" id="student2FA" ... />
           </div>
         */}
-        <br></br>
         <hr className='border-1 border-secondary opacity-20 my-4'></hr>
         <div className="d-grid gap-2">
              <button type="submit" className="btn btn-primary btn-lg fs-6 shadow-sm" disabled={isLoading}>

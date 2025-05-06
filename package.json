@@ -6,19 +6,32 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:seed": "prisma db seed"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.9.0",
+    "@prisma/client": "^6.7.0",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
+    "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.5",
     "next": "15.2.5",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^22.15.12",
     "eslint": "^9",
-    "eslint-config-next": "15.2.5"
+    "eslint-config-next": "15.2.5",
+    "prisma": "^6.7.0",
+    "ts-node": "^10.9.2"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

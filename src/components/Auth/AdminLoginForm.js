@@ -102,7 +102,6 @@ export default function AdminLoginForm() {
             disabled={isLoading}
           />
         </div>
-        <br></br>
         <hr className='border-1 border-secondary opacity-20 my-4'></hr>
         <div className="d-grid gap-2">
           <button type="submit" className="btn btn-primary btn-lg fs-6 shadow-sm" disabled={isLoading}>
