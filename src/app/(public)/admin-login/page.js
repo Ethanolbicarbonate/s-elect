@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import StudentLoginForm from '@/components/LoginPage/StudentLoginForm';
+import AdminLoginForm from '@/components/Auth/AdminLoginForm';
 
 export default function Home() {
   return (
@@ -24,13 +24,8 @@ export default function Home() {
                   className="w-100 h-100 object-fit-contain logo-color"
                 />
               </div>
-              <p className="text-secondary">
-                Welcome to <span className="logo-font text-primary">select</span>
-                <br />
-                Designed for clarity, built for ease.
-              </p>
             </div>
-            <StudentLoginForm />
+            <AdminLoginForm />
           </div>
         </div>
       </div>
