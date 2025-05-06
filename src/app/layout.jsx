@@ -1,20 +1,20 @@
-// import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.css';
 import "./global.css";
-// import BootstrapClient from '@/components/BootstrapClient.js';
-// import { Analytics } from '@vercel/analytics/next';
-// import { SpeedInsights } from '@vercel/speed-insights/next';
-// import AuthProvider from '@/components/AuthProvider';
+import BootstrapClient from '@/components/BootstrapClient.js';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import AuthProvider from '@/components/AuthProvider';
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata = {
   title: "sELECT",
@@ -65,15 +65,41 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="theme-color" content="#ffffff" />
         <link rel="manifest" href="/manifest.json" />
-        
+        <style>
+          {`
+            @media (display-mode: standalone) {
+              body {
+                background-color: #ffffff;
+              }
+              /* Prevent flash of unstyled content */
+              body:not(:defined) {
+                display: none;
+              }
+            }
+
+            /* Force portrait mode on mobile */
+            @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+              html {
+                transform: rotate(-90deg);
+                transform-origin: left top;
+                width: 100vh;
+                height: 100vw;
+                overflow-x: hidden;
+                position: absolute;
+                top: 100%;
+                left: 0;
+              }
+            }
+          `}
+        </style>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} logo-font`}>
-      {/* <AuthProvider> */}
+      <AuthProvider>
           {children}
-          {/* <BootstrapClient />
+          <BootstrapClient />
           <Analytics />
           <SpeedInsights />
-        </AuthProvider> */}
+        </AuthProvider>
       </body>
     </html>
   );
