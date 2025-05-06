@@ -50,8 +50,8 @@ export default function StudentLoginForm() {
   };
 
   return (
-    <div className="flex-grow-1 d-flex flex-column align-items-center p-4 overflow-auto">
-      <h4 className="mb-4 text-primary">Student Login</h4>
+    <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
+      <h5 className="mb-4 text-primary">Student Login</h5>
       <form onSubmit={handleSubmit} className="w-100" style={{ maxWidth: '400px' }}>
         {error && (
           <div className="alert alert-danger" role="alert">

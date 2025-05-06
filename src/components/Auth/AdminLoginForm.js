@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -23,49 +24,40 @@ export default function AdminLoginForm() {
       return;
     }
 
-    // --- Placeholder for API Call ---
     try {
-      console.log('Submitting admin login:', { credential }); // Log data being sent
+      const result = await signIn("admin-credentials", { // Use the correct provider ID
+        redirect: false, // Don't automatically redirect, handle it manually
+        email: email,
+        password: password,
+      });
 
-      // Replace with your actual API endpoint and logic
-      // Example:
-      // const response = await fetch('/api/auth/admin-login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ credential, password }),
-      // });
-      // const data = await response.json();
-
-      // if (!response.ok) {
-      //   throw new Error(data.message || 'Login failed. Please check your credentials.');
-      // }
-
-      // --- Mock Success & Redirect ---
-      // Simulate a successful login after 1 second
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Admin login successful (mock)');
-
-      // On successful login, redirect based on role (logic determined by API response)
-      // Example: if (data.role === 'SuperAdmin') router.push('/admin/dashboard');
-      // router.push('/admin/dashboard'); // Assuming '/admin/dashboard' is the admin entry point
-
-      // TEMPORARY: Redirect back to home for now until admin dashboard exists
-      router.push('/');
-      alert("Mock Admin Login Success! Redirecting... (Implement actual dashboard route later)");
-
-
+      if (result?.error) {
+         // Handle specific errors if needed, otherwise show generic message
+        console.error("Sign-in error:", result.error);
+        setError("Login failed. Please check your email and password."); // STD-LOG-FR-005, STD-LOG-FR-008
+        setIsLoading(false);
+      } else if (result?.ok) {
+        // Sign-in successful
+        console.log("Admin sign-in successful");
+        // Redirect to student dashboard (STD-LOG-FR-004)
+        router.push('/admin/dashboard');
+        // No need to setIsLoading(false) as we are navigating away
+      } else {
+         // Catch any other unexpected situations
+         setError("An unexpected error occurred during login.");
+         setIsLoading(false);
+      }
     } catch (err) {
-      console.error('Admin login error:', err);
-      setError(err.message || 'An error occurred during login.');
-    } finally {
+       // Catch network errors or other exceptions during the signIn process
+      console.error('Login submission error:', err);
+      setError('An error occurred. Please try again.');
       setIsLoading(false);
     }
-    // --- End Placeholder ---
+    // No finally block needed for setIsLoading if navigating away on success
   };
-
   return (
-    <div className="flex-grow-1 d-flex flex-column align-items-center p-4 overflow-auto">
-      <h4 className="mb-4 text-primary">Admin Login</h4>
+    <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
+      <h5 className="mb-4 text-primary">Admin Login</h5>
       <form onSubmit={handleSubmit} className="w-100" style={{ maxWidth: '400px' }}>
         {error && (
           <div className="alert alert-danger" role="alert">
