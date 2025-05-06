@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "prisma:migrate:dev": "prisma migrate dev",
@@ -20,7 +20,8 @@
     "next": "15.2.5",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
