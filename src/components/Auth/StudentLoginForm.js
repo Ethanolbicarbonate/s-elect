@@ -70,7 +70,7 @@ export default function StudentLoginForm() {
             placeholder="juan.delacruz@wvsu.edu.ph"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            required // Basic HTML5 validation
             disabled={isLoading}
           />
            {/* Add help text if needed according to STD-LOG-FR-003 */}
@@ -92,7 +92,7 @@ export default function StudentLoginForm() {
           />
         </div>
         <p className='fs-7 text-secondary'>
-          Don't have an account yet?{' '}
+          Don&apos;t have an account yet?{' '}
           <Link href="/student-signup" className="text-primary text-decoration-none">
             Sign Up
           </Link>
