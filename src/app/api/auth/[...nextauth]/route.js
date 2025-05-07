@@ -34,6 +34,22 @@ export const authOptions = {
           return null; // User not found
         }
 
+         // **NEW CHECKS FOR LOGIN AFTER SIGN-UP**
+        if (!student.password) {
+          console.log("Student login attempt for unactivated account (no password):", credentials.email);
+          // You might want to throw a specific error message here if `signIn` `redirect:false` can catch it.
+          // For now, just failing to authorize will show the generic login error.
+          // A better UX would guide them to complete sign-up.
+          throw new Error("Account not fully set up. Please complete the sign-up process or check your email for verification.");
+          // return null;
+        }
+        if (!student.emailVerified) {
+          console.log("Student login attempt for unverified email:", credentials.email);
+          throw new Error("Email not verified. Please check your email for a verification link/code or restart sign-up.");
+          // return null;
+        }
+        // **END NEW CHECKS**
+
         // Check if password matches
         const passwordMatch = await bcrypt.compare(
           credentials.password,
