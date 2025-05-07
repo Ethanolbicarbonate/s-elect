@@ -70,7 +70,7 @@ export default function StudentLoginForm() {
             placeholder="juan.delacruz@wvsu.edu.ph"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required // Basic HTML5 validation
+            required
             disabled={isLoading}
           />
            {/* Add help text if needed according to STD-LOG-FR-003 */}
@@ -91,15 +91,12 @@ export default function StudentLoginForm() {
             disabled={isLoading}
           />
         </div>
-        {/* Add 2FA input field here if needed AFTER initial login or as part of it */}
-        {/* Example:
-          <div className="mb-3 text-start">
-            <label htmlFor="student2FA" className="form-label">
-              2FA Code
-            </label>
-            <input type="text" className="form-control" id="student2FA" ... />
-          </div>
-        */}
+        <p className='fs-7 text-secondary'>
+          Don't have an account yet?{' '}
+          <Link href="/student-signup" className="text-primary text-decoration-none">
+            Sign Up
+          </Link>
+        </p>
         <hr className='border-1 border-secondary opacity-20 my-4'></hr>
         <div className="d-grid gap-2">
              <button type="submit" className="btn btn-primary btn-lg fs-6 shadow-sm" disabled={isLoading}>

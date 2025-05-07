@@ -19,6 +19,7 @@
     "bootstrap": "^5.3.5",
     "next": "15.2.5",
     "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rimraf": "^6.0.1"
@@ -27,6 +28,7 @@
     "@eslint/eslintrc": "^3",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.15.12",
+    "@types/nodemailer": "^6.4.17",
     "eslint": "^9",
     "eslint-config-next": "15.2.5",
     "prisma": "^6.7.0",

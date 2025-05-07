@@ -41,10 +41,19 @@ model Student {
   lastName       String
   middleName     String?   // Optional middle name
   email          String    @unique // firstname.lastname@wvsu.edu.ph format
-  password       String    // Will store hashed password
+  password       String?    // Will store hashed password
   college        College
   enrollmentDate DateTime  @default(now())
   hasVoted       Boolean   @default(false) // Track voting status
+
+// Fields for sign-up & verification
+  isPreApproved       Boolean   @default(true) // Indicates if they are in the "enrolled" list
+  emailVerified       DateTime? // Timestamp when email was verified during sign-up
+  verificationToken   String?   // Stores the OTP or verification token
+  verificationExpires DateTime? // Expiry for the verification token
+  // passwordResetToken  String?   // For future password reset functionality
+  // passwordResetExpires DateTime? // For future password reset functionality
+
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   // Relation for next-auth adapter (optional but potentially useful later)
