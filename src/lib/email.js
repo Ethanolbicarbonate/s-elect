@@ -100,7 +100,7 @@ export async function sendVerificationEmail(to, token) {
             <!-- Header -->
             <tr>
               <td style="padding: 0;">
-                <img src="https://s-elect.vercel.app/assets/EmailHeader.png" alt="sELECT Header" style="display: block; width: 100%; max-width: 600px; height: auto;">
+                <img src="https://s-elect.app/assets/EmailHeader.png" alt="sELECT Header" style="display: block; width: 100%; max-width: 600px; height: auto;">
               </td>
             </tr>
             
@@ -135,7 +135,7 @@ export async function sendVerificationEmail(to, token) {
             </tr>
             <tr>
               <td style="padding: 0;">
-                <img src="https://s-elect.vercel.app/assets/EmailHeader.png" alt="sELECT Header" style="display: block; width: 100%; max-width: 600px; height: auto;">
+                <img src="https://s-elect.app/assets/EmailHeader.png" alt="sELECT Header" style="display: block; width: 100%; max-width: 600px; height: auto;">
               </td>
             </tr>
           </table>
