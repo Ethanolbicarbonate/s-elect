@@ -32,43 +32,53 @@ async function getEtherealTransporter() {
 // --- End Ethereal Configuration ---
 
 async function createTransporter() {
-    if (process.env.NODE_ENV === 'development') {
-        console.log("Using Ethereal for email in development.");
-        return await getEtherealTransporter(); // Return the created transporter
-    } else {
-        // Production: Gmail with OAuth2
-        if (
-            !process.env.GMAIL_OAUTH_CLIENT_ID ||
-            !process.env.GMAIL_OAUTH_CLIENT_SECRET ||
-            !process.env.GMAIL_OAUTH_REFRESH_TOKEN ||
-            !process.env.EMAIL_FROM_GMAIL
-        ) {
-            console.error("Gmail OAuth credentials not fully configured for production.");
-            return null;
-        }
+  if (process.env.NODE_ENV === 'development') {
+      console.log("Using Ethereal for email in development.");
+      return await getEtherealTransporter(); // Return the Ethereal transporter
+  } else {
+      // Production: Use transactional email service (e.g., Brevo SMTP)
+      // Ensure these environment variables are set on Vercel
+      if (
+          !process.env.EMAIL_SERVER_HOST ||
+          !process.env.EMAIL_SERVER_PORT ||
+          !process.env.EMAIL_SERVER_USER ||
+          !process.env.EMAIL_SERVER_PASSWORD
+          // EMAIL_FROM will be used in the mailOptions, not needed for transporter config itself
+      ) {
+          console.error("Production email server credentials not fully configured.");
+          // In production, if email sending is critical, you might want to throw an error instead
+          // throw new Error("Production email credentials missing.");
+          return null; // Return null if configuration is incomplete
+      }
 
-        try {
-            const transporter = nodemailer.createTransport({
-                host: 'smtp.gmail.com',
-                port: 465,
-                secure: true,
-                auth: {
-                    type: 'OAuth2',
-                    user: process.env.EMAIL_FROM_GMAIL,
-                    clientId: process.env.GMAIL_OAUTH_CLIENT_ID,
-                    clientSecret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
-                    refreshToken: process.env.GMAIL_OAUTH_REFRESH_TOKEN,
-                },
-            });
-            // Optional: Verify connection. Do this only once if possible, or less frequently.
-            // await transporter.verify(); 
-            // console.log("Gmail transporter verified for this send operation.");
-            return transporter;
-        } catch (error) {
-            console.error("Failed to create Gmail transporter:", error);
-            return null;
-        }
-    }
+      console.log("Setting up production email transporter...");
+      try {
+          const transporter = nodemailer.createTransport({
+              host: process.env.EMAIL_SERVER_HOST,
+              port: parseInt(process.env.EMAIL_SERVER_PORT, 10), // Ensure port is a number
+              secure: process.env.EMAIL_SERVER_PORT === '465', // true for 465, false for other ports (like 587)
+              auth: {
+                  user: process.env.EMAIL_SERVER_USER, // SMTP username (often account email or API key identifier)
+                  pass: process.env.EMAIL_SERVER_PASSWORD, // SMTP password (often an API key)
+              },
+              // Optional: Allow self-signed certs in staging/testing if needed, NOT recommended for production
+              // tls: {
+              //     rejectUnauthorized: process.env.NODE_ENV === 'production' // Only reject in production
+              // }
+          });
+
+          // Optional: Verify connection configuration (good for debugging deployment issues)
+          // await transporter.verify();
+          // console.log("Production transporter verified successfully.");
+
+          return transporter;
+
+      } catch (error) {
+          console.error("Failed to create production email transporter:", error);
+          // Depending on how critical email is, you might rethrow or return null
+          return null;
+      }
+  }
 }
 
 export async function sendVerificationEmail(to, token) {
@@ -135,40 +145,49 @@ export async function sendVerificationEmail(to, token) {
     const textContent = `Verify your sELECT account. Your verification code is: ${token}. This code will expire in 10 minutes. Or use this link: ${verificationUrl}`;
 
     try {
-        const mailTransporter = await createTransporter();
+      const mailTransporter = await createTransporter();
 
-        if (!mailTransporter) {
-            console.error("Mail transporter could not be initialized.");
-            return { success: false, error: "Mail transporter setup failed." };
-        }
+      if (!mailTransporter) {
+          console.error("Mail transporter could not be initialized due to missing credentials.");
+          return { success: false, error: "Mail transporter setup failed." };
+      }
 
-        const fromAddress = process.env.NODE_ENV === 'development'
-            ? `"sELECT System (Dev Test)" <dev-noreply@example.com>`
-            : `"sELECT System" <${process.env.EMAIL_FROM_GMAIL}>`;
+      // Use EMAIL_FROM env variable for the production 'From' address
+      // Keep a distinct 'From' for development via Ethereal if you want
+      const fromAddress = process.env.NODE_ENV === 'development'
+          ? `"sELECT System (Dev Test)" <dev-noreply@example.com>` // Ethereal often ignores this 'From' but set it anyway
+          : process.env.EMAIL_FROM || `"sELECT System" <noreply@${new URL(process.env.NEXTAUTH_URL).hostname}>`; // Use configured EMAIL_FROM or derive from domain
 
-        const mailOptions = {
-            from: fromAddress,
-            to: to,
-            subject: subject,
-            text: textContent, // Use the textContent defined in this function's scope
-            html: htmlContent, // Use the htmlContent defined in this function's scope
-        };
 
-        const info = await mailTransporter.sendMail(mailOptions);
+      const mailOptions = {
+          from: fromAddress, // The 'From' address
+          to: to,
+          subject: subject,
+          text: textContent,
+          html: htmlContent,
+      };
 
-        console.log('Verification email sent: %s', info.messageId);
-        // For Ethereal preview
-        if (process.env.NODE_ENV === 'development' && mailTransporter.options.host === 'smtp.ethereal.email' && nodemailer.getTestMessageUrl(info)) {
-            console.log('Preview URL (Ethereal): %s', nodemailer.getTestMessageUrl(info));
-            return { success: true, messageId: info.messageId, previewUrl: nodemailer.getTestMessageUrl(info) };
-        }
-        return { success: true, messageId: info.messageId };
+      console.log(`Attempting to send email from ${mailOptions.from} to ${mailOptions.to}...`);
+      const info = await mailTransporter.sendMail(mailOptions);
+      console.log('Email sent successfully.');
 
-    } catch (error) {
-        console.error('Error sending verification email:', error);
-        if (error.code === 'EAUTH' || error.responseCode === 535 || error.responseCode === 401) {
-            console.error("Authentication error with email provider. Check credentials/OAuth setup.");
-        }
-        return { success: false, error: `Failed to send verification email. Details: ${error.message}` };
-    }
+
+      // Log Ethereal preview URL only in development when using Ethereal
+      if (process.env.NODE_ENV === 'development' && mailTransporter.options.host === 'smtp.ethereal.email' && nodemailer.getTestMessageUrl(info)) {
+           console.log('Preview URL (Ethereal): %s', nodemailer.getTestMessageUrl(info));
+           return { success: true, messageId: info.messageId, previewUrl: nodemailer.getTestMessageUrl(info) };
+       }
+
+      return { success: true, messageId: info.messageId };
+
+  } catch (error) {
+      console.error('Error sending verification email:', error);
+      // Provide more specific error details if possible
+      let errorMessage = 'Failed to send verification email.';
+      if (error.message) errorMessage += ` Details: ${error.message}`;
+      if (error.code) errorMessage += ` Code: ${error.code}`;
+      if (error.response) errorMessage += ` Response: ${error.response}`;
+
+      return { success: false, error: errorMessage };
+  }
 }
