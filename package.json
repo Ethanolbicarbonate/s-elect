@@ -17,6 +17,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.5",
+    "csv-parse": "^5.6.0",
     "google-auth-library": "^9.15.1",
     "next": "15.2.5",
     "next-auth": "^4.24.11",
