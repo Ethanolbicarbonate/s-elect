@@ -66,11 +66,11 @@ export default function StudentSignupForm() {
             {isLoading ? 'Sending...' : 'Send Verification Code'}
           </button>
           <p className='fs-7 text-secondary'>
-          Already have an account?{' '}
-          <Link href="/student-login" className="text-primary text-decoration-none">
-            Log In
-          </Link>
-        </p>
+            Already have an account?{' '}
+            <Link href="/student-login" className="text-primary text-decoration-none">
+                Log In
+            </Link>
+            </p>
         <hr className='border-1 border-secondary opacity-20 my-4'></hr>
         <div className="d-grid gap-2">
             <Link href="/" className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm">

@@ -1,70 +1,174 @@
-// lib/email.js
+// src/lib/email.js
 import nodemailer from 'nodemailer';
 
-// Configure Nodemailer transporter
-// For local development with Ethereal:
-// let transporter;
-// async function getEtherealTransporter() {
-//     if (!transporter) {
-//         const testAccount = await nodemailer.createTestAccount();
-//         transporter = nodemailer.createTransport({
-//             host: 'smtp.ethereal.email',
-//             port: 587,
-//             secure: false, // true for 465, false for other ports
-//             auth: {
-//                 user: testAccount.user, // generated ethereal user
-//                 pass: testAccount.pass, // generated ethereal password
-//             },
-//         });
-//     }
-//     return transporter;
-// }
+// --- Ethereal Configuration ---
+let etherealTransporterInstance; // Renamed to avoid confusion
+async function getEtherealTransporter() {
+    if (!etherealTransporterInstance) {
+        try {
+            const testAccount = await nodemailer.createTestAccount();
+            console.log('Ethereal Test Account CREATED:');
+            console.log('User:', testAccount.user);
+            console.log('Pass:', testAccount.pass);
+            console.log('Host: smtp.ethereal.email');
+            console.log('Port: 587');
 
-// For production (e.g., SendGrid - set environment variables on Vercel)
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_SERVER_HOST,
-    port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
-    auth: {
-        user: process.env.EMAIL_SERVER_USER,
-        pass: process.env.EMAIL_SERVER_PASSWORD,
-    },
-    secure: parseInt(process.env.EMAIL_SERVER_PORT || "587") === 465, // true for port 465, false for others
-});
+            etherealTransporterInstance = nodemailer.createTransport({
+                host: 'smtp.ethereal.email',
+                port: 587,
+                secure: false,
+                auth: {
+                    user: testAccount.user,
+                    pass: testAccount.pass,
+                },
+            });
+        } catch (error) {
+            console.error("Failed to create Ethereal test account:", error);
+            throw new Error("Could not initialize Ethereal email transporter.");
+        }
+    }
+    return etherealTransporterInstance;
+}
+// --- End Ethereal Configuration ---
 
+async function createTransporter() {
+    if (process.env.NODE_ENV === 'development') {
+        console.log("Using Ethereal for email in development.");
+        return await getEtherealTransporter(); // Return the created transporter
+    } else {
+        // Production: Gmail with OAuth2
+        if (
+            !process.env.GMAIL_OAUTH_CLIENT_ID ||
+            !process.env.GMAIL_OAUTH_CLIENT_SECRET ||
+            !process.env.GMAIL_OAUTH_REFRESH_TOKEN ||
+            !process.env.EMAIL_FROM_GMAIL
+        ) {
+            console.error("Gmail OAuth credentials not fully configured for production.");
+            return null;
+        }
+
+        try {
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    type: 'OAuth2',
+                    user: process.env.EMAIL_FROM_GMAIL,
+                    clientId: process.env.GMAIL_OAUTH_CLIENT_ID,
+                    clientSecret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
+                    refreshToken: process.env.GMAIL_OAUTH_REFRESH_TOKEN,
+                },
+            });
+            // Optional: Verify connection. Do this only once if possible, or less frequently.
+            // await transporter.verify(); 
+            // console.log("Gmail transporter verified for this send operation.");
+            return transporter;
+        } catch (error) {
+            console.error("Failed to create Gmail transporter:", error);
+            return null;
+        }
+    }
+}
 
 export async function sendVerificationEmail(to, token) {
-  const subject = 'Verify your sELECT Account Email';
-  const verificationUrl = `${process.env.NEXTAUTH_URL}/student-signup/verify?token=${token}&email=${encodeURIComponent(to)}`; // Construct verification URL
-  const htmlContent = `
-    <h1>Verify Your Email</h1>
-    <p>Thank you for signing up for sELECT.</p>
-    <p>Your verification code is: <strong>${token}</strong></p>
-    <p>Or click this link to verify (not typically done with OTPs, but an option): <a href="${verificationUrl}">${verificationUrl}</a></p>
-    <p>This code will expire in 10 minutes.</p>
-    <p>If you did not request this, please ignore this email.</p>
-  `;
-  const textContent = `Verify your sELECT account. Your verification code is: ${token}. This code will expire in 10 minutes. Or visit ${verificationUrl}`;
+    const year = new Date().getFullYear();
+    const subject = 'Verify your sELECT Account Email';
+    const verificationUrl = `${process.env.NEXTAUTH_URL}/student-signup/verify?token=${token}&email=${encodeURIComponent(to)}`;
 
-  // For Ethereal local testing:
-  // const mailTransporter = await getEtherealTransporter();
+    // Define htmlContent and textContent HERE, in the scope of the sending function
+    const htmlContent = `
+    <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Verify Your sELECT Account</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f5f5f5;">
+          <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <!-- Header -->
+            <tr>
+              <td style="padding: 0;">
+                <img src="https://s-elect.vercel.app/assets/EmailHeader.png" alt="sELECT Header" style="display: block; width: 100%; max-width: 600px; height: auto;">
+              </td>
+            </tr>
+            
+            <!-- Content -->
+            <tr>
+              <td style="padding: 30px 40px;">            
+                <p style="margin-bottom: 25px; font-size: 16px;">Thank you for signing up for <span style="color: #006fff; font-weight: bold;">sELECT</span>. To complete your registration, please use the verification code below:</p>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                  <div style="background-color: #006fff; border: 1px solid #006fff; border-radius: 10px; color: #ffffff; font-weight: bold; font-size: 24px; padding: 15px 25px; display: inline-block; letter-spacing: 2px;">${token}</div>
+                </div>
+                
+                <p style="margin-bottom: 25px; font-size: 16px; text-align: center;"><strong>This code will expire in 10 minutes.</strong></p>
+                
+                <p style="color: #666666; font-size: 14px;">If you did not request this verification, please disregard this email or contact support if you have concerns.</p>
+              </td>
+            </tr>
+            
+            <!-- Divider -->
+            <tr>
+              <td style="padding: 0 40px;">
+                <hr style="border: none; border-top: 1px solid #dddddd; margin: 20px 0;">
+              </td>
+            </tr>
+            
+            <!-- Copyright -->
+            <tr>
+              <td style="padding: 20px; text-align: center; font-size: 12px; color: #666666; background-color: #ffffff;">
+                © ${year} sELECT. All rights reserved.<br>
+                <span style="color: #999999; font-size: 11px;">This is an automated message, please do not reply to this email.</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0;">
+                <img src="https://s-elect.vercel.app/assets/EmailHeader.png" alt="sELECT Header" style="display: block; width: 100%; max-width: 600px; height: auto;">
+              </td>
+            </tr>
+          </table>
+        </body>
+      </html>
+    `;
+    const textContent = `Verify your sELECT account. Your verification code is: ${token}. This code will expire in 10 minutes. Or use this link: ${verificationUrl}`;
 
-  // For production:
-  const mailTransporter = transporter;
+    try {
+        const mailTransporter = await createTransporter();
 
-  try {
-    const info = await mailTransporter.sendMail({
-      from: `"sELECT System" <${process.env.EMAIL_FROM || 'noreply@example.com'}>`,
-      to: to,
-      subject: subject,
-      text: textContent,
-      html: htmlContent,
-    });
+        if (!mailTransporter) {
+            console.error("Mail transporter could not be initialized.");
+            return { success: false, error: "Mail transporter setup failed." };
+        }
 
-    console.log('Verification email sent: %s', info.messageId);
-    // For Ethereal: console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    return { success: true, messageId: info.messageId };
-  } catch (error) {
-    console.error('Error sending verification email:', error);
-    return { success: false, error: 'Failed to send verification email.' };
-  }
+        const fromAddress = process.env.NODE_ENV === 'development'
+            ? `"sELECT System (Dev Test)" <dev-noreply@example.com>`
+            : `"sELECT System" <${process.env.EMAIL_FROM_GMAIL}>`;
+
+        const mailOptions = {
+            from: fromAddress,
+            to: to,
+            subject: subject,
+            text: textContent, // Use the textContent defined in this function's scope
+            html: htmlContent, // Use the htmlContent defined in this function's scope
+        };
+
+        const info = await mailTransporter.sendMail(mailOptions);
+
+        console.log('Verification email sent: %s', info.messageId);
+        // For Ethereal preview
+        if (process.env.NODE_ENV === 'development' && mailTransporter.options.host === 'smtp.ethereal.email' && nodemailer.getTestMessageUrl(info)) {
+            console.log('Preview URL (Ethereal): %s', nodemailer.getTestMessageUrl(info));
+            return { success: true, messageId: info.messageId, previewUrl: nodemailer.getTestMessageUrl(info) };
+        }
+        return { success: true, messageId: info.messageId };
+
+    } catch (error) {
+        console.error('Error sending verification email:', error);
+        if (error.code === 'EAUTH' || error.responseCode === 535 || error.responseCode === 401) {
+            console.error("Authentication error with email provider. Check credentials/OAuth setup.");
+        }
+        return { success: false, error: `Failed to send verification email. Details: ${error.message}` };
+    }
 }
