@@ -1,15 +1,14 @@
       
-// app/api/auth/[...nextauth]/route.js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient, AdminRole } from "@prisma/client"; // Import AdminRole
+import { PrismaClient, AdminRole } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 export const authOptions = {
-  adapter: PrismaAdapter(prisma), // Use Prisma adapter (optional for credentials but good practice)
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       // Provider for Students

@@ -115,7 +115,7 @@ export async function sendVerificationEmail(to, token) {
                 
                 <p style="margin-bottom: 25px; font-size: 16px; text-align: center;"><strong>This code will expire in 10 minutes.</strong></p>
                 
-                <p style="color: #666666; font-size: 14px;">If you did not request this verification, please disregard this email or contact support if you have concerns.</p>
+                <p style="color: #666666; font-size: 14px;">If you did not request this verification, please disregard this email or <a href="mailto:support@s-elect.app" style="color: #666666; text-decoration: underline;">contact support</a> if you have concerns.</p>
               </td>
             </tr>
             

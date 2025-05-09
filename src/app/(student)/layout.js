@@ -21,6 +21,7 @@ export default async function StudentLayout({ children }) {
       <header style={{ backgroundColor: 'aliceblue', padding: '1em' }}>
         <h2>Simplified Student Layout Header</h2>
         <p>User: {session.user.firstName || session.user.email}</p>
+        <p>College: {session.user.college}</p>
         {/* <NavigationPanel /> */} {/* <<<< TEMPORARILY COMMENT THIS OUT */}
       </header>
       <main style={{ padding: '1em', border: '1px solid lightblue', marginTop: '1em' }}>
