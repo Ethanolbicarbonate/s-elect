@@ -1,7 +1,7 @@
 // app/(student)/layout.js
 
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Ensure this path is correct
+import { authOptions } from '../api/auth/[...nextauth]/route'; // Ensure this path is correct
 import { redirect } from 'next/navigation';
 
 export default async function StudentLayout({ children }) {
