@@ -24,18 +24,20 @@ export const authOptions = {
           return null;
         }
 
+                const normalizedEmail = credentials.email.toLowerCase();
+
         const student = await prisma.student.findUnique({
-          where: { email: credentials.email },
+          where: { email: normalizedEmail },
         });
 
         if (!student) {
-          console.log("Student not found:", credentials.email);
+          console.log("Student not found:", normalizedEmail);
           return null; // User not found
         }
 
          // **NEW CHECKS FOR LOGIN AFTER SIGN-UP**
         if (!student.password) {
-          console.log("Student login attempt for unactivated account (no password):", credentials.email);
+          console.log("Student login attempt for unactivated account (no password):", normalizedEmail);
           // You might want to throw a specific error message here if `signIn` `redirect:false` can catch it.
           // For now, just failing to authorize will show the generic login error.
           // A better UX would guide them to complete sign-up.
@@ -43,7 +45,7 @@ export const authOptions = {
           // return null;
         }
         if (!student.emailVerified) {
-          console.log("Student login attempt for unverified email:", credentials.email);
+          console.log("Student login attempt for unverified email:", normalizedEmail);
           throw new Error("Email not verified. Please check your email for a verification link/code or restart sign-up.");
           // return null;
         }
@@ -56,7 +58,7 @@ export const authOptions = {
         );
 
         if (!passwordMatch) {
-          console.log("Student password mismatch for:", credentials.email);
+          console.log("Student password mismatch for:", normalizedEmail);
           return null; // Incorrect password
         }
 
@@ -86,12 +88,14 @@ export const authOptions = {
           return null;
         }
 
+        const normalizedCredential = credentials.email.toLowerCase();
+
         const admin = await prisma.admin.findUnique({
-          where: { email: credentials.email },
+          where: { email: normalizedCredential },
         });
 
         if (!admin) {
-          console.log("Admin not found:", credentials.email);
+          console.log("Admin not found:", normalizedCredential);
           return null;
         }
 
@@ -101,7 +105,7 @@ export const authOptions = {
         );
 
         if (!passwordMatch) {
-          console.log("Admin password mismatch for:", credentials.email);
+          console.log("Admin password mismatch for:", normalizedCredential);
           return null;
         }
 

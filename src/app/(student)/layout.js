@@ -3,7 +3,6 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Ensure this path is correct
 import { redirect } from 'next/navigation';
-// import NavigationPanel from "@/components/Layout/NavigationPanel"; // <<<< TEMPORARILY COMMENT THIS OUT
 
 export default async function StudentLayout({ children }) {
   const session = await getServerSession(authOptions);
@@ -22,7 +21,6 @@ export default async function StudentLayout({ children }) {
         <h2>Simplified Student Layout Header</h2>
         <p>User: {session.user.firstName || session.user.email}</p>
         <p>College: {session.user.college}</p>
-        {/* <NavigationPanel /> */} {/* <<<< TEMPORARILY COMMENT THIS OUT */}
       </header>
       <main style={{ padding: '1em', border: '1px solid lightblue', marginTop: '1em' }}>
         {children}
