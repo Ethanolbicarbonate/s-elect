@@ -1,8 +1,9 @@
+// src/app/api/auth/[...nextauth]/route.js
       
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient, AdminRole } from "@prisma/client";
+import { PrismaClient } from "@prisma/client"; // AdminRole can be removed if not used directly here
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -24,51 +25,46 @@ export const authOptions = {
           return null;
         }
 
+        // 1. Normalize the input email to lowercase
+        const normalizedEmail = credentials.email.toLowerCase();
+
         const student = await prisma.student.findUnique({
-          where: { email: credentials.email.toLowerCase },
+          // 2. Query using the normalized email
+          where: { email: normalizedEmail },
         });
 
         if (!student) {
-          console.log("Student not found:", credentials.email.toLowerCase);
+          console.log("Student not found with normalized email:", normalizedEmail);
           return null; // User not found
         }
 
-         // **NEW CHECKS FOR LOGIN AFTER SIGN-UP**
         if (!student.password) {
-          console.log("Student login attempt for unactivated account (no password):", credentials.email.toLowerCase);
-          // You might want to throw a specific error message here if `signIn` `redirect:false` can catch it.
-          // For now, just failing to authorize will show the generic login error.
-          // A better UX would guide them to complete sign-up.
+          console.log("Student login attempt for unactivated account (no password):", normalizedEmail);
           throw new Error("Account not fully set up. Please complete the sign-up process or check your email for verification.");
-          // return null;
         }
         if (!student.emailVerified) {
-          console.log("Student login attempt for unverified email:", credentials.email.toLowerCase);
+          console.log("Student login attempt for unverified email:", normalizedEmail);
           throw new Error("Email not verified. Please check your email for a verification link/code or restart sign-up.");
-          // return null;
         }
-        // **END NEW CHECKS**
 
-        // Check if password matches
         const passwordMatch = await bcrypt.compare(
           credentials.password,
-          student.password // The hashed password from DB
+          student.password
         );
 
         if (!passwordMatch) {
-          console.log("Student password mismatch for:", credentials.email.toLowerCase);
+          console.log("Student password mismatch for:", normalizedEmail);
           return null; // Incorrect password
         }
 
-        console.log("Student authorized:", student.email.toLowerCase);
-        // Return user object (must include at least 'id', 'email')
+        console.log("Student authorized:", student.email);
         return {
           id: student.id,
-          email: student.email,
-          firstName: student.firstName, // Add custom fields needed in session/token
+          email: student.email, // Return the stored (ideally already lowercase) email
+          firstName: student.firstName,
           lastName: student.lastName,
           college: student.college,
-          role: "STUDENT", // Add a role identifier for students
+          role: "STUDENT",
         };
       },
     }),
@@ -86,12 +82,16 @@ export const authOptions = {
           return null;
         }
 
+        // 1. Normalize the input email/credential to lowercase
+        const normalizedCredential = credentials.email.toLowerCase(); // Assuming admin credential is email
+
         const admin = await prisma.admin.findUnique({
-          where: { email: credentials.email.toLowerCase },
+          // 2. Query using the normalized credential
+          where: { email: normalizedCredential },
         });
 
         if (!admin) {
-          console.log("Admin not found:", credentials.email.toLowerCase);
+          console.log("Admin not found with normalized credential:", normalizedCredential);
           return null;
         }
 
@@ -101,55 +101,50 @@ export const authOptions = {
         );
 
         if (!passwordMatch) {
-          console.log("Admin password mismatch for:", credentials.email.toLowerCase);
+          console.log("Admin password mismatch for:", normalizedCredential);
           return null;
         }
 
-        console.log("Admin authorized:", admin.email.toLowerCase, "Role:", admin.role);
-        // Return user object
+        console.log("Admin authorized:", admin.email, "Role:", admin.role);
         return {
           id: admin.id,
-          email: admin.email,
-          role: admin.role, // e.g., SUPER_ADMIN, MODERATOR, AUDITOR
-          college: admin.college, // Include college for moderators
+          email: admin.email, // Return the stored (ideally already lowercase) email
+          role: admin.role,
+          college: admin.college,
         };
       },
     }),
   ],
   session: {
-    strategy: "jwt", // Use JSON Web Tokens for sessions (good for serverless)
+    strategy: "jwt",
   },
   callbacks: {
-    // Include user data in the JWT
-    async jwt({ token, user, account, profile, isNewUser }) {
-       // The 'user' object comes from the authorize function on initial sign in
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role; // Role from authorize (STUDENT, SUPER_ADMIN, etc.)
-        token.college = user.college; // College from authorize (for students and moderators)
-        token.firstName = user.firstName; // Include student first name
+        token.role = user.role;
+        token.college = user.college;
+        token.firstName = user.firstName;
       }
       return token;
     },
-    // Make user data available client-side via useSession()
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.college = token.college;
-        session.user.firstName = token.firstName; // Add first name to session
+        session.user.firstName = token.firstName;
       }
       return session;
     },
   },
   pages: {
-    signIn: '/', // Redirect users to role selection page if sign in is required
-    // error: '/auth/error', // Optional: Custom error page
+    signIn: '/',
   },
-  secret: process.env.AUTH_SECRET, // Use the secret from .env
-  debug: process.env.NODE_ENV === "development", // Enable debug logs in development
+  secret: process.env.AUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
 };
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST }; // Export handlers for GET and POST requests
+export { handler as GET, handler as POST };
