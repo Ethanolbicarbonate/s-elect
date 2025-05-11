@@ -87,7 +87,7 @@ function ForgotPasswordEmailForm() {
       )}
       <form onSubmit={handleSubmit} className="w-100" style={{ maxWidth: '400px' }}>
         <p className="fs-7 text-secondary mb-3">
-          Enter the email address associated with your {userType} account. We'll send you an OTP to reset your password.
+          Enter the email address associated with your {userType} account. We&apos;ll send you an OTP to reset your password.
         </p>
         <div className="mb-3 text-start fs-7 text-secondary">
           <label htmlFor="email_forgot" className="form-label">Email Address</label>
