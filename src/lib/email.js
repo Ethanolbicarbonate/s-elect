@@ -110,7 +110,7 @@ export async function sendVerificationEmail(to, token) {
           <!-- Content -->
           <tr>
             <td style="padding: 0px 40px;">            
-              <p style="margin-bottom: 30px; font-size: 16px;">Thank you for signing up for <span style="color: #656565; font-weight: bold;">sELECT</span>.<br> To complete your registration, please use the verification code below:</p>
+              <p style="margin-bottom: 30px; font-size: 16px; color: #666666">Thank you for signing up for <span style="color: #656565; font-weight: bold;">sELECT</span>.<br> To complete your registration, please use the verification code below:</p>
               
               <div style=" width: 100%;">
                 <div style="text-align: center; display: flex; justify-content: center; ; margin-top: 12px">
@@ -247,7 +247,7 @@ export async function sendPasswordResetEmail(to, token, userType = "User") {
           <!-- Content -->
           <tr>
             <td style="padding: 0px 40px;">            
-              <p style="margin-bottom: 30px; font-size: 16px;">We received a request to reset the password for your <span style="color: #656565; font-weight: bold;">sELECT</span> account associated with this email address. <br> Please use the following One-Time Password (OTP) to proceed:</p>
+              <p style="margin-bottom: 30px color: #666666; font-size: 16px;">We received a request to reset the password for your <span style="color: #656565; font-weight: bold;">sELECT</span> account associated with this email address. <br> Please use the following One-Time Password (OTP) to proceed:</p>
               
               <div style=" width: 100%;">
                 <div style="text-align: center; display: flex; justify-content: center; ; margin-top: 12px">
