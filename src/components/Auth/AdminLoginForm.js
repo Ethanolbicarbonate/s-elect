@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function AdminLoginForm() {
-  const [credential, setCredential] = useState(''); // Could be email or username
+  const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -50,7 +50,7 @@ export default function AdminLoginForm() {
     try {
       const result = await signIn("admin-credentials", { // Use the correct provider ID
         redirect: false, // Don't automatically redirect, handle it manually
-        email: email,
+        email: credential,
         password: password,
       });
 
@@ -92,13 +92,13 @@ export default function AdminLoginForm() {
           )}
         <div className="mb-3 text-start fs-7 text-secondary">
           <label htmlFor="adminCredential" className="form-label">
-            Admin Credential (Email/Username)
+            Admin Email
           </label>
           <input
-            type="text" // Use text to allow email or username
+            type="email"
             className="form-control"
             id="adminCredential"
-            placeholder="Enter your admin email or username"
+            placeholder="Enter your admin email"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
             required

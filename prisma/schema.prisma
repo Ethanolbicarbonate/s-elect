@@ -44,7 +44,7 @@ model Student {
   email          String    @unique // firstname.lastname@wvsu.edu.ph format
   password       String?    // Will store hashed password
   college        College
-  enrollmentDate DateTime  @default(now())
+  // enrollmentDate DateTime  @default(now())
   hasVoted       Boolean   @default(false) // Track voting status
 
 // Fields for sign-up & verification
