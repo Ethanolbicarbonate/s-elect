@@ -122,7 +122,7 @@ export async function sendVerificationEmail(to, token) {
               
                 <p style="margin-bottom: 12px; font-size: 12px; text-align: center;"><span style="color: #999999;">This code will expire in 10 minutes</strong></p>
               </div>
-              <p style="color: #666666; font-size: 14px;">If you did not request this verification, please disregard this email <br> or email <span style="color: #656565; font-weight: bold;"> support@s-elect.app </span> if you have concerns.</p>
+              <p style="color: #666666; font-size: 14px;">If you did not request this verification, please disregard this email <br> or email <span style="color: #656565;"> support@s-elect.app </span> if you have concerns.</p>
             </td>
           </tr>
           
@@ -260,7 +260,7 @@ export async function sendPasswordResetEmail(to, token, userType = "User") {
                 <p style="margin-bottom: 12px; font-size: 12px; text-align: center;"><span style="color: #999999;">This code will expire in 10 minutes</strong></p>
               </div>
               <p style="color: #666666; font-size: 14px;">Click this link to reset your password: <a href="${resetUrl}" style="color: #006fff; text-decoration: underline;">Reset Password Link</a></p>
-              <p style="color: #666666; font-size: 14px;">If you did not request a password reset, please ignore this email. Your password will remain unchanged. <br> Email <span style="color: #656565; font-weight: bold;"> support@s-elect.app </span> if you have concerns.</p>
+              <p style="color: #666666; font-size: 14px;">If you did not request a password reset, please ignore this email. Your password will remain unchanged. <br> Email <span style="color: #656565;"> support@s-elect.app </span> if you have concerns.</p>
             </td>
           </tr>
           
