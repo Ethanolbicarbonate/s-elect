@@ -112,7 +112,7 @@ export default function StudentSignupForm() {
           </Link>
         </p>
         <hr className="border-1 border-secondary opacity-20 my-4"></hr>
-        <div className="d-grid gap-2">
+        <div className="d-grid gap-2 pb-4">
           <Link
             href="/"
             className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm"

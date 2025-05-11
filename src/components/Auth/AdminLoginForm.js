@@ -105,7 +105,7 @@ export default function AdminLoginForm() {
             disabled={isLoading}
           />
         </div>
-        <div className="mb-3 text-start fs-7 text-secondary">
+        <div className="mb-1 text-start fs-7 text-secondary">
           <label htmlFor="adminPassword" className="form-label">
             Password
           </label>
@@ -120,8 +120,13 @@ export default function AdminLoginForm() {
             disabled={isLoading}
           />
         </div>
+        <p className="text-end fs-7">
+          <Link href="/forgot-password?type=admin" className="text-secondary text-decoration-none">
+            Forgot Password?
+          </Link>
+        </p>
         <hr className='border-1 border-secondary opacity-20 my-4'></hr>
-        <div className="d-grid gap-2">
+        <div className="d-grid gap-2 pb-4">
           <button type="submit" className="btn btn-primary btn-lg fs-6 shadow-sm" disabled={isLoading}>
             {isLoading ? (
               <>

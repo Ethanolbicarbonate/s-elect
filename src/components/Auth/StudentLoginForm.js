@@ -107,7 +107,7 @@ export default function StudentLoginForm() {
           {/* Add help text if needed according to STD-LOG-FR-003 */}
           {/* <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div> */}
         </div>
-        <div className="mb-3 text-start">
+        <div className="mb-1 text-start">
           <label
             htmlFor="studentPassword"
             className="form-label fs-7 text-secondary"
@@ -125,17 +125,13 @@ export default function StudentLoginForm() {
             disabled={isLoading}
           />
         </div>
-        <p className="fs-7 text-secondary">
-          Don&apos;t have an account yet?{" "}
-          <Link
-            href="/student-signup"
-            className="text-primary text-decoration-none"
-          >
-            Sign Up
+        <p className="text-end fs-7">
+          <Link href="/forgot-password?type=student" className="text-secondary text-decoration-none">
+            Forgot Password?
           </Link>
         </p>
         <hr className="border-1 border-secondary opacity-20 my-4"></hr>
-        <div className="d-grid gap-2">
+        <div className="d-grid gap-2 pb-4">
           <button
             type="submit"
             className="btn btn-primary btn-lg fs-6 shadow-sm"
@@ -160,6 +156,15 @@ export default function StudentLoginForm() {
           >
             Back to Role Selection
           </Link>
+          <p className="fs-7 text-secondary mt-1">
+            Don&apos;t have an account yet?{" "}
+            <Link
+              href="/student-signup"
+              className="text-primary text-decoration-none"
+            >
+              Sign Up
+            </Link>
+          </p>
         </div>
       </form>
       {/* Add link for password recovery if applicable */}

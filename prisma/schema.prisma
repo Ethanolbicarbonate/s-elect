@@ -37,26 +37,28 @@ enum AdminRole {
 }
 
 model Student {
-  id             String    @id @default(cuid())
-  firstName      String
-  lastName       String
-  middleName     String?   // Optional middle name
-  email          String    @unique // firstname.lastname@wvsu.edu.ph format
-  password       String?    // Will store hashed password
-  college        College
+  id         String  @id @default(cuid())
+  firstName  String
+  lastName   String
+  middleName String? // Optional middle name
+  email      String  @unique // firstname.lastname@wvsu.edu.ph format
+  password   String? // Will store hashed password
+  college    College
   // enrollmentDate DateTime  @default(now())
-  hasVoted       Boolean   @default(false) // Track voting status
+  hasVoted   Boolean @default(false) // Track voting status
 
-// Fields for sign-up & verification
+  // Fields for sign-up & verification
   isPreApproved       Boolean   @default(true) // Indicates if they are in the "enrolled" list
   emailVerified       DateTime? // Timestamp when email was verified during sign-up
-  verificationToken   String?   // Stores the OTP or verification token
+  verificationToken   String? // Stores the OTP or verification token
   verificationExpires DateTime? // Expiry for the verification token
-  // passwordResetToken  String?   // For future password reset functionality
-  // passwordResetExpires DateTime? // For future password reset functionality
 
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  // Fields for Password Reset
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // Relation for next-auth adapter (optional but potentially useful later)
   // accounts       Account[]
   // sessions       Session[]
@@ -65,9 +67,14 @@ model Student {
 model Admin {
   id        String    @id @default(cuid())
   email     String    @unique
-  password  String    // Will store hashed password
+  password  String // Will store hashed password
   role      AdminRole
-  college   College?  // Nullable, only set for MODERATOR role
+  college   College? // Nullable, only set for MODERATOR role
+
+  // Fields for Password Reset
+  passwordResetToken  String?
+  passwordResetExpires DateTime?
+  
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   // Relation for next-auth adapter (optional but potentially useful later)
@@ -78,7 +85,6 @@ model Admin {
   @@index([role, college]) // Index for faster lookups maybe
   @@map("admins") // Map to 'admins' table name
 }
-
 
 // --- NextAuth.js Prisma Adapter Models ---
 // Needed if you use the database session strategy or link accounts (OAuth)
