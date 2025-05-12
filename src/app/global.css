@@ -76,10 +76,10 @@ a, button, .btn {
 }
 
 .thin-input {
-  padding: 0.8rem 0.4rem 0.5rem 0.4rem;
-  font-size: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
   border-width: 1px;
-  border-radius: 6px;
+  border-radius: 8px;
   height: auto;
 }
 
@@ -91,7 +91,7 @@ a, button, .btn {
   position: absolute;
   top: 0.55rem;
   left: 0.4rem;
-  font-size: 0.8rem;
+  font-size: .85rem;
   color: #6c757d;
   pointer-events: none;
   transition: all 0.2s ease;
