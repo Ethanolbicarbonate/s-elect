@@ -68,7 +68,6 @@ export default function StudentLoginForm() {
       displayError("An error occurred. Please try again.");
       setIsLoading(false);
     }
-    // No finally block needed for setIsLoading if navigating away on success
   };
 
   return (
@@ -81,7 +80,7 @@ export default function StudentLoginForm() {
       >
         {error && (
           <div
-            className={`alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade ${
+            className={`alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade fs-7 ${
               showError ? "show" : ""
             }`}
             role="alert"
@@ -104,7 +103,7 @@ export default function StudentLoginForm() {
             required // Basic HTML5 validation
             disabled={isLoading}
           />
-          {/* Add help text if needed according to STD-LOG-FR-003 */}
+          {/* help text if needed according to STD-LOG-FR-003 */}
           {/* <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div> */}
         </div>
         <div className="mb-1 text-start">
@@ -167,10 +166,6 @@ export default function StudentLoginForm() {
           </p>
         </div>
       </form>
-      {/* Add link for password recovery if applicable */}
-      {/* <div className="mt-3">
-        <a href="/forgot-password">Forgot Password?</a>
-      </div> */}
     </div>
   );
 }

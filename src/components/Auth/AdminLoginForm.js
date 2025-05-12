@@ -84,7 +84,7 @@ export default function AdminLoginForm() {
       <form onSubmit={handleSubmit} className="w-100" style={{ maxWidth: '400px' }}>
         {error && (
             <div 
-              className={`alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade ${showError ? 'show' : ''}`} 
+              className={`fs-7 alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade ${showError ? 'show' : ''}`} 
               role="alert"
             >
               {error}

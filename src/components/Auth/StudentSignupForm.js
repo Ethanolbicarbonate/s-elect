@@ -67,7 +67,7 @@ export default function StudentSignupForm() {
       {message && <div className="alert alert-success">{message}</div>}
       {error && (
         <div
-          className={`alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade ${
+          className={`fs-7 alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade ${
             showError ? "show" : ""
           }`}
           role="alert"

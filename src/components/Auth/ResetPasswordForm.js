@@ -86,12 +86,9 @@ function ActualResetPasswordForm() {
   return (
     <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
       <h5 className="mb-4 text-primary">Reset Your Password</h5>
-      <p className="fs-7 text-secondary mb-3">
-        Enter the OTP sent to <span className="text-primary">{email}</span> and your new password.
-      </p>
       {(message || error) && (
         <div
-          className={`alert ${error ? 'alert-danger' : 'alert-success'} position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade ${showFeedback ? 'show' : ''}`}
+          className={`alert ${error ? 'alert-danger' : 'alert-success'} fs-7 position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade ${showFeedback ? 'show' : ''}`}
           role="alert"
         >
           {error || message}
@@ -149,7 +146,7 @@ function ActualResetPasswordForm() {
         </button>
         <hr className="border-1 border-secondary opacity-20 my-4" />
          <div className="d-grid gap-2">
-            <Link href={userType === 'student' ? "/student-login" : (userType === 'admin' ? "/admin-login" : "/")} className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm">
+            <Link href={userType === 'student' ? "/student-login" : (userType === 'admin' ? "/admin-login" : "/")} className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm mb-4">
                 Back to Login
             </Link>
         </div>
