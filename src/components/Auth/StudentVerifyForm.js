@@ -33,17 +33,12 @@ function VerifyForm() {
   const displayError = (message) => {
     setError(message);
 
-    setTimeout(
-      () => {
-        setShowError(false);
-        setTimeout(
-          () => {
-            setError("");
-          },
-          500);
-      },
-      3000
-    );
+    setTimeout(() => {
+      setShowError(false);
+      setTimeout(() => {
+        setError("");
+      }, 500);
+    }, 3000);
   };
 
   const displayMessage = (msg, redirectPath = null) => {
@@ -113,8 +108,8 @@ function VerifyForm() {
 
   return (
     <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
-      <h5 className="mb-4 text-primary">Student Sign Up - Step 2</h5>
-      <p className="text-center text-muted fs-7">
+      <p className="mt-4 mb-0 text-secondary fs-6">Student Signup - step 2</p>
+      <p className="mb-4text-center text-muted fs-7 opacity-75">
         A verification code was sent to{" "}
         <span className="text-primary">{email || "your email"}</span>.
       </p>
@@ -143,13 +138,10 @@ function VerifyForm() {
         className="w-100"
         style={{ maxWidth: "400px" }}
       >
-        <div className="mb-3 text-start fs-7 text-secondary">
-          <label htmlFor="token" className="form-label">
-            Verification Code (OTP)
-          </label>
+        <div className="floating-label mt-2" style={{ marginBottom: "2rem" }}>
           <input
             type="text"
-            className="form-control"
+            className="form-control thin-input"
             id="token"
             value={token}
             onChange={(e) => setToken(e.target.value)}
@@ -157,61 +149,70 @@ function VerifyForm() {
             disabled={isLoading}
             maxLength={6}
           />
+          <label htmlFor="token">Verification Code (OTP)</label>
         </div>
         <div className="row">
-          <div className="col-md-6 mb-3 text-start fs-7 text-secondary">
-            <label htmlFor="password_signup" className="form-label">
-              New Password
-            </label>
+          <div
+            className="col-md-6 floating-label"
+            style={{ marginBottom: "2rem" }}
+          >
             <input
               type="password"
-              className="form-control"
+              className="form-control thin-input"
               id="password_signup"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={isLoading}
             />
-          </div>
-
-          <div className="col-md-6 mb-3 text-start fs-7 text-secondary">
-            <label htmlFor="confirmPassword_signup" className="form-label">
-              Confirm New Password
+            <label htmlFor="password_signup" style={{ left: "1rem" }}>
+              {" "}
+              Set Password
             </label>
+          </div>
+          <div className="col-md-6 floating-label mb-1">
             <input
               type="password"
-              className="form-control"
+              className="form-control thin-input"
               id="confirmPassword_signup"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               disabled={isLoading}
             />
+            <label htmlFor="confirmPassword_signup" style={{ left: "1rem" }}>
+              {" "}
+              Confirm Password
+            </label>
           </div>
         </div>
-        <p className="fs-7 text-secondary my-0">
-          Already have an account?{" "}
-          <Link
-            href="/student-login"
-            className="text-primary text-decoration-none"
-          >
-            Log In
-          </Link>
-        </p>
-        <Link
-          href="/student-signup"
-          className="fs-7 text-secondary text-decoration-none"
-        >
-          Need to resend code or change email?
-        </Link>
         <hr className="border-1 border-secondary opacity-20 my-4"></hr>
-        <button
-          type="submit"
-          className="btn btn-primary btn-lg fs-6 shadow-sm w-100 mb-3"
-          disabled={isLoading}
-        >
-          {isLoading ? "Verifying..." : "Complete Sign Up"}
-        </button>
+        <div className="d-grid gap-2 pb-4">
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg fs-6 shadow-sm w-100"
+            disabled={isLoading}
+          >
+            {isLoading ? "Verifying..." : "Complete Sign Up"}
+          </button>
+          <div>
+            <p className="fs-7 text-secondary mt-2 mb-0 opacity-75">
+              Already have an account?{" "}
+              <Link
+                href="/student-login"
+                className="text-primary text-decoration-none"
+              >
+                Log In
+              </Link>
+            </p>
+            <Link
+              href="/student-signup"
+              className="fs-7 text-secondary text-decoration-none mb-4 opacity-75"
+            >
+              Need to resend code or change email?
+            </Link>
+          </div>
+        </div>
       </form>
     </div>
   );

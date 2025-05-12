@@ -71,8 +71,8 @@ export default function StudentLoginForm() {
   };
 
   return (
-    <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
-      <h5 className="mb-4 text-primary">Student Login</h5>
+    <div className="scroll-container flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
+      <p className="my-4 text-secondary fs-6">Student Login</p>
       <form
         onSubmit={handleSubmit}
         className="w-100"
@@ -88,44 +88,37 @@ export default function StudentLoginForm() {
             {error}
           </div>
         )}
-        <div className="mb-3 text-start fs-7 text-secondary">
-          <label htmlFor="studentEmail" className="form-label">
-            WVSU Email address
-          </label>
+        <div className="floating-label mb-4">
           <input
             type="email"
-            className="form-control"
+            className="form-control thin-input"
             id="studentEmail"
-            aria-describedby="emailHelp"
-            placeholder="juan.delacruz@wvsu.edu.ph"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required // Basic HTML5 validation
+            required
             disabled={isLoading}
+            placeholder=" "
           />
-          {/* help text if needed according to STD-LOG-FR-003 */}
-          {/* <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div> */}
+          <label htmlFor="studentEmail">WVSU Email address</label>
         </div>
-        <div className="mb-1 text-start">
-          <label
-            htmlFor="studentPassword"
-            className="form-label fs-7 text-secondary"
-          >
-            Password
-          </label>
+        <div className="floating-label mb-2">
           <input
             type="password"
-            className="form-control"
+            className="form-control thin-input"
             id="studentPassword"
-            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             disabled={isLoading}
+            placeholder=" "
           />
+          <label htmlFor="studentPassword">Password</label>
         </div>
         <p className="text-end fs-7">
-          <Link href="/forgot-password?type=student" className="text-secondary text-decoration-none">
+          <Link
+            href="/forgot-password?type=student"
+            className="text-secondary opacity-75 text-decoration-none"
+          >
             Forgot Password?
           </Link>
         </p>
@@ -155,13 +148,13 @@ export default function StudentLoginForm() {
           >
             Back to Role Selection
           </Link>
-          <p className="fs-7 text-secondary mt-1">
+          <p className="fs-7 text-secondary mt-2 mb-4 opacity-75">
             Don&apos;t have an account yet?{" "}
             <Link
               href="/student-signup"
               className="text-primary text-decoration-none"
             >
-              Sign Up
+              Register Now
             </Link>
           </p>
         </div>

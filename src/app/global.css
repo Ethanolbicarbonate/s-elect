@@ -75,6 +75,37 @@ a, button, .btn {
     color: #fdfdfd !important;
 }
 
+.thin-input {
+  padding: 0.6rem 0.4rem 0.3rem 0.4rem;
+  font-size: 0.75rem;
+  border-width: 0.5px;
+  border-radius: 2px;
+  height: auto;
+}
+
+.floating-label {
+  position: relative;
+}
+
+.floating-label label {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.4rem;
+  font-size: 0.8rem;
+  color: #6c757d;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  padding: 0 0.2rem;
+}
+
+.thin-input:focus + label,
+.thin-input:not(:placeholder-shown) + label {
+  top: -1.25rem;
+  left: 0.35rem;
+  opacity: 75%;
+}
+
+
 @media (min-width: 768px) {
     div.custom-height-sm-min {
         height: 75% !important;

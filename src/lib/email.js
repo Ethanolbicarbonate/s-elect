@@ -113,7 +113,7 @@ export async function sendVerificationEmail(to, token) {
               <p style="margin-bottom: 30px; font-size: 16px; color: #666666">Thank you for signing up for <span style="color: #656565; font-weight: bold;">sELECT</span>.<br> To complete your registration, please use the verification code below:</p>
               
               <div style=" width: 100%;">
-                <div style="text-align: center; display: flex; justify-content: center; ; margin-top: 12px">
+                <div style="text-align: center; display: flex; justify-content: center; margin-top: 12px">
                   <div style="color: #656565; font-weight: bold; font-size: 24px; display: inline-block;">Verification Code:&nbsp;</div>
                   <div style="color: #006fff; font-weight: bold; font-size: 24px; display: inline-block; letter-spacing: 2px;">
                     ${token}
@@ -250,7 +250,7 @@ export async function sendPasswordResetEmail(to, token, userType = "User") {
               <p style="margin-bottom: 30px color: #666666; font-size: 16px;">We received a request to reset the password for your <span style="color: #656565; font-weight: bold;">sELECT</span> account associated with this email address. <br> Please use the following One-Time Password (OTP) to proceed:</p>
               
               <div style=" width: 100%;">
-                <div style="text-align: center; display: flex; justify-content: center; ; margin-top: 12px">
+                <div style="text-align: center; display: flex; justify-content: center; margin-top: 12px">
                   <div style="color: #656565; font-weight: bold; font-size: 24px; display: inline-block;">Password Reset Code:&nbsp;</div>
                   <div style="color: #006fff; font-weight: bold; font-size: 24px; display: inline-block; letter-spacing: 2px;">
                     ${token}

@@ -63,8 +63,7 @@ export default function StudentSignupForm() {
 
   return (
     <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
-      <h5 className="mb-4 text-primary">Student Sign Up - Step 1</h5>
-      {message && <div className="alert alert-success">{message}</div>}
+      <p className="my-4 text-secondary fs-6">Student Signup - Step 1</p>
       {error && (
         <div
           className={`fs-7 alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-3 fade ${
@@ -80,45 +79,43 @@ export default function StudentSignupForm() {
         className="w-100"
         style={{ maxWidth: "400px" }}
       >
-        <div className="mb-3 text-start fs-7 text-secondary">
-          <label htmlFor="email" className="form-label">
-            Your WVSU Email (@wvsu.edu.ph)
-          </label>
+        <div className="floating-label mb-4">
           <input
             type="email"
-            className="form-control"
+            className="form-control thin-input"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="juan.delacruz@wvsu.edu.ph"
             disabled={isLoading}
+            placeholder=" "
           />
+          <label htmlFor="email">Your WVSU Email (@wvsu.edu.ph)</label>
         </div>
-        <button
-          type="submit"
-          className="btn btn-primary btn-lg fs-6 shadow-sm w-100 mb-3"
-          disabled={isLoading}
-        >
-          {isLoading ? "Sending..." : "Send Verification Code"}
-        </button>
-        <p className="fs-7 text-secondary">
-          Already have an account?{" "}
-          <Link
-            href="/student-login"
-            className="text-primary text-decoration-none"
-          >
-            Log In
-          </Link>
-        </p>
         <hr className="border-1 border-secondary opacity-20 my-4"></hr>
         <div className="d-grid gap-2 pb-4">
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg fs-6 shadow-sm w-100"
+            disabled={isLoading}
+          >
+            {isLoading ? "Sending..." : "Send Verification Code"}
+          </button>
           <Link
             href="/"
             className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm"
           >
             Back to Role Selection
           </Link>
+          <p className="fs-7 text-secondary mt-2 mb-4 opacity-75">
+            Already have an account?{" "}
+            <Link
+              href="/student-login"
+              className="text-primary text-decoration-none"
+            >
+              Log In
+            </Link>
+          </p>
         </div>
       </form>
     </div>
