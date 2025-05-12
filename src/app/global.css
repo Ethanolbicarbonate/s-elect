@@ -76,7 +76,7 @@ a, button, .btn {
 }
 
 .thin-input {
-  padding: 0.55rem 0.6rem;
+  padding: 0.4rem 0.8rem;
   font-size: 1rem;
   border-width: 1px;
   border-radius: 8px;
@@ -89,7 +89,7 @@ a, button, .btn {
 
 .floating-label label {
   position: absolute;
-  top: 0.7rem;
+  top: 0.6rem;
   left: 0.4rem;
   font-size: .85rem;
   color: #6c757d;
