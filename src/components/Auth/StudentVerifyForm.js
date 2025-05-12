@@ -151,10 +151,10 @@ function VerifyForm() {
           />
           <label htmlFor="token">Verification Code (OTP)</label>
         </div>
-        <div className="row">
+        <div className="row" style={{ rowGap: '2rem' }}>
           <div
             className="col-md-6 floating-label"
-            style={{ marginBottom: "2rem" }}
+            style={{ marginBottom: "0rem" }}
           >
             <input
               type="password"
