@@ -76,10 +76,10 @@ a, button, .btn {
 }
 
 .thin-input {
-  padding: 0.6rem 0.4rem 0.3rem 0.4rem;
+  padding: 0.8rem 0.4rem 0.5rem 0.4rem;
   font-size: 0.75rem;
-  border-width: 0.5px;
-  border-radius: 2px;
+  border-width: 1px;
+  border-radius: 6px;
   height: auto;
 }
 
@@ -95,7 +95,7 @@ a, button, .btn {
   color: #6c757d;
   pointer-events: none;
   transition: all 0.2s ease;
-  padding: 0 0.2rem;
+  padding: 0 0.4rem;
 }
 
 .thin-input:focus + label,
