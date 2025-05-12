@@ -98,7 +98,7 @@ export async function sendVerificationEmail(to, token) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Verify Your sELECT Account</title>
       </head>
-      <body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f5f5f5;">
+      <body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color:rgba(255, 255, 255, 0);">
         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 20px; overflow: hidden;  border: 1px solid #dddddd">
           <!-- Header -->
           <tr>
@@ -235,7 +235,7 @@ export async function sendPasswordResetEmail(to, token, userType = "User") {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Reset Your sELECT Password</title>
       </head>
-      <body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f5f5f5;">
+      <body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color:rgba(255, 255, 255, 0);">
         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 20px; overflow: hidden;  border: 1px solid #dddddd">
           <!-- Header -->
           <tr>
