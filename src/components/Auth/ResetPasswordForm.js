@@ -131,7 +131,7 @@ function ActualResetPasswordForm() {
           <label htmlFor="otp_reset">One-Time Password (OTP)</label>
         </div>
 
-        <div className="row" style={{ rowGap: '2rem' }}>
+        <div className="row" style={{ rowGap: "2rem" }}>
           <div
             className="col-md-6 floating-label"
             style={{ marginBottom: "0rem" }}
