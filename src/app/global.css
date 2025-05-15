@@ -150,3 +150,26 @@ a, button, .btn {
         max-width: 100% !important;
     }
 }
+
+.bg-success-soft {
+  background-color: rgba(25, 135, 84, 0.1) !important; /* Added !important for specificity if needed */
+}
+.bg-danger-soft {
+  background-color: rgba(220, 53, 69, 0.1) !important; /* Added !important for specificity if needed */
+}
+.badge.rounded-circle.p-1 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; /* Adjust as needed */
+  height: 20px; /* Adjust as needed */
+  padding: 0.25em !important; /* Adjust padding */
+}
+.badge.rounded-circle.p-1 i {
+  font-size: 0.7rem; /* Adjust icon size within the badge */
+  line-height: 1; /* Helps with vertical alignment of icon */
+}
+.card-title { /* Be careful with overly generic selectors like this in global.css */
+  /* Consider making it more specific if it clashes, e.g., .dashboard-widget .card-title */
+  font-size: 0.9rem;
+}

@@ -2,7 +2,7 @@
 import nodemailer from "nodemailer";
 
 // --- Ethereal Configuration ---
-let etherealTransporterInstance; // Renamed to avoid confusion
+let etherealTransporterInstance;
 async function getEtherealTransporter() {
   if (!etherealTransporterInstance) {
     try {
