@@ -173,3 +173,7 @@ a, button, .btn {
   /* Consider making it more specific if it clashes, e.g., .dashboard-widget .card-title */
   font-size: 0.9rem;
 }
+
+.bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
+.bg-info-soft { background-color: rgba(13, 202, 240, 0.1); }
+.card-header { border-bottom: 0; }
