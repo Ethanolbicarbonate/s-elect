@@ -37,7 +37,7 @@ export default function CreateElectionForm({
 
   return (
     <div className="card h-100 border-1 rounded-4">
-      <div className="card-header rounded-top-4 bg-primary-soft">
+      <div className="card-header rounded-top-4 bg-light">
         <h5 className="mb-0 text-secondary fw-normal">
           Create New Election Period
         </h5>

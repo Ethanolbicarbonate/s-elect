@@ -12,7 +12,7 @@ export default function ElectionListTable({
   if (isLoading && elections.length === 0) {
     return (
       <div className="card h-100 border-1 rounded-4 mt-4">
-        <div className="card-header bg-light">
+        <div className="card-header rounded-top-4 bg-light">
           <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
         </div>
         <div className="card-body text-center py-4">
@@ -31,7 +31,7 @@ export default function ElectionListTable({
   if (!isLoading && elections.length === 0) {
     return (
       <div className="card h-100 border-1 rounded-4 mt-4">
-        <div className="card-header bg-light">
+        <div className="card-header rounded-top-4 bg-light">
           <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
         </div>
         <div className="card-body text-center text-muted py-4">
