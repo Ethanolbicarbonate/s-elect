@@ -142,7 +142,7 @@ export default function CandidatesPage() {
                   </h5>
                   {party.slogan && (
                     <p className="mb-0 text-muted small fst-italic">
-                      "{party.slogan}"
+                      &quot;{party.slogan}&quot;
                     </p>
                   )}
                 </div>
@@ -216,7 +216,7 @@ export default function CandidatesPage() {
                   </h5>
                   {party.slogan && (
                     <p className="mb-0 text-muted small fst-italic">
-                      "{party.slogan}"
+                      &quot;{party.slogan}&quot;
                     </p>
                   )}
                 </div>
