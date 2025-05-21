@@ -1,8 +1,7 @@
-// src/app/(student)/party-lists/page.js
 import Image from "next/image";
 import Link from "next/link";
 
-export default function PartyListsPage() {
+export default function CandidatesPage() {
   // Sample Data (replace with dynamic data later)
   const uscPartyLists = [
     {

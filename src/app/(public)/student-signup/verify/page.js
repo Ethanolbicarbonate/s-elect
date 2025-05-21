@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import StudentVerifyForm from '@/components/Auth/StudentVerifyForm';
 
-export default function Home() {
+export default function AccountVerifyPage() {
   return (
     <main
       className="d-flex h-100 justify-content-center align-items-center"

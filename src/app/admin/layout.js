@@ -1,64 +1,122 @@
 // src/app/admin/layout.js
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path as necessary
-import { redirect } from 'next/navigation';
-import Link from "next/link"; // For potential logout link
+'use client'; // This layout needs to be a Client Component for sidebar state
 
-// Placeholder for a real admin navigation panel
-const AdminNavigationPanel = ({ adminUser }) => {
-  return (
-    <nav style={{ backgroundColor: 'darkseagreen', padding: '1em', marginBottom: '1em' }}>
-      <h4>Admin Navigation</h4>
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
-        <li><Link href="/admin/dashboard" style={{ color: 'white' }}>Dashboard</Link></li>
-        <li><Link href="/admin/candidates" style={{ color: 'white' }}>Candidates</Link></li>
-        <li><Link href="/admin/election-settings" style={{ color: 'white' }}>Election Settings</Link></li>
-        <li><Link href="/admin/results" style={{ color: 'white' }}>Results</Link></li>
-        <li><Link href="/admin/audit-log" style={{ color: 'white' }}>Audit Log</Link></li>
-        {/* Add more links based on admin role if needed */}
-        <li>
-          <form action="/api/auth/signout" method="POST">
-            <button type="submit" style={{ background: 'none', border: 'none', color: 'white', padding: 0, textDecoration: 'underline', cursor: 'pointer' }}>
-              Sign Out
-            </button>
-          </form>
-        </li>
-      </ul>
-    </nav>
-  );
-};
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { redirect, usePathname } from 'next/navigation';
+import AdminNavigationPanel from '@/components/Layout/AdminNavigationPanel'; // We'll create this
+import Link from 'next/link';
+import Image from 'next/image';
 
-
-export default async function AdminLayout({ children }) {
-  const session = await getServerSession(authOptions);
+export default function AdminLayout({ children }) {
+  const { data: session, status } = useSession();
+  const pathname = usePathname();
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const allowedAdminRoles = ['SUPER_ADMIN', 'AUDITOR', 'MODERATOR'];
 
-  if (!session || !session.user || !allowedAdminRoles.includes(session.user.role)) {
-    console.log("AdminLayout: No session or not an authorized admin, redirecting to /admin-login");
-    redirect('/admin-login');
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (!session || !session.user || !allowedAdminRoles.includes(session.user.role)) {
+      console.log("AdminLayout: No session or not an authorized admin, redirecting to /admin-login");
+      redirect('/admin-login');
+    }
+  }, [session, status]);
+
+  useEffect(() => {
+    setShowSidebar(false);
+  }, [pathname]);
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+
+  if (status === 'loading' || !session) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
   }
 
-  console.log("AdminLayout: Rendering for admin:", session.user.email, "Role:", session.user.role);
+  // Determine Admin Name (can be improved if admins have first/last names)
+  const adminName = session.user.email; // Or session.user.name if you add it to Admin model & session
+  const adminRole = session.user.role;
+  const adminCollege = session.user.college; // Will be null for SUPER_ADMIN, AUDITOR
+
+  // Determine current page name for breadcrumb
+  let currentPageName = "Admin Dashboard";
+  if (pathname.startsWith('/admin/dashboard')) currentPageName = "Admin Dashboard";
+  else if (pathname.startsWith('/admin/election-settings')) currentPageName = "Election Settings";
+  else if (pathname.startsWith('/admin/candidates')) currentPageName = "Candidate Management";
+  else if (pathname.startsWith('/admin/audit-log')) currentPageName = "Audit Log";
+  else if (pathname.startsWith('/admin/feedback')) currentPageName = "User Feedback";
+  else if (pathname.startsWith('/admin/sessions')) currentPageName = "Active Sessions";
+  else if (pathname.startsWith('/admin/results')) currentPageName = "Election Results";
+
 
   return (
-    <div className="admin-layout-wrapper" style={{ border: '2px solid darkgreen', padding: '10px', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header style={{ backgroundColor: 'lightgreen', padding: '1em', textAlign: 'center' }}>
-        <h1>sELECT - Admin Portal</h1>
-        <p>User: {session.user.email}</p>
-        <p>Role: {session.user.role}
-          {session.user.role === 'MODERATOR' && session.user.college ? ` (${session.user.college})` : ''}
-        </p>
-      </header>
-      <div style={{ display: 'flex', flexGrow: 1 }}>
-        <AdminNavigationPanel adminUser={session.user} />
-        <main style={{ padding: '1em', border: '1px solid lightgreen', marginTop: '1em', flexGrow: 1, backgroundColor: '#f9f9f9' }}>
+    <div className="d-flex vh-100">
+      <AdminNavigationPanel showSidebar={showSidebar} toggleSidebar={toggleSidebar} userRole={adminRole} />
+
+      <div
+        className="flex-grow-1 d-flex flex-column transition-margin-lg"
+        style={{ marginLeft: '0px' }} // Default no margin, style below applies for lg
+      >
+        {/* Top Bar */}
+        <header
+          className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top"
+          style={{ height: '60px', borderBottom: '1px solid #dee2e6', zIndex: '100' }}
+        >
+          <div className="d-flex align-items-center">
+            <button
+              className="btn btn-icon d-lg-none me-2"
+              onClick={toggleSidebar}
+              aria-label="Toggle navigation"
+            >
+              <i className="bi bi-list fs-4"></i>
+            </button>
+            <nav aria-label="breadcrumb" className="d-none d-md-block">
+              <ol className="breadcrumb mb-0 d-flex align-items-center">
+                <li className="breadcrumb-item">
+                  <Link href="/admin/dashboard" className="text-decoration-none">
+                    <i className="bi bi-house-door-fill text-secondary"></i>
+                  </Link>
+                </li>
+                <li className="breadcrumb-item active text-dark text-secondary opacity-75" aria-current="page">
+                  {currentPageName}
+                </li>
+              </ol>
+            </nav>
+            <div className="d-md-none text-dark fw-normal">
+                {currentPageName}
+            </div>
+          </div>
+
+          <div className="d-flex align-items-center">
+            <span className={`badge p-2 ${adminRole === 'SUPER_ADMIN' ? 'bg-danger text-white fw-medium fs-6' : (adminRole === 'MODERATOR' ? 'bg-info text-dark' : 'bg-secondary text-white')}`}>
+              {adminRole} {adminCollege ? `(${adminCollege})` : ''}
+            </span>
+          </div>
+        </header>
+
+        {/* Main Content Area */}
+        <main
+          className="flex-grow-1 p-4"
+          style={{backgroundColor: "rgba(173, 173, 173, 0.13)", backgroundImage: "url(/assets/background-grid.svg)", overflowY: 'auto' }}
+        >
           {children}
         </main>
       </div>
-      <footer style={{ backgroundColor: 'lightgreen', padding: '1em', marginTop: 'auto', textAlign: 'center' }}>
-        <p>Simplified Admin Layout Footer | © sELECT {new Date().getFullYear()}</p>
-      </footer>
+      <style jsx global>{`
+        @media (min-width: 992px) { /* lg breakpoint */
+          .transition-margin-lg {
+            margin-left: 260px !important; /* Admin Sidebar width */
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,12 +1,10 @@
-// src/app/(student)/layout.js
-'use client'; // This layout now needs to be a Client Component to manage state
+'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react'; // Use client-side session hook
+import { useSession } from 'next-auth/react'; 
 import { redirect, usePathname } from 'next/navigation';
 import NavigationPanel from "@/components/Layout/NavigationPanel";
 import Link from "next/link";
-import Image from 'next/image'; // For logo in top bar
 
 export default function StudentLayout({ children }) {
   const { data: session, status } = useSession();
@@ -52,14 +50,13 @@ export default function StudentLayout({ children }) {
       userName = session.user.firstName; // Fallback to only firstName if lastName is missing
     }
   }
-  // The .trim() is generally not needed here if you construct the string carefully.
 
   const userCollege = session.user.college || 'N/A';
 
   // Determine current page name for breadcrumb (simple example)
   let currentPageName = "Dashboard";
   if (pathname.startsWith('/dashboard')) currentPageName = "Dashboard";
-  else if (pathname.startsWith('/party-lists')) currentPageName = "Party Lists";
+  else if (pathname.startsWith('/candidates')) currentPageName = "Candidates";
   else if (pathname.startsWith('/vote')) currentPageName = "Vote";
   else if (pathname.startsWith('/about-help')) currentPageName = "About/Help";
   else if (pathname.startsWith('/settings')) currentPageName = "Settings";
@@ -72,16 +69,14 @@ export default function StudentLayout({ children }) {
       <div
         className="flex-grow-1 d-flex flex-column transition-margin-lg"
         style={{
-          // marginLeft on large screens, paddingLeft on small screens when sidebar is open
-          // This styling might need adjustment based on how you want the push/overlay effect
-          paddingLeft: showSidebar ? '0' : '0', // Content doesn't shift on mobile, sidebar overlays
-          marginLeft: '0px', // Default: no margin for mobile
+          paddingLeft: showSidebar ? '0' : '0', 
+          marginLeft: '0px', 
         }}
       >
         {/* Top Bar */}
         <header
-          className="d-flex justify-content-between align-items-center p-3 shadow-sm bg-white sticky-top"
-          style={{ height: '60px', borderBottom: '1px solid #dee2e6', zIndex: 101 }} // zIndex higher than sidebar overlay
+          className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top"
+          style={{ height: '60px', borderBottom: '1px solid #dee2e6', zIndex: '100'}} 
         >
           <div className="d-flex align-items-center">
             {/* Hamburger Menu for Mobile */}
@@ -114,14 +109,14 @@ export default function StudentLayout({ children }) {
 
           <div className="d-flex align-items-center">
             <span className="me-2 text-dark d-none d-sm-inline">{userName}</span> {/* Hide username on xs screens if too crowded */}
-            <span className="badge bg-warning text-dark p-2">{userCollege}</span>
+            <span className="badge bg-warning text-dark p-2 fs-6 fw-medium">{userCollege}</span>
           </div>
         </header>
 
         {/* Main Content Area */}
         <main
-          className="flex-grow-1 p-4 bg-light"
-          style={{ backgroundColor: '#f8f9fa', overflowY: 'auto' }}
+          className="flex-grow-1 p-4"
+          style={{backgroundColor: "rgba(173, 173, 173, 0.13)", backgroundImage: "url(/assets/background-grid.svg)", overflowY: 'auto' }}
         >
           {children}
         </main>
@@ -129,7 +124,7 @@ export default function StudentLayout({ children }) {
       <style jsx global>{`
         @media (min-width: 992px) { /* lg breakpoint */
           .transition-margin-lg {
-            margin-left: 280px !important; /* Sidebar width */
+            margin-left: 260px !important; /* Sidebar width */
             padding-left: 0 !important;
           }
         }

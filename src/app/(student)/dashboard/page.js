@@ -1,241 +1,199 @@
-// src/app/(student)/dashboard/page.js
-import Link from "next/link";
+import ElectionStatusWidget from "@/components/Dashboard/ElectionStatusWidget";
+import VoterStatusWidget from "@/components/Dashboard/VoterStatusWidget";
+import ElectionCalendarWidget from "@/components/Dashboard/ElectionCalendarWidget";
+import VoterTurnoutWidget from "@/components/Dashboard/VoterTurnoutWidget";
+import ResultsWidget from "@/components/Dashboard/ResultsWidget";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { College } from "@prisma/client"; // Import College enum client-side if needed for logic
 
-export default function DashboardPage() {
-  // --- Calendar Logic ---
-  const currentDate = new Date(2025, 4, 1); // May 2025 (Month is 0-indexed, so 4 is May)
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-  const monthName = currentDate.toLocaleString("default", { month: "long" });
-  const currentMonthYear = `${monthName} ${year}`;
+// --- Helper Functions to Process Election Data ---
 
-  const daysInMonth = new Date(year, month + 1, 0).getDate(); // Get total days in the current month
-  const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 for Sun, 1 for Mon, ..., 6 for Sat
+// Determines the effective end date for a student in a given election
+function getEffectiveEndDateForStudent(election, studentCollege) {
+  const mainEndDate = new Date(election.endDate);
 
-  // Adjust firstDayOfMonth to be 0 for Monday, 6 for Sunday, to match common calendar layouts
-  // If your week starts on Sunday, this adjustment is different or not needed.
-  // Assuming MON is the first day of the week in your display (['MON', 'TUE', ...])
-  const startDayOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // 0 (Mon) to 6 (Sun)
+  // Find if there's an extension for the student's college
+  const collegeExtension = election.extensions?.find(
+    (ext) => ext.college === studentCollege
+  );
 
-  const calendarDays = [];
-  // Add empty cells for days before the first day of the month
-  for (let i = 0; i < startDayOffset; i++) {
-    calendarDays.push({ type: "empty", key: `empty-${i}` });
+  // If an extension exists and its end date is after the main end date, use the extended date
+  if (
+    collegeExtension &&
+    new Date(collegeExtension.extendedEndDate) > mainEndDate
+  ) {
+    return new Date(collegeExtension.extendedEndDate);
   }
-  // Add actual days of the month
-  for (let day = 1; day <= daysInMonth; day++) {
-    calendarDays.push({ type: "day", day: day, key: `day-${day}` });
+
+  // Otherwise, use the main election end date
+  return mainEndDate;
+}
+
+// Calculates the effective status for a student in a given election based on effective end date
+function getEffectiveStatusForStudent(election, studentCollege) {
+  const now = new Date();
+  const mainStartDate = new Date(election.startDate);
+  // The effectiveEndDate calculation should remain as it considers extensions
+  const effectiveEndDate = getEffectiveEndDateForStudent(
+    election,
+    studentCollege
+  );
+
+  // **PRIORITIZE EXPLICIT FINAL STATUSES**
+  if (election.status === "ENDED" || election.status === "ARCHIVED") {
+    return election.status; // If admin explicitly ended or archived it, that's the status.
   }
-  // --- End Calendar Logic ---
+  if (election.status === "PAUSED") {
+    return "PAUSED";
+  }
+
+  // If status is UPCOMING or ONGOING (or not yet explicitly ended/archived by an admin), calculate dynamically
+  if (now >= mainStartDate && now <= effectiveEndDate) {
+    return "ONGOING";
+  } else if (now < mainStartDate) {
+    return "UPCOMING";
+  } else {
+    // now > effectiveEndDate (and not manually set to ENDED/ARCHIVED yet)
+    return "ENDED"; // Dynamically determined to be ended based on dates
+  }
+}
+// Finds the most relevant election for the student based on status and college
+function getRelevantElectionForStudent(allElections, studentCollege) {
+  const now = new Date();
+
+  // Helper to get a sortable effective status
+  const getSortableStatus = (e) => {
+    const status = getEffectiveStatusForStudent(e, studentCollege);
+    if (status === "ONGOING") return 1;
+    if (status === "UPCOMING") return 2;
+    if (status === "PAUSED") return 3;
+    if (status === "ENDED") return 4;
+    if (status === "ARCHIVED") return 5;
+    return 6; // Default for unknown
+  };
+
+  // Filter out ARCHIVED unless it's the only thing left
+  const activeOrUpcomingElections = allElections.filter(
+    (e) => e.status !== "ARCHIVED"
+  );
+
+  if (activeOrUpcomingElections.length > 0) {
+    // Sort by: 1. ONGOING, 2. UPCOMING, then by start date (most recent upcoming first)
+    // For ONGOING, might want to sort by end date (closest to ending first)
+    activeOrUpcomingElections.sort((a, b) => {
+      const statusA = getSortableStatus(a);
+      const statusB = getSortableStatus(b);
+      if (statusA !== statusB) return statusA - statusB; // Sort by status priority
+
+      // If same status, for ONGOING, sort by soonest effective end date
+      if (getEffectiveStatusForStudent(a, studentCollege) === "ONGOING") {
+        return (
+          getEffectiveEndDateForStudent(a, studentCollege).getTime() -
+          getEffectiveEndDateForStudent(b, studentCollege).getTime()
+        );
+      }
+      // For UPCOMING, sort by soonest start date
+      return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+    });
+    return activeOrUpcomingElections[0]; // Return the most relevant (ongoing or soonest upcoming)
+  } else if (allElections.length > 0) {
+    // If no active/upcoming, show the most recently ended/archived
+    allElections.sort(
+      (a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+    );
+    return allElections[0];
+  }
+  return null;
+}
+
+// --- Main Dashboard Page Component ---
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
+  const studentCollege = session?.user?.college;
+
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/admin/elections`, {
+    cache: "no-store",
+  });
+
+  let allElections = [];
+  if (res.ok) {
+    allElections = await res.json();
+  } else {
+    console.error(
+      "Failed to fetch elections for dashboard:",
+      res.status,
+      await res.text()
+    );
+  }
+
+  const relevantElectionForStatus = getRelevantElectionForStudent(
+    allElections,
+    studentCollege
+  );
+  // Filter elections that should appear on the calendar (not ARCHIVED, potentially not ENDED?)
+  // Let's keep ENDED elections on the calendar for historical view for now.
+  const electionEventsForCalendar = allElections
+    .filter((e) => e.status !== "ARCHIVED" && e.status !== "ENDED") // <<<< MODIFIED FILTER
+    .map((e) => ({
+      id: e.id,
+      name: e.name,
+      startDate: new Date(e.startDate),
+      // Pass the effective end date which considers extensions for the student
+      endDate: getEffectiveEndDateForStudent(e, studentCollege),
+      type: e.type, // This 'type' was from the old schema. Election model doesn't have it.
+      // You might want to remove 'type' from here or assign a default if needed by calendar dot color.
+      // For a single dot type, it's not needed.
+    }));
+
+  // Calculate the status message for the status widget
+  let electionStatus = "N/A";
+  let electionMessage = "No active or upcoming election.";
+  let hasVoted = false;
+
+  if (relevantElectionForStatus) {
+    electionStatus = getEffectiveStatusForStudent(
+      relevantElectionForStatus,
+      studentCollege
+    );
+    electionMessage = relevantElectionForStatus.name;
+    // TODO: Fetch actual hasVoted status
+  }
 
   return (
     <div>
-      {/* Row 1: Combined Status, Calendar, Live Tally */}
       <div className="row g-4 mb-4">
-        {/* Combined Election & Voter Status Container */}
-        <div className="col-md-6 col-lg-3 d-flex flex-column">
-          {" "}
-          {/* Added d-flex flex-column */}
-          {/* Election Status Widget */}
-          <div className="card shadow-sm border-0 mb-4 flex-grow-1">
-            {" "}
-            {/* Added flex-grow-1 */}
-            <div className="card-body d-flex flex-column">
-              {" "}
-              {/* Optional: make card-body also flex if content needs to stretch */}
-              <div className="d-flex justify-content-between align-items-center">
-                <h6 className="card-title text-secondary mb-0">
-                  Election Status
-                </h6>
-                <span className="badge bg-success-soft rounded-circle p-1">
-                  <i className="bi bi-check-circle-fill text-success"></i>
-                </span>
-              </div>
-              <hr className="border-1 border-secondary opacity-20"></hr>
-              <h3 className="text-success">Ongoing</h3>
-              <p className="card-text text-muted small  opacity-50 mt-4">
-                The election is currently being held.
-              </p>
-              {/* If you want content within card-body to stretch, add mt-auto to the last element or make inner elements flex-grow-1 */}
-            </div>
+        <div className="col-md-6 col-lg-4 d-flex flex-column">
+          <div className="mb-4 flex-grow-1">
+            <ElectionStatusWidget
+              status={electionStatus}
+              message={electionMessage}
+            />
           </div>
-          {/* Voter Status Widget */}
-          <div className="card shadow-sm border-0 flex-grow-1">
-            {" "}
-            {/* Added flex-grow-1 */}
-            <div className="card-body d-flex flex-column">
-              {" "}
-              {/* Optional: make card-body also flex */}
-              <div className="d-flex justify-content-between align-items-center">
-                <h6 className="card-title text-secondary mb-0">Voter Status</h6>
-                <span className="badge bg-danger-soft rounded-circle p-1">
-                  <i className="bi bi-exclamation-circle-fill text-danger"></i>
-                </span>
-              </div>
-              <hr className="border-1 border-secondary opacity-20"></hr>
-              <h3 className="text-secondary">Vote not submitted</h3>
-              <p className="card-text text-muted small opacity-50 mt-4">
-                You haven't submitted your vote yet.
-              </p>
-            </div>
-          </div>
-        </div>{" "}
-        {/* End of Combined Status Container */}
-        {/* Election Calendar Widget */}
-        <div className="col-md-6 col-lg-5">
-          <div className="card h-100 shadow-sm border-0">
-            <div className="card-body d-flex flex-column">
-              {" "}
-              {/* Added d-flex flex-column for better height management if needed */}
-              <div className="d-flex justify-content-between align-items-center m-0 p-0">
-                <h6 className="card-title text-secondary mb-0">
-                  Election Calendar
-                </h6>
-                <div className="mb-0">
-                  <button
-                    className="btn btn-sm btn-outline-none mb-0 p-0 opacity-75"
-                    aria-label="Previous month"
-                  >
-                    <i className="bi bi-chevron-left"></i>
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline-none mb-0 p-0 opacity-75"
-                    aria-label="Next month"
-                  >
-                    <i className="bi bi-chevron-right"></i>
-                  </button>
-                </div>
-              </div>
-              <hr className="border-1 border-secondary opacity-20"></hr>
-              <h6 className="text-center mb-3 text-primary">
-                {currentMonthYear}
-              </h6>{" "}
-              {/* currentMonthYear = "May 2025" */}
-              {/* Weekday Headers */}
-              <div className="row g-0 text-center small text-muted mb-2">
-                {" "}
-                {/* g-0 to remove gutters between weekday cols */}
-                {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map(
-                  (day) => (
-                    <div className="col fw-bold" key={day}>
-                      {day}
-                    </div>
-                  )
-                )}
-              </div>
-              {/* Calendar Days Grid */}
-              <div
-                className="d-grid gap-1"
-                style={{ gridTemplateColumns: "repeat(7, 1fr)" }}
-              >
-                {" "}
-                {/* Using CSS Grid for days */}
-                {(() => {
-                  // For May 2025:
-                  // 1st May 2025 is a Thursday.
-                  // Monday is index 0, Tuesday 1, ..., Thursday 3, ..., Sunday 6
-                  const firstDayOfMonthIndex = 3; // Thursday (0=Mon, 1=Tue, 2=Wed, 3=Thu)
-                  const daysInMonth = 31; // Days in May
-
-                  const calendarCells = [];
-
-                  // 1. Add empty cells for days before the 1st of the month
-                  for (let i = 0; i < firstDayOfMonthIndex; i++) {
-                    calendarCells.push(
-                      <div className="p-1" key={`empty-${i}`}>
-                        <div
-                          className="btn btn-sm w-100 btn-outline-light text-muted"
-                          style={{ visibility: "hidden" }}
-                        >
-                          {" "}
-                        </div>{" "}
-                        {/* Invisible placeholder */}
-                      </div>
-                    );
-                  }
-
-                  // 2. Add cells for the actual days of the month
-                  for (let day = 1; day <= daysInMonth; day++) {
-                    calendarCells.push(
-                      <div className="p-1" key={`day-${day}`}>
-                        <button
-                          className={`btn btn-sm w-100 ${
-                            day === 2
-                              ? "btn-primary" // Example: Highlight day 2
-                              : day === 1
-                              ? "btn-outline-primary fw-bold" // Example: Highlight Mondays
-                              : "btn-light"
-                          }`}
-                          title={`May ${day}, 2025`}
-                        >
-                          {day}
-                        </button>
-                      </div>
-                    );
-                  }
-
-                  // 3. Optional: Add empty cells to fill the last week if needed
-                  // const totalCells = firstDayOfMonthIndex + daysInMonth;
-                  // const remainingCells = (7 - (totalCells % 7)) % 7; // Cells to fill the last row to 7
-                  // for (let i = 0; i < remainingCells; i++) {
-                  //   calendarCells.push(
-                  //     <div className="p-1" key={`empty-end-${i}`}>
-                  //       <div className="btn btn-sm w-100 btn-outline-light text-muted" style={{visibility: 'hidden'}}> </div>
-                  //     </div>
-                  //   );
-                  // }
-
-                  return calendarCells;
-                })()}
-              </div>
-            </div>
-          </div>
-        </div>{" "}
-        {/* End of Calendar col-lg-5 */}
-        {/* Live Tally Widget (Placeholder) */}
-        <div className="col-lg-4">
-          {/* ... (Live Tally widget remains the same) ... */}
-          <div className="card h-100 shadow-sm border-0">
-            <div className="card-body">
-              <h6 className="card-title text-secondary mb-0">Live Tally</h6>
-              <hr className="border-1 border-secondary opacity-20"></hr>
-              <div className="d-flex align-items-center justify-content-center h-100 text-muted">
-                <p>Live tally data will appear here.</p>
-              </div>
-            </div>
-          </div>
-        </div>{" "}
-        {/* End of Live Tally */}
-      </div>{" "}
-      {/* End of Row 1 */}
-      {/* Row 2: Results (Full Width) */}
-      <div className="row g-4 h-100">
-        {/* ... (Results widget remains the same) ... */}
-        <div className="col-12 h-100">
-          {" "}
-          {/* This column will span the full width */}
-          <div className="card h-100 shadow-sm border-0">
-            {" "}
-            {/* You might want to control height or min-height */}
-            <div className="card-body vh-100">
-              <h6 className="card-title text-secondary mb-0">Results</h6>
-              <hr className="border-1 border-secondary opacity-20"></hr>
-              <div
-                className="d-flex align-items-center justify-content-center h-100 text-muted"
-                style={{ minHeight: "150px" }}
-              >
-                {" "}
-                {/* Example min-height */}
-                <p>
-                  Election results will be displayed here after the voting
-                  period.
-                </p>
-              </div>
-            </div>
+          <div className="flex-grow-1">
+            <VoterStatusWidget
+              hasVoted={hasVoted}
+              electionOngoing={electionStatus === "ONGOING"}
+            />
           </div>
         </div>
-      </div>{" "}
-      {/* End of Row 2 */}
+
+        <div className="col-md-6 col-lg-4">
+          <ElectionCalendarWidget
+            electionEvents={electionEventsForCalendar} // Pass array of {date, type, name}
+          />
+        </div>
+
+        <div className="col-lg-4">
+          <VoterTurnoutWidget />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-12">
+          <ResultsWidget election={relevantElectionForStatus} />
+        </div>
+      </div>
     </div>
   );
 }

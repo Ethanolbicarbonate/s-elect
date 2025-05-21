@@ -1,4 +1,4 @@
-// src/components/Layout/NavigationPanel.js
+// src/components/Layout/AdminNavigationPanel.js
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -8,7 +8,11 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export default function NavigationPanel({ showSidebar, toggleSidebar }) {
+export default function AdminNavigationPanel({
+  showSidebar,
+  toggleSidebar,
+  userRole,
+}) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [shouldRenderOverlay, setShouldRenderOverlay] = useState(false);
 
@@ -22,7 +26,6 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
     }
   }, [showSidebar]);
 
-  // Added props
   const pathname = usePathname();
   const router = useRouter();
 
@@ -31,17 +34,100 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
     router.push("/");
   };
 
-  const navItems = [
-    { href: "/dashboard", label: "Dashboard", icon: "bi-grid-fill" },
-    { href: "/candidates", label: "Candidates", icon: "bi-people-fill" },
-    { href: "/vote", label: "Vote", icon: "bi bi-check-square-fill" },
-    { href: "/about-help", label: "About/Help", icon: "bi-info-circle-fill" },
-    { href: "/settings", label: "Settings", icon: "bi-gear-fill" },
+  const baseNavItems = [
+    {
+      href: "/admin/dashboard",
+      label: "Dashboard",
+      icon: "bi-speedometer2",
+      roles: ["SUPER_ADMIN", "MODERATOR", "AUDITOR"],
+    },
   ];
+
+  const superAdminItems = [
+    {
+      href: "/admin/election-settings",
+      label: "Election Settings",
+      icon: "bi-calendar-event-fill",
+      roles: ["SUPER_ADMIN"],
+    },
+    {
+      href: "/admin/candidates",
+      label: "Manage Candidates",
+      icon: "bi-people-fill",
+      roles: ["SUPER_ADMIN"],
+    }, // Super Admin sees all
+    {
+      href: "/admin/results",
+      label: "View Results",
+      icon: "bi-bar-chart-line-fill",
+      roles: ["SUPER_ADMIN"],
+    },
+    {
+      href: "/admin/audit-log",
+      label: "Audit Log",
+      icon: "bi-journal-text",
+      roles: ["SUPER_ADMIN"],
+    },
+    {
+      href: "/admin/feedback",
+      label: "User Feedback",
+      icon: "bi-chat-left-dots-fill",
+      roles: ["SUPER_ADMIN"],
+    },
+    {
+      href: "/admin/sessions",
+      label: "Active Sessions",
+      icon: "bi-person-bounding-box",
+      roles: ["SUPER_ADMIN"],
+    },
+  ];
+
+  const moderatorItems = [
+    {
+      href: "/admin/candidates",
+      label: "Manage Candidates",
+      icon: "bi-people-fill",
+      roles: ["MODERATOR"],
+    },
+    // Moderators might also need to see results for their college, to be implemented on results page
+    {
+      href: "/admin/results",
+      label: "View Results",
+      icon: "bi-bar-chart-line-fill",
+      roles: ["MODERATOR"],
+    },
+  ];
+
+  const auditorItems = [
+    {
+      href: "/admin/audit-log",
+      label: "Audit Log",
+      icon: "bi-journal-text",
+      roles: ["AUDITOR"],
+    },
+    {
+      href: "/admin/results",
+      label: "View Results",
+      icon: "bi-bar-chart-line-fill",
+      roles: ["AUDITOR"],
+    },
+  ];
+
+  let navItems = [...baseNavItems];
+  if (userRole === "SUPER_ADMIN") {
+    navItems = [...navItems, ...superAdminItems];
+  } else if (userRole === "MODERATOR") {
+    navItems = [...navItems, ...moderatorItems];
+  } else if (userRole === "AUDITOR") {
+    navItems = [...navItems, ...auditorItems];
+  }
+  // Remove duplicates by href if any (e.g. if base and role-specific items overlap)
+  navItems = navItems.filter(
+    (item, index, self) => index === self.findIndex((t) => t.href === item.href)
+  );
 
   return (
     <>
-      {/* Overlay for mobile when sidebar is open (optional, but good UX) */}
       {shouldRenderOverlay && (
         <div
           className={`mobile-overlay ${isOverlayVisible ? "visible" : ""}`}
@@ -78,9 +164,8 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
           </button>
         </div>
 
-        {/* Desktop Logo (hidden on mobile if close button is preferred) */}
         <Link
-          href="/dashboard"
+          href="/admin/dashboard"
           className="d-none d-lg-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
         >
           <div className="w-100">
@@ -93,6 +178,7 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
             />
           </div>
         </Link>
+
         <ul className="nav nav-pills flex-column mb-auto gap-1">
           {navItems.map((item) => (
             <li className="nav-item" key={item.label}>
@@ -100,8 +186,8 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
                 href={item.href}
                 className={`nav-link d-flex align-items-center ${
                   pathname === item.href ||
-                  (item.href === "/dashboard" &&
-                    pathname.startsWith("/dashboard"))
+                  (item.href === "/admin/dashboard" &&
+                    pathname.startsWith("/admin/dashboard"))
                     ? "active text-white"
                     : "text-secondary"
                 }`}
@@ -121,6 +207,7 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
             </li>
           ))}
         </ul>
+
         <div className="px-3 py-1">
           <button
             onClick={handleLogout}
@@ -132,8 +219,6 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
           </button>
         </div>
       </nav>
-
-      {/* CSS for transitions and mobile display */}
       <style jsx global>{`
         .transition-transform {
           transition: transform 0.3s ease-in-out;

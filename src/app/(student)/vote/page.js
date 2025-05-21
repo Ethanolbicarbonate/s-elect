@@ -1,5 +1,4 @@
-// src/app/(student)/candidates/page.js
-export default function CandidatesPage() {
+export default function VotePage() {
   return (
     <div>
       <h1 className="mb-4">Vote</h1>

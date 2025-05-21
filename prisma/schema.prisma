@@ -36,6 +36,40 @@ enum AdminRole {
   MODERATOR
 }
 
+enum ElectionStatus {
+  UPCOMING
+  ONGOING
+  PAUSED  // Admin can pause the entire event
+  ENDED   // General end, or explicitly ended by admin
+  ARCHIVED
+}
+
+model Election {
+  id          String    @id @default(cuid())
+  name        String    // e.g., "University Elections Spring 2025"
+  description String?
+  startDate   DateTime
+  endDate     DateTime  // General end date for all colleges not specifically extended
+  status      ElectionStatus @default(UPCOMING)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  extensions  ElectionExtension[] // Relation to specific college extensions
+}
+
+model ElectionExtension {
+  id              String   @id @default(cuid())
+  electionId      String
+  election        Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  college         College  // The specific college this extension applies to
+  extendedEndDate DateTime // The specific extended end date for this college
+  reason          String?
+  createdAt       DateTime @default(now())
+
+  @@unique([electionId, college]) // Ensures one extension entry per college per election
+}
+
 model Student {
   id         String  @id @default(cuid())
   firstName  String
@@ -59,9 +93,6 @@ model Student {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  // Relation for next-auth adapter (optional but potentially useful later)
-  // accounts       Account[]
-  // sessions       Session[]
 }
 
 model Admin {
@@ -77,9 +108,6 @@ model Admin {
   
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  // Relation for next-auth adapter (optional but potentially useful later)
-  // accounts  Account[]
-  // sessions  Session[]
 
   // Ensure a moderator always has a college assigned
   @@index([role, college]) // Index for faster lookups maybe
@@ -124,17 +152,6 @@ model Session {
 
   @@map("sessions")
 }
-
-// If using email provider or a unified User model:
-// model User {
-//   id            String    @id @default(cuid())
-//   name          String?
-//   email         String?   @unique
-//   emailVerified DateTime?
-//   image         String?
-//   accounts      Account[]
-//   sessions      Session[]
-// }
 
 model VerificationToken {
   identifier String

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import StudentSignupForm from '@/components/Auth/StudentSignupForm';
 
-export default function Home() {
+export default function StudentSignupPage() {
   return (
     <main
       className="d-flex h-100 justify-content-center align-items-center"

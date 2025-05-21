@@ -119,12 +119,13 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }) { // The 'user' object here comes from the authorize function
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.college = user.college;
-        token.firstName = user.firstName;
+        token.firstName = user.firstName; // Correctly adding firstName
+        token.lastName = user.lastName; // ***** ADD THIS LINE if missing *****
       }
       return token;
     },
@@ -133,7 +134,8 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.college = token.college;
-        session.user.firstName = token.firstName;
+        session.user.firstName = token.firstName; // Correctly getting firstName
+        session.user.lastName = token.lastName; // ***** ADD THIS LINE if missing *****
       }
       return session;
     },

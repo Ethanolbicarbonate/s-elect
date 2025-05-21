@@ -177,3 +177,53 @@ a, button, .btn {
 .bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
 .bg-info-soft { background-color: rgba(13, 202, 240, 0.1); }
 .card-header { border-bottom: 0; }
+
+.inner-shadow {
+  box-shadow: inset 0rem .0rem .25rem rgba(0, 0, 0, 0.15);
+}
+
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.129);
+  backdrop-filter: blur(0.1rem);
+  -webkit-backdrop-filter: blur(0.1rem);
+  z-index: 99;
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.mobile-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-backdrop-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040; /* Should be below the modal (Bootstrap modal z-index is often 1050+) but above other content */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2); /* Semi-transparent black background */
+
+  /* Apply the blur */
+  -webkit-backdrop-filter: blur(3px); /* For Safari */
+  backdrop-filter: blur(3px);       /* Standard */
+
+  /* Ensure it's part of Bootstrap's fade transition if you want it to fade in/out */
+  /* The .fade and .show classes are typically handled by Bootstrap JS if modal is managed by it,
+     or you can manage opacity with React state if it's a fully custom modal visibility toggle.
+     Since we are manually adding .show, this should work with Bootstrap's default fade transition.
+  */
+}
+
+/* Ensure the modal itself is above the custom backdrop */
+.modal.fade.show.d-block {
+  z-index: 1050; /* Example: Make sure this is higher than .modal-backdrop-blur */
+}

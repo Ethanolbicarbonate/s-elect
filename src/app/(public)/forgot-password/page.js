@@ -1,8 +1,7 @@
-// src/app/(public)/forgot-password/page.js
 import Image from 'next/image';
-import ForgotPasswordForm from '@/components/Auth/ForgotPasswordForm'; // Corrected component name
+import ForgotPasswordForm from '@/components/Auth/ForgotPasswordForm';
 
-export default function Home() {
+export default function ForgotPasswordPage() {
   return (
     <main
       className="d-flex h-100 justify-content-center align-items-center"

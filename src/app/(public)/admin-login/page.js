@@ -1,7 +1,7 @@
 import Image from "next/image";
 import AdminLoginForm from "@/components/Auth/AdminLoginForm";
 
-export default function Home() {
+export default function AdminLoginPage() {
   return (
     <main
       className="d-flex h-100 justify-content-center align-items-center"

@@ -1,8 +1,7 @@
-// src/app/(public)/reset-password/page.js
 import Image from 'next/image';
 import ResetPasswordForm from '@/components/Auth/ResetPasswordForm';
 
-export default function Home() {
+export default function ResetPasswordPage() {
   return (
     <main
       className="d-flex h-100 justify-content-center align-items-center"

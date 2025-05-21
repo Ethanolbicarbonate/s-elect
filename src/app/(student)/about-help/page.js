@@ -1,4 +1,4 @@
-export default function CandidatesPage() {
+export default function AboutPage() {
   return (
     <div>
       <h1 className="mb-4">About/Help</h1>

@@ -1,3 +1,3 @@
-export default function results() {
+export default function ResultsPage() {
     return <div>Coming soon...</div>;
   }

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import RoleSelection from "@/components/Auth/RoleSelection";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <main
       className="d-flex h-100 justify-content-center align-items-center"
