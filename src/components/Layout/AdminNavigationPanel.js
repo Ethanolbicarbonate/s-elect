@@ -12,6 +12,7 @@ export default function AdminNavigationPanel({
   showSidebar,
   toggleSidebar,
   userRole,
+  userCollege,
 }) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [shouldRenderOverlay, setShouldRenderOverlay] = useState(false);
@@ -34,96 +35,122 @@ export default function AdminNavigationPanel({
     router.push("/");
   };
 
-  const baseNavItems = [
-    {
+  // --- REFINED NAVIGATION ITEMS LOGIC ---
+  const getNavItemsForRole = (role, college) => {
+    let items = [];
+
+    // All admin roles see Dashboard
+    items.push({
       href: "/admin/dashboard",
       label: "Dashboard",
-      icon: "bi-speedometer2",
-      roles: ["SUPER_ADMIN", "MODERATOR", "AUDITOR"],
-    },
-  ];
+      icon: "bi-grid-fill",
+    });
 
-  const superAdminItems = [
-    {
-      href: "/admin/election-settings",
-      label: "Election Settings",
-      icon: "bi-calendar-event-fill",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      href: "/admin/candidates",
-      label: "Manage Candidates",
-      icon: "bi-people-fill",
-      roles: ["SUPER_ADMIN"],
-    }, // Super Admin sees all
-    {
-      href: "/admin/results",
-      label: "View Results",
-      icon: "bi-bar-chart-line-fill",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      href: "/admin/audit-log",
-      label: "Audit Log",
-      icon: "bi-journal-text",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      href: "/admin/feedback",
-      label: "User Feedback",
-      icon: "bi-chat-left-dots-fill",
-      roles: ["SUPER_ADMIN"],
-    },
-    {
-      href: "/admin/sessions",
-      label: "Active Sessions",
-      icon: "bi-person-bounding-box",
-      roles: ["SUPER_ADMIN"],
-    },
-  ];
+    if (role === "SUPER_ADMIN") {
+      items.push(
+        {
+          href: "/admin/election-settings",
+          label: "Election Settings",
+          icon: "bi-calendar-event-fill",
+        },
+        {
+          href: "/admin/candidates?scope=usc", // Use 'scope' query param for USC Candidates
+          label: "Manage USC Candidates",
+          icon: "bi-file-person-fill",
+        },
+        {
+          href: "/admin/candidates?scope=csc", // Use 'scope' query param for CSC Candidates (Super Admin can see all CSCs)
+          label: "Manage All CSC Candidates", // More accurate label for SA
+          icon: "bi-file-person",
+        },
+        {
+          href: "/admin/results",
+          label: "View All Results",
+          icon: "bi-bar-chart-line-fill",
+        },
+        {
+          href: "/admin/audit-log",
+          label: "Audit Log",
+          icon: "bi bi-pencil-square",
+        },
+        {
+          href: "/admin/feedback",
+          label: "User Feedback",
+          icon: "bi-chat-left-dots-fill",
+        },
+        {
+          href: "/admin/sessions",
+          label: "Active Sessions",
+          icon: "bi-person-bounding-box",
+        }
+      );
+    } else if (role === "MODERATOR") {
+      if (college === null) {
+        // USC Moderator
+        items.push(
+          {
+            href: "/admin/candidates?scope=usc", // USC Moderator manages USC candidates
+            label: "Manage USC Candidates",
+            icon: "bi-people-fill",
+          },
+          // USC Mod might also see USC results only - you can add a separate link if needed
+          {
+            href: "/admin/results?scope=usc", // Example: filter results for USC only
+            label: "View USC Results",
+            icon: "bi-bar-chart-line-fill",
+          }
+        );
+      } else if (typeof college === "string") {
+        items.push(
+          {
+            href: `/admin/candidates?scope=csc&college=${college}`,
+            label: `Manage ${college} CSC Candidates`, // Now 'college' should be a string
+            icon: "bi-person-video3",
+          },
+          {
+            href: `/admin/results?scope=csc&college=${college}`,
+            label: `View ${college} Results`,
+            icon: "bi-bar-chart-line-fill",
+          }
+        );
+      } else {
+        // Fallback for MODERATOR if 'college' is unexpectedly undefined/invalid
+        console.warn(
+          "Moderator has an invalid or undefined college value:",
+          college
+        );
+        items.push({
+          href: "/admin/candidates", // Default to a general candidates page
+          label: "Manage Candidates (Scope Error)",
+          icon: "bi-question-circle",
+        });
+      }
+    } else if (role === "AUDITOR") {
+      items.push(
+        {
+          href: "/admin/audit-log",
+          label: "Audit Log",
+          icon: "bi bi-pencil-square",
+        },
+        {
+          href: "/admin/results", // Auditor sees all results (page enforces read-only)
+          label: "View All Results",
+          icon: "bi-bar-chart-line-fill",
+        }
+      );
+    }
+    return items;
+  };
 
-  const moderatorItems = [
-    {
-      href: "/admin/candidates",
-      label: "Manage Candidates",
-      icon: "bi-people-fill",
-      roles: ["MODERATOR"],
-    },
-    // Moderators might also need to see results for their college, to be implemented on results page
-    {
-      href: "/admin/results",
-      label: "View Results",
-      icon: "bi-bar-chart-line-fill",
-      roles: ["MODERATOR"],
-    },
-  ];
+  const navItems = getNavItemsForRole(userRole, userCollege);
+  // --- END REFINED NAVIGATION ITEMS LOGIC ---
 
-  const auditorItems = [
-    {
-      href: "/admin/audit-log",
-      label: "Audit Log",
-      icon: "bi-journal-text",
-      roles: ["AUDITOR"],
-    },
-    {
-      href: "/admin/results",
-      label: "View Results",
-      icon: "bi-bar-chart-line-fill",
-      roles: ["AUDITOR"],
-    },
-  ];
-
-  let navItems = [...baseNavItems];
-  if (userRole === "SUPER_ADMIN") {
-    navItems = [...navItems, ...superAdminItems];
-  } else if (userRole === "MODERATOR") {
-    navItems = [...navItems, ...moderatorItems];
-  } else if (userRole === "AUDITOR") {
-    navItems = [...navItems, ...auditorItems];
-  }
-  // Remove duplicates by href if any (e.g. if base and role-specific items overlap)
-  navItems = navItems.filter(
-    (item, index, self) => index === self.findIndex((t) => t.href === item.href)
+  // Remove duplicates just in case (e.g., if a role-specific item duplicates a base item)
+  // This filter is important if getNavItemsForRole might produce overlaps, though current logic aims to prevent.
+  const uniqueNavItems = navItems.filter(
+    (item, index, self) =>
+      index ===
+      self.findIndex((t) => t.href === item.href && t.label === item.label)
   );
 
   return (
@@ -180,32 +207,41 @@ export default function AdminNavigationPanel({
         </Link>
 
         <ul className="nav nav-pills flex-column mb-auto gap-1">
-          {navItems.map((item) => (
-            <li className="nav-item" key={item.label}>
-              <Link
-                href={item.href}
-                className={`nav-link d-flex align-items-center ${
-                  pathname === item.href ||
-                  (item.href === "/admin/dashboard" &&
-                    pathname.startsWith("/admin/dashboard"))
-                    ? "active text-white"
-                    : "text-secondary"
-                }`}
-                aria-current={pathname === item.href ? "page" : undefined}
-                onClick={() => {
-                  if (showSidebar && toggleSidebar) toggleSidebar();
-                }} // Close sidebar on nav item click on mobile
+          {uniqueNavItems.map(
+            (
+              item // Use uniqueNavItems here
+            ) => (
+              <li
+                className="nav-item fs-7 fw-medium"
+                key={item.href + item.label}
               >
-                <i className={`bi ${item.icon} me-2`}></i>
-                {item.label}
-                {item.badge && (
-                  <span className="badge bg-warning text-dark ms-auto">
-                    {item.badge}
-                  </span>
-                )}
-              </Link>
-            </li>
-          ))}
+                <Link
+                  href={item.href}
+                  className={`nav-link d-flex align-items-center rounded-3 ${
+                    // More robust active check: handles query params
+                    pathname.startsWith(item.href) &&
+                    (pathname.length === item.href.length ||
+                      pathname[item.href.length] === "?" ||
+                      pathname[item.href.length] === "/")
+                      ? "active bg-primary" // Use bg-primary for active link in dark sidebar
+                      : "text-secondary" // Inactive color
+                  }`}
+                  onClick={() => {
+                    if (showSidebar) toggleSidebar();
+                  }}
+                >
+                  <i className={`bi ${item.icon} me-2`}></i>
+                  {item.label}
+                  {item.badge && (
+                    <span className="badge bg-warning text-dark ms-auto">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+                <hr className="border-1 border-light my-2 mx-3 p-0 opacity-100" />
+              </li>
+            )
+          )}
         </ul>
 
         <div className="px-3 py-1">

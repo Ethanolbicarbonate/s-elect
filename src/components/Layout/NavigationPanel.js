@@ -98,7 +98,7 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
             <li className="nav-item" key={item.label}>
               <Link
                 href={item.href}
-                className={`nav-link d-flex align-items-center ${
+                className={`nav-link d-flex align-items-center rounded-3 ${
                   pathname === item.href ||
                   (item.href === "/dashboard" &&
                     pathname.startsWith("/dashboard"))
@@ -118,6 +118,7 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
                   </span>
                 )}
               </Link>
+              <hr className="border-1 border-light my-2 mx-3 p-0 opacity-100" />
             </li>
           ))}
         </ul>

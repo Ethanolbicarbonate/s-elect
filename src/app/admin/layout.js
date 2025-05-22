@@ -1,28 +1,30 @@
-// src/app/admin/layout.js
-'use client'; // This layout needs to be a Client Component for sidebar state
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect, usePathname } from 'next/navigation';
-import AdminNavigationPanel from '@/components/Layout/AdminNavigationPanel'; // We'll create this
+import AdminNavigationPanel from '@/components/Layout/AdminNavigationPanel';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function AdminLayout({ children }) {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession(); // Get session data
   const pathname = usePathname();
   const [showSidebar, setShowSidebar] = useState(false);
 
   const allowedAdminRoles = ['SUPER_ADMIN', 'AUDITOR', 'MODERATOR'];
 
   useEffect(() => {
-    if (status === 'loading') return;
+    if (status === 'loading') return; // Do nothing while session is loading
+
+    // If session is null/undefined or user is missing, or role is not allowed, redirect
     if (!session || !session.user || !allowedAdminRoles.includes(session.user.role)) {
       console.log("AdminLayout: No session or not an authorized admin, redirecting to /admin-login");
-      redirect('/admin-login');
+      redirect('/admin-login'); // Use Next.js redirect
     }
-  }, [session, status]);
+  }, [session, status]); // Depend on session and status
 
+  // Effect to close sidebar when route changes on mobile
   useEffect(() => {
     setShowSidebar(false);
   }, [pathname]);
@@ -31,7 +33,10 @@ export default function AdminLayout({ children }) {
     setShowSidebar(!showSidebar);
   };
 
-  if (status === 'loading' || !session) {
+  // --- IMPORTANT FIX HERE ---
+  // If session is loading OR if session data is not available (i.e., after logout, before redirect)
+  // return a loading state or a minimal UI to prevent errors from trying to access session.user.
+  if (status === 'loading' || !session || !session.user) { // Added !session || !session.user check
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-primary" role="status">
@@ -40,35 +45,52 @@ export default function AdminLayout({ children }) {
       </div>
     );
   }
+  // --- END IMPORTANT FIX ---
 
-  // Determine Admin Name (can be improved if admins have first/last names)
-  const adminName = session.user.email; // Or session.user.name if you add it to Admin model & session
+
+  // At this point, we can safely assume session and session.user exist and are authorized.
+  const adminName = session.user.firstName ? `${session.user.firstName} ${session.user.lastName || ''}`.trim() : session.user.email;
   const adminRole = session.user.role;
-  const adminCollege = session.user.college; // Will be null for SUPER_ADMIN, AUDITOR
+  const adminCollege = session.user.college;
+
 
   // Determine current page name for breadcrumb
   let currentPageName = "Admin Dashboard";
   if (pathname.startsWith('/admin/dashboard')) currentPageName = "Admin Dashboard";
   else if (pathname.startsWith('/admin/election-settings')) currentPageName = "Election Settings";
-  else if (pathname.startsWith('/admin/candidates')) currentPageName = "Candidate Management";
+  else if (pathname.startsWith('/admin/candidates')) {
+      const urlParams = new URLSearchParams(pathname.split('?')[1]);
+      const scope = urlParams.get('scope');
+      const collegeParam = urlParams.get('college');
+      if (scope === 'usc') currentPageName = "Manage USC Candidates";
+      else if (scope === 'csc' && collegeParam) currentPageName = `Manage ${collegeParam} CSC Candidates`;
+      else currentPageName = "Candidate Management"; // Generic if no scope or general page
+  }
   else if (pathname.startsWith('/admin/audit-log')) currentPageName = "Audit Log";
   else if (pathname.startsWith('/admin/feedback')) currentPageName = "User Feedback";
   else if (pathname.startsWith('/admin/sessions')) currentPageName = "Active Sessions";
   else if (pathname.startsWith('/admin/results')) currentPageName = "Election Results";
-
-
   return (
     <div className="d-flex vh-100">
-      <AdminNavigationPanel showSidebar={showSidebar} toggleSidebar={toggleSidebar} userRole={adminRole} />
+      <AdminNavigationPanel
+        showSidebar={showSidebar}
+        toggleSidebar={toggleSidebar}
+        userRole={adminRole}
+        userCollege={adminCollege}
+      />
 
       <div
         className="flex-grow-1 d-flex flex-column transition-margin-lg"
-        style={{ marginLeft: '0px' }} // Default no margin, style below applies for lg
+        style={{ marginLeft: "0px" }} // Default no margin, style below applies for lg
       >
         {/* Top Bar */}
         <header
           className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top"
-          style={{ height: '60px', borderBottom: '1px solid #dee2e6', zIndex: '100' }}
+          style={{
+            height: "60px",
+            borderBottom: "1px solid #dee2e6",
+            zIndex: "100",
+          }}
         >
           <div className="d-flex align-items-center">
             <button
@@ -81,23 +103,37 @@ export default function AdminLayout({ children }) {
             <nav aria-label="breadcrumb" className="d-none d-md-block">
               <ol className="breadcrumb mb-0 d-flex align-items-center">
                 <li className="breadcrumb-item">
-                  <Link href="/admin/dashboard" className="text-decoration-none">
+                  <Link
+                    href="/admin/dashboard"
+                    className="text-decoration-none"
+                  >
                     <i className="bi bi-house-door-fill text-secondary"></i>
                   </Link>
                 </li>
-                <li className="breadcrumb-item active text-dark text-secondary opacity-75" aria-current="page">
+                <li
+                  className="breadcrumb-item active text-dark text-secondary opacity-75"
+                  aria-current="page"
+                >
                   {currentPageName}
                 </li>
               </ol>
             </nav>
             <div className="d-md-none text-dark fw-normal">
-                {currentPageName}
+              {currentPageName}
             </div>
           </div>
 
           <div className="d-flex align-items-center">
-            <span className={`badge p-2 ${adminRole === 'SUPER_ADMIN' ? 'bg-danger text-white fw-medium fs-6' : (adminRole === 'MODERATOR' ? 'bg-info text-dark' : 'bg-secondary text-white')}`}>
-              {adminRole} {adminCollege ? `(${adminCollege})` : ''}
+            <span
+              className={`badge p-2 ${
+                adminRole === "SUPER_ADMIN"
+                  ? "bg-danger text-white fw-medium fs-6"
+                  : adminRole === "MODERATOR"
+                  ? "bg-info text-dark"
+                  : "bg-secondary text-white"
+              }`}
+            >
+              {adminRole} {adminCollege ? `(${adminCollege})` : ""}
             </span>
           </div>
         </header>
@@ -105,13 +141,18 @@ export default function AdminLayout({ children }) {
         {/* Main Content Area */}
         <main
           className="flex-grow-1 p-4"
-          style={{backgroundColor: "rgba(173, 173, 173, 0.13)", backgroundImage: "url(/assets/background-grid.svg)", overflowY: 'auto' }}
+          style={{
+            backgroundColor: "rgba(173, 173, 173, 0.13)",
+            backgroundImage: "url(/assets/background-grid.svg)",
+            overflowY: "auto",
+          }}
         >
           {children}
         </main>
       </div>
       <style jsx global>{`
-        @media (min-width: 992px) { /* lg breakpoint */
+        @media (min-width: 992px) {
+          /* lg breakpoint */
           .transition-margin-lg {
             margin-left: 260px !important; /* Admin Sidebar width */
           }

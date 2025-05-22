@@ -97,7 +97,7 @@ export default function ElectionListTable({
                   </td>
                   <td>
                     <span
-                      className={`fs-7 fw-normal badge bg-${
+                      className={`fs-7 fw-normal opacity-75 badge bg-${
                         election.status === "ONGOING"
                           ? "success"
                           : election.status === "UPCOMING"

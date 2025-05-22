@@ -54,21 +54,26 @@ async function main() {
   });
   console.log(`Created/updated auditor with email: ${auditor.email}`);
 
-  const passwordCictMod = await bcrypt.hash(
-    "cictmod.select2025",
+  const uscModeratorEmail = "usc.mod@s-elect.app".toLowerCase();
+  const passwordUscModerator = await bcrypt.hash(
+    "uscmod.select2025",
     roundsOfHashing
   );
-  const CictMod = await prisma.admin.upsert({
-    where: { email: "cict.mod@s-elect.app" },
-    update: {},
-    create: {
-      email: "cict.mod@s-elect.app",
-      password: passwordCictMod,
+  await prisma.admin.upsert({
+    where: { email: uscModeratorEmail },
+    update: {
+      password: passwordUscModerator,
       role: AdminRole.MODERATOR,
-      college: College.CICT,
+      college: null,
+    }, // Ensure college is null if it existed with a value
+    create: {
+      email: uscModeratorEmail,
+      password: passwordUscModerator,
+      role: AdminRole.MODERATOR,
+      college: null, // Explicitly set college to null for USC Moderator
     },
   });
-  console.log(`Created/updated cict moderator with email: ${CictMod.email}`);
+  console.log(`Created/updated USC moderator with email: ${uscModeratorEmail}`);
 
   // Seed Moderators (one per college)
   const colleges = Object.values(College);
