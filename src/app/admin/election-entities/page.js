@@ -119,7 +119,7 @@ export default function ElectionEntitiesPage() {
         }
       }
     }
-  }, [sessionStatus, session, searchParams]);
+  }, [sessionStatus, fetchElections]);
 
 
   // Fetch all entities for the selected election

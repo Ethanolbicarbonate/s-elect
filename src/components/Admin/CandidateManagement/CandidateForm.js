@@ -183,7 +183,7 @@ export default function CandidateForm({
                         <option key={pl.id} value={pl.id}>{pl.name} ({pl.type}{pl.college ? ` - ${pl.college}` : ''})</option>
                         ))}
                     </select>
-                    {compatiblePartylists.length === 0 && !formData.isIndependent && <div className="form-text text-warning fs-7 ms-1">No partylists compatible with the selected position's scope. Please add/check partylists or select a different position.</div>}
+                    {compatiblePartylists.length === 0 && !formData.isIndependent && <div className="form-text text-warning fs-7 ms-1">No partylists compatible with the selected position&apos;s scope. Please add/check partylists or select a different position.</div>}
                     </div>
                 )}
                 

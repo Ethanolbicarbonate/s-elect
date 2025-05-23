@@ -1,28 +1,34 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { redirect, usePathname } from 'next/navigation';
-import AdminNavigationPanel from '@/components/Layout/AdminNavigationPanel';
-import Link from 'next/link';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { redirect, usePathname } from "next/navigation";
+import AdminNavigationPanel from "@/components/Layout/AdminNavigationPanel";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function AdminLayout({ children }) {
   const { data: session, status } = useSession(); // Get session data
   const pathname = usePathname();
   const [showSidebar, setShowSidebar] = useState(false);
 
-  const allowedAdminRoles = ['SUPER_ADMIN', 'AUDITOR', 'MODERATOR'];
+  const allowedAdminRoles = ["SUPER_ADMIN", "AUDITOR", "MODERATOR"];
 
   useEffect(() => {
-    if (status === 'loading') return; // Do nothing while session is loading
+    if (status === "loading") return; // Do nothing while session is loading
 
     // If session is null/undefined or user is missing, or role is not allowed, redirect
-    if (!session || !session.user || !allowedAdminRoles.includes(session.user.role)) {
-      console.log("AdminLayout: No session or not an authorized admin, redirecting to /admin-login");
-      redirect('/admin-login'); // Use Next.js redirect
+    if (
+      !session ||
+      !session.user ||
+      !allowedAdminRoles.includes(session.user.role)
+    ) {
+      console.log(
+        "AdminLayout: No session or not an authorized admin, redirecting to /admin-login"
+      );
+      redirect("/admin-login"); // Use Next.js redirect
     }
-  }, [session, status]); // Depend on session and status
+  }, [session, status, allowedAdminRoles]); // Depend on session and status
 
   // Effect to close sidebar when route changes on mobile
   useEffect(() => {
@@ -33,7 +39,8 @@ export default function AdminLayout({ children }) {
     setShowSidebar(!showSidebar);
   };
 
-  if (status === 'loading' || !session || !session.user) { // Added !session || !session.user check
+  if (status === "loading" || !session || !session.user) {
+    // Added !session || !session.user check
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-primary" role="status">
@@ -44,29 +51,35 @@ export default function AdminLayout({ children }) {
   }
   // --- END IMPORTANT FIX ---
 
-
   // At this point, we can safely assume session and session.user exist and are authorized.
-  const adminName = session.user.firstName ? `${session.user.firstName} ${session.user.lastName || ''}`.trim() : session.user.email;
+  const adminName = session.user.firstName
+    ? `${session.user.firstName} ${session.user.lastName || ""}`.trim()
+    : session.user.email;
   const adminRole = session.user.role;
   const adminCollege = session.user.college;
 
-
   // Determine current page name for breadcrumb
   let currentPageName = "Admin Dashboard";
-  if (pathname.startsWith('/admin/dashboard')) currentPageName = "Admin Dashboard";
-  else if (pathname.startsWith('/admin/election-settings')) currentPageName = "Election Settings";
-  else if (pathname.startsWith('/admin/candidates')) {
-      const urlParams = new URLSearchParams(pathname.split('?')[1]);
-      const scope = urlParams.get('scope');
-      const collegeParam = urlParams.get('college');
-      if (scope === 'usc') currentPageName = "Manage USC Candidates";
-      else if (scope === 'csc' && collegeParam) currentPageName = `Manage ${collegeParam} CSC Candidates`;
-      else currentPageName = "Candidate Management"; // Generic if no scope or general page
-  }
-  else if (pathname.startsWith('/admin/audit-log')) currentPageName = "Audit Log";
-  else if (pathname.startsWith('/admin/feedback')) currentPageName = "User Feedback";
-  else if (pathname.startsWith('/admin/sessions')) currentPageName = "Active Sessions";
-  else if (pathname.startsWith('/admin/results')) currentPageName = "Election Results";
+  if (pathname.startsWith("/admin/dashboard"))
+    currentPageName = "Admin Dashboard";
+  else if (pathname.startsWith("/admin/election-settings"))
+    currentPageName = "Election Settings";
+  else if (pathname.startsWith("/admin/candidates")) {
+    const urlParams = new URLSearchParams(pathname.split("?")[1]);
+    const scope = urlParams.get("scope");
+    const collegeParam = urlParams.get("college");
+    if (scope === "usc") currentPageName = "Manage USC Candidates";
+    else if (scope === "csc" && collegeParam)
+      currentPageName = `Manage ${collegeParam} CSC Candidates`;
+    else currentPageName = "Candidate Management"; // Generic if no scope or general page
+  } else if (pathname.startsWith("/admin/audit-log"))
+    currentPageName = "Audit Log";
+  else if (pathname.startsWith("/admin/feedback"))
+    currentPageName = "User Feedback";
+  else if (pathname.startsWith("/admin/sessions"))
+    currentPageName = "Active Sessions";
+  else if (pathname.startsWith("/admin/results"))
+    currentPageName = "Election Results";
   return (
     <div className="d-flex vh-100">
       <AdminNavigationPanel
