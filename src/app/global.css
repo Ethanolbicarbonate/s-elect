@@ -221,3 +221,8 @@ a, button, .btn {
 .modal.fade.show.d-block {
   z-index: 1050; /* Example: Make sure this is higher than .modal-backdrop-blur */
 }
+
+.modal-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 200px); /* Adjust based on header/footer height */
+}

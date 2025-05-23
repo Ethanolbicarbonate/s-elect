@@ -48,15 +48,16 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
           onClick={toggleSidebar}
         />
       )}
-      {showSidebar && (
-        <div className="mobile-overlay" onClick={toggleSidebar}></div>
-      )}
 
       <nav
         className={`d-flex flex-column vh-100 p-3 position-fixed top-0 left-0 transition-transform bg-white gap-4 ${
-          showSidebar ? "transform-none" : "-translate-x-full" // Slide in/out
-        } d-lg-transform-none`} // Always visible on lg screens
-        style={{ width: "260px", zIndex: 1000 }}
+          showSidebar ? "transform-none" : "-translate-x-full"
+        } d-lg-transform-none`}
+        style={{
+          width: "260px",
+          zIndex: 1000,
+          boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+        }} // Added a subtle shadow
       >
         {/* Mobile Close Button (Inside Sidebar) */}
         <div className="d-flex justify-content-between align-items-center d-lg-none mb-3">

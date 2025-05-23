@@ -12,7 +12,7 @@ export default function AdminNavigationPanel({
   showSidebar,
   toggleSidebar,
   userRole,
-  userCollege,
+  userCollege, // This is the admin's assigned college, if they are a College Moderator
 }) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [shouldRenderOverlay, setShouldRenderOverlay] = useState(false);
@@ -20,10 +20,10 @@ export default function AdminNavigationPanel({
   useEffect(() => {
     if (showSidebar) {
       setShouldRenderOverlay(true);
-      requestAnimationFrame(() => setOverlayVisible(true)); // trigger transition
+      requestAnimationFrame(() => setOverlayVisible(true));
     } else {
       setOverlayVisible(false);
-      setTimeout(() => setShouldRenderOverlay(false), 300); // match transition duration
+      setTimeout(() => setShouldRenderOverlay(false), 300);
     }
   }, [showSidebar]);
 
@@ -35,11 +35,10 @@ export default function AdminNavigationPanel({
     router.push("/");
   };
 
-  // --- REFINED NAVIGATION ITEMS LOGIC ---
-  const getNavItemsForRole = (role, college) => {
+  const getNavItemsForRole = (role, adminCollegeContext) => {
     let items = [];
+    const entityManagementPath = "/admin/election-entities"; // Centralized path
 
-    // All admin roles see Dashboard
     items.push({
       href: "/admin/dashboard",
       label: "Dashboard",
@@ -54,14 +53,9 @@ export default function AdminNavigationPanel({
           icon: "bi-calendar-event-fill",
         },
         {
-          href: "/admin/candidates?scope=usc", // Use 'scope' query param for USC Candidates
-          label: "Manage USC Candidates",
-          icon: "bi-file-person-fill",
-        },
-        {
-          href: "/admin/candidates?scope=csc", // Use 'scope' query param for CSC Candidates (Super Admin can see all CSCs)
-          label: "Manage All CSC Candidates", // More accurate label for SA
-          icon: "bi-file-person",
+          href: entityManagementPath, 
+          label: "Manage Election Entities",
+          icon: "bi-stack",
         },
         {
           href: "/admin/results",
@@ -71,7 +65,7 @@ export default function AdminNavigationPanel({
         {
           href: "/admin/audit-log",
           label: "Audit Log",
-          icon: "bi bi-pencil-square",
+          icon: "bi-pencil-square",
         },
         {
           href: "/admin/feedback",
@@ -85,55 +79,56 @@ export default function AdminNavigationPanel({
         }
       );
     } else if (role === "MODERATOR") {
-      if (college === null) {
+      if (adminCollegeContext === null || adminCollegeContext === undefined) {
         // USC Moderator
         items.push(
           {
-            href: "/admin/candidates?scope=usc", // USC Moderator manages USC candidates
-            label: "Manage USC Candidates",
-            icon: "bi-people-fill",
+            href: `${entityManagementPath}?scope=USC`, // USC Mod still needs specific scope
+            label: "Manage USC Entities",
+            icon: "bi-diagram-3-fill",
           },
-          // USC Mod might also see USC results only - you can add a separate link if needed
           {
-            href: "/admin/results?scope=usc", // Example: filter results for USC only
+            href: "/admin/results?scope=USC",
             label: "View USC Results",
             icon: "bi-bar-chart-line-fill",
           }
         );
-      } else if (typeof college === "string") {
+      } else if (typeof adminCollegeContext === "string") {
+        // College Moderator
         items.push(
           {
-            href: `/admin/candidates?scope=csc&college=${college}`,
-            label: `Manage ${college} CSC Candidates`, // Now 'college' should be a string
-            icon: "bi-person-video3",
+            href: `${entityManagementPath}?scope=CSC&college=${adminCollegeContext}`, // College Mod needs specific scope
+            label: `Manage ${adminCollegeContext} CSC Entities`,
+            icon: "bi-collection-fill",
           },
           {
-            href: `/admin/results?scope=csc&college=${college}`,
-            label: `View ${college} Results`,
+            href: `/admin/results?scope=CSC&college=${adminCollegeContext}`,
+            label: `View ${adminCollegeContext} Results`,
             icon: "bi-bar-chart-line-fill",
           }
         );
       } else {
-        // Fallback for MODERATOR if 'college' is unexpectedly undefined/invalid
+        // Fallback for improperly configured Moderator
         console.warn(
           "Moderator has an invalid or undefined college value:",
-          college
+          adminCollegeContext
         );
         items.push({
-          href: "/admin/candidates", // Default to a general candidates page
-          label: "Manage Candidates (Scope Error)",
+          href: entityManagementPath, // Generic link, page should handle this gracefully
+          label: "Manage Entities (Scope Error)",
           icon: "bi-question-circle",
         });
       }
     } else if (role === "AUDITOR") {
+      // Auditor links remain the same
       items.push(
         {
           href: "/admin/audit-log",
           label: "Audit Log",
-          icon: "bi bi-pencil-square",
+          icon: "bi-pencil-square",
         },
         {
-          href: "/admin/results", // Auditor sees all results (page enforces read-only)
+          href: "/admin/results",
           label: "View All Results",
           icon: "bi-bar-chart-line-fill",
         }
@@ -143,10 +138,7 @@ export default function AdminNavigationPanel({
   };
 
   const navItems = getNavItemsForRole(userRole, userCollege);
-  // --- END REFINED NAVIGATION ITEMS LOGIC ---
 
-  // Remove duplicates just in case (e.g., if a role-specific item duplicates a base item)
-  // This filter is important if getNavItemsForRole might produce overlaps, though current logic aims to prevent.
   const uniqueNavItems = navItems.filter(
     (item, index, self) =>
       index ===
@@ -161,25 +153,28 @@ export default function AdminNavigationPanel({
           onClick={toggleSidebar}
         />
       )}
-      {showSidebar && (
-        <div className="mobile-overlay" onClick={toggleSidebar}></div>
-      )}
+      {/* Removed duplicate mobile-overlay div that was always rendered if showSidebar was true */}
 
       <nav
         className={`d-flex flex-column vh-100 p-3 position-fixed top-0 left-0 transition-transform bg-white gap-4 ${
-          showSidebar ? "transform-none" : "-translate-x-full" // Slide in/out
-        } d-lg-transform-none`} // Always visible on lg screens
-        style={{ width: "260px", zIndex: 1000 }}
+          showSidebar ? "transform-none" : "-translate-x-full"
+        } d-lg-transform-none`}
+        style={{
+          width: "260px",
+          zIndex: 1000,
+          boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+        }} // Added a subtle shadow
       >
-        {/* Mobile Close Button (Inside Sidebar) */}
         <div className="d-flex justify-content-between align-items-center d-lg-none mb-3">
-          <div className="w-100">
+          <div style={{ width: "150px" }}>
+            {" "}
+            {/* Constrained width for mobile logo */}
             <Image
               src="/assets/logotext.svg"
               alt="sELECT"
-              width={500}
-              height={200}
-              className="w-100 h-100 object-fit-contain logo-color"
+              width={150} // Adjusted for smaller space
+              height={60} // Adjusted for smaller space
+              className="w-100 h-auto object-fit-contain logo-color" // h-auto for aspect ratio
             />
           </div>
           <button
@@ -195,66 +190,78 @@ export default function AdminNavigationPanel({
           href="/admin/dashboard"
           className="d-none d-lg-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
         >
-          <div className="w-100">
+          <div style={{ width: "180px" }}>
+            {" "}
+            {/* Constrained width for desktop logo */}
             <Image
               src="/assets/logotext.svg"
               alt="sELECT"
-              width={500}
-              height={200}
-              className="w-100 h-100 object-fit-contain logo-color"
+              width={180}
+              height={72}
+              className="w-100 h-auto object-fit-contain logo-color"
             />
           </div>
         </Link>
 
         <ul className="nav nav-pills flex-column mb-auto gap-1">
-          {uniqueNavItems.map(
-            (
-              item // Use uniqueNavItems here
-            ) => (
-              <li
-                className="nav-item fs-7 fw-medium"
-                key={item.href + item.label}
+          {uniqueNavItems.map((item) => (
+            <li
+              className="nav-item fs-7 fw-medium"
+              key={item.href + item.label}
+            >
+              <Link
+                href={item.href}
+                className={`nav-link d-flex align-items-center rounded-3 ${
+                  // Active check needs to be robust for query params
+                  // Check if the current pathname starts with the item's base href
+                  // AND (it's an exact match OR the next char is '/' or '?')
+                  // AND if query params exist, consider them for stricter active state if needed
+                  pathname === item.href ||
+                  (pathname.startsWith(item.href) &&
+                    (item.href.endsWith("?") ||
+                      pathname.charAt(item.href.length) === "?" ||
+                      pathname.charAt(item.href.length) === "/"))
+                    ? "active bg-primary"
+                    : "text-secondary"
+                }`}
+                onClick={() => {
+                  if (showSidebar) toggleSidebar();
+                }}
               >
-                <Link
-                  href={item.href}
-                  className={`nav-link d-flex align-items-center rounded-3 ${
-                    // More robust active check: handles query params
-                    pathname.startsWith(item.href) &&
-                    (pathname.length === item.href.length ||
-                      pathname[item.href.length] === "?" ||
-                      pathname[item.href.length] === "/")
-                      ? "active bg-primary" // Use bg-primary for active link in dark sidebar
-                      : "text-secondary" // Inactive color
-                  }`}
-                  onClick={() => {
-                    if (showSidebar) toggleSidebar();
-                  }}
-                >
-                  <i className={`bi ${item.icon} me-2`}></i>
-                  {item.label}
-                  {item.badge && (
-                    <span className="badge bg-warning text-dark ms-auto">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-                <hr className="border-1 border-light my-2 mx-3 p-0 opacity-100" />
-              </li>
-            )
-          )}
+                <i className={`bi ${item.icon} me-2 fs-5`}></i>{" "}
+                {/* Slightly larger icon */}
+                {item.label}
+                {item.badge && (
+                  <span className="badge bg-warning text-dark ms-auto">
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+              {/* Optional: remove hr if gap-1 is enough separation */}
+              <hr className="border-1 border-light my-1 mx-3 p-0 opacity-100" />
+            </li>
+          ))}
         </ul>
 
-        <div className="px-3 py-1">
+        <div className="mt-auto pt-2 border-top border-light">
+          {" "}
+          {/* Footer links push to bottom */}
           <button
             onClick={handleLogout}
-            className="nav-link text-danger d-flex align-items-center w-100"
-            style={{ background: "none", border: "none", textAlign: "left" }}
+            className="nav-link text-danger d-flex align-items-center w-100 fs-7 fw-medium"
+            style={{
+              background: "none",
+              border: "none",
+              textAlign: "left",
+              padding: "0.5rem 0.75rem",
+            }}
           >
-            <i className="bi bi-door-closed-fill me-2"></i>
+            <i className="bi bi-door-closed-fill me-2 fs-5"></i>
             Logout
           </button>
         </div>
       </nav>
+      {/* Style tag remains the same */}
       <style jsx global>{`
         .transition-transform {
           transition: transform 0.3s ease-in-out;
@@ -266,7 +273,6 @@ export default function AdminNavigationPanel({
           transform: translateX(0);
         }
         @media (min-width: 992px) {
-          /* lg breakpoint in Bootstrap */
           .d-lg-transform-none {
             transform: translateX(0) !important;
           }
