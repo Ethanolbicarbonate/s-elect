@@ -80,7 +80,7 @@ export default function RootLayout({ children }) {
         </style>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} logo-font`}>
-      <AuthProvider>
+        <AuthProvider>
           {children}
           <BootstrapClient />
           <Analytics />

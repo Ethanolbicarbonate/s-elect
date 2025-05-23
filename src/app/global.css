@@ -215,12 +215,6 @@ a, button, .btn {
   /* Apply the blur */
   -webkit-backdrop-filter: blur(3px); /* For Safari */
   backdrop-filter: blur(3px);       /* Standard */
-
-  /* Ensure it's part of Bootstrap's fade transition if you want it to fade in/out */
-  /* The .fade and .show classes are typically handled by Bootstrap JS if modal is managed by it,
-     or you can manage opacity with React state if it's a fully custom modal visibility toggle.
-     Since we are manually adding .show, this should work with Bootstrap's default fade transition.
-  */
 }
 
 /* Ensure the modal itself is above the custom backdrop */

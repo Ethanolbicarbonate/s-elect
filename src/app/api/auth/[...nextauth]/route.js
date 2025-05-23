@@ -124,8 +124,8 @@ export const authOptions = {
         token.id = user.id;
         token.role = user.role;
         token.college = user.college;
-        token.firstName = user.firstName; // Correctly adding firstName
-        token.lastName = user.lastName; // ***** ADD THIS LINE if missing *****
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
       }
       return token;
     },
@@ -134,8 +134,8 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.college = token.college;
-        session.user.firstName = token.firstName; // Correctly getting firstName
-        session.user.lastName = token.lastName; // ***** ADD THIS LINE if missing *****
+        session.user.firstName = token.firstName;
+        session.user.lastName = token.lastName;
       }
       return session;
     },

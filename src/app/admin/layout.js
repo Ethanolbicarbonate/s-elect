@@ -33,9 +33,6 @@ export default function AdminLayout({ children }) {
     setShowSidebar(!showSidebar);
   };
 
-  // --- IMPORTANT FIX HERE ---
-  // If session is loading OR if session data is not available (i.e., after logout, before redirect)
-  // return a loading state or a minimal UI to prevent errors from trying to access session.user.
   if (status === 'loading' || !session || !session.user) { // Added !session || !session.user check
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
