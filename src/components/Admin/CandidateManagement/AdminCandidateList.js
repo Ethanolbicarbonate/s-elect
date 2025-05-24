@@ -78,11 +78,9 @@ export default function AdminCandidateList({
         }
 
         return (
-          <div key={partylistIdKey} className="mb-4 card shadow-sm">
-            {" "}
-            <div className="card-header bg-light py-2">
-              {" "}
-              <h5 className="mb-0 fw-normal fs-6">
+          <div key={partylistIdKey} className="mb-4 card rounded-3 pb-4">
+            <div className="card-header bg-light py-2 rounded-top-3">
+              <h5 className="mb-0 fw-normal fs-6 text-secondary">
                 {groupName}
                 {partylistForHeader && (
                   <small className="ms-2 text-muted">
@@ -95,7 +93,7 @@ export default function AdminCandidateList({
                 )}
               </h5>
             </div>
-            <div className="table-responsive">
+            <div className="table-responsive px-2">
               {" "}
               {/* This div handles horizontal scrolling */}
               <table className="table table-hover table-sm small align-middle mb-0">
@@ -104,21 +102,21 @@ export default function AdminCandidateList({
                     {/* Hide Photo on xs screens */}
                     <th
                       style={{ width: "5%" }}
-                      className="d-none d-sm-table-cell"
+                      className="d-none d-sm-table-cell fw-normal fs-7 text-secondary"
                     >
                       Photo
                     </th>
-                    <th style={{ width: "30%" }}>Name</th>
-                    <th style={{ width: "30%" }}>Position</th>
+                    <th style={{ width: "30%" }} className="fw-normal fs-7 text-secondary">Name</th>
+                    <th style={{ width: "30%" }} className="fw-normal fs-7 text-secondary">Position</th>
                     {/* Hide Bio on screens smaller than md */}
                     <th
                       style={{ width: "25%" }}
-                      className="d-none d-md-table-cell"
+                      className="d-none d-md-table-cell fw-normal fs-7 text-secondary"
                     >
                       Bio Snippet
                     </th>
                     {canManage && (
-                      <th style={{ width: "10%" }} className="text-end">
+                      <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-secondary">
                         Actions
                       </th>
                     )}
@@ -176,13 +174,13 @@ export default function AdminCandidateList({
                             ""
                           )}
                         </td>
-                        <td>{candidate.position?.name || "N/A"}</td>
+                        <td>{candidate.position?.name || <span className="text-secondary opacity-50">N/A</span>}</td>
                         <td
                           className="text-truncate d-none d-md-table-cell"
                           style={{ maxWidth: "150px" }}
                           title={candidate.bio}
                         >
-                          {candidate.bio || "N/A"}
+                          {candidate.bio || <span className="text-secondary opacity-50">N/A</span>}
                         </td>
                         {canManage && (
                           <td className="text-end">

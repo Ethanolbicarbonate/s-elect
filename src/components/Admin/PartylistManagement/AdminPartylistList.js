@@ -26,22 +26,22 @@ export default function AdminPartylistList({
         <thead>
           <tr>
             {/* Hide Logo on xs, show sm and up */}
-            <th style={{ width: "5%" }} className="d-none d-sm-table-cell">
+            <th style={{ width: "5%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
               Logo
             </th>
-            <th style={{ width: "25%" }}>Name</th>
+            <th style={{ width: "25%" }} className="fw-normal fs-7 text-secondary">Name</th>
             {/* Hide Acronym on xs, show sm and up */}
-            <th style={{ width: "10%" }} className="d-none d-sm-table-cell">
+            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
               Acronym
             </th>
-            <th style={{ width: "10%" }}>Type</th>
-            <th style={{ width: "15%" }}>College (CSC)</th>
+            <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary">Type</th>
+            <th style={{ width: "15%" }} className="fw-normal fs-7 text-secondary">College</th>
             {/* Hide Platform on screens smaller than md */}
-            <th style={{ width: "25%" }} className="d-none d-md-table-cell">
+            <th style={{ width: "25%" }} className="d-none d-md-table-cell fw-normal fs-7 text-secondary">
               Platform Snippet
             </th>
             {canManage && (
-              <th style={{ width: "10%" }} className="text-end">
+              <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-secondary">
                 Actions
               </th>
             )}
@@ -83,23 +83,23 @@ export default function AdminPartylistList({
                 )}
               </td>
               <td>{pl.name}</td>
-              <td className="d-none d-sm-table-cell">{pl.acronym || "N/A"}</td>
+              <td className="d-none d-sm-table-cell">{pl.acronym || <span className="text-secondary opacity-50">N/A</span>}</td>
               <td>
                 <span
-                  className={`badge bg-${
+                  className={`opacity-75 fw-normal badge bg-${
                     pl.type === "USC" ? "primary" : "info"
                   }`}
                 >
                   {pl.type}
                 </span>
               </td>
-              <td>{pl.type === "CSC" ? pl.college : "N/A"}</td>
+              <td>{pl.type === "CSC" ? pl.college : <span className="text-secondary opacity-50">N/A</span>}</td>
               <td
                 className="text-truncate d-none d-md-table-cell"
                 style={{ maxWidth: "200px" }}
                 title={pl.platform}
               >
-                {pl.platform || "N/A"}
+                {pl.platform || <span className="text-secondary opacity-50">N/A</span>}
               </td>
               {canManage && (
                 <td className="text-end">

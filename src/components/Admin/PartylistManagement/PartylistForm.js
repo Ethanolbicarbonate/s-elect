@@ -138,8 +138,7 @@ export default function PartylistForm({
                 )}
 
                 <div className="mb-3">
-                  {/* ... Partylist Name input ... */}
-                  <label htmlFor="pl_name" className="form-label fs-7 ms-1">
+                  <label htmlFor="pl_name" className="form-label fs-7 ms-2 text-secondary">
                     Partylist Name <span className="text-danger">*</span>
                   </label>
                   <input
@@ -156,7 +155,7 @@ export default function PartylistForm({
 
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <label htmlFor="pl_type" className="form-label fs-7 ms-1">
+                    <label htmlFor="pl_type" className="form-label fs-7 ms-2 text-secondary">
                       Type <span className="text-danger">*</span>
                     </label>
                     <select
@@ -179,9 +178,9 @@ export default function PartylistForm({
                     <div className="col-md-6">
                       <label
                         htmlFor="pl_college"
-                        className="form-label fs-7 ms-1"
+                        className="form-label fs-7 ms-2 text-secondary"
                       >
-                        College (for CSC) <span className="text-danger">*</span>
+                        College <span className="text-danger">*</span>
                       </label>
                       <select
                         className="form-select thin-input"
@@ -209,7 +208,7 @@ export default function PartylistForm({
                 </div>
                 {/* ... Acronym, Logo URL, Platform inputs (unchanged from previous good version) ... */}
                 <div className="mb-3">
-                  <label htmlFor="pl_acronym" className="form-label fs-7 ms-1">
+                  <label htmlFor="pl_acronym" className="form-label fs-7 ms-2 text-secondary">
                     Acronym (Optional)
                   </label>
                   <input
@@ -223,7 +222,7 @@ export default function PartylistForm({
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="pl_logoUrl" className="form-label fs-7 ms-1">
+                  <label htmlFor="pl_logoUrl" className="form-label fs-7 ms-2 text-secondary">
                     Logo URL (Optional - 1:1, max 5MB)
                   </label>
                   <input
@@ -238,7 +237,7 @@ export default function PartylistForm({
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="pl_platform" className="form-label fs-7 ms-1">
+                  <label htmlFor="pl_platform" className="form-label fs-7 ms-2 text-secondary">
                     Platform/Tagline (Optional)
                   </label>
                   <textarea

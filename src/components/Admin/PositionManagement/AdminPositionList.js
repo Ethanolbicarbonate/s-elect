@@ -27,24 +27,24 @@ export default function AdminPositionList({
       <table className="table table-hover table-sm small align-middle">
         <thead>
           <tr>
-            <th style={{ width: "5%" }}>Order</th>
-            <th style={{ width: "25%" }}>Name</th>
-            <th style={{ width: "10%" }}>Type</th>
+            <th style={{ width: "5%" }} className="fw-normal fs-7 text-secondary">Order</th>
+            <th style={{ width: "25%" }} className="fw-normal fs-7 text-secondary">Name</th>
+            <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary">Type</th>
             {/* Hide College on xs, show sm and up */}
-            <th style={{ width: "10%" }} className="d-none d-sm-table-cell">
-              College (CSC)
+            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
+              College
             </th>
-            <th style={{ width: "10%" }}>Max Votes</th>
+            <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary">Max Votes</th>
             {/* Hide Min Votes on xs, show sm and up */}
-            <th style={{ width: "10%" }} className="d-none d-sm-table-cell">
+            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
               Min Votes
             </th>
             {/* Hide Description on screens smaller than md */}
-            <th style={{ width: "20%" }} className="d-none d-md-table-cell">
+            <th style={{ width: "20%" }} className="d-none d-md-table-cell fw-normal fs-7 text-secondary">
               Description
             </th>
             {canManage && (
-              <th style={{ width: "10%" }} className="text-end">
+              <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-secondary">
                 Actions
               </th>
             )}
@@ -59,7 +59,7 @@ export default function AdminPositionList({
                 <td>{pos.name}</td>
                 <td>
                   <span
-                    className={`badge bg-${
+                    className={`opacity-75 fw-normal badge bg-${
                       pos.type === "USC" ? "primary" : "info"
                     }`}
                   >
@@ -67,7 +67,7 @@ export default function AdminPositionList({
                   </span>
                 </td>
                 <td className="d-none d-sm-table-cell">
-                  {pos.type === "CSC" ? pos.college : "N/A"}
+                  {pos.type === "CSC" ? pos.college : <span className="text-secondary opacity-50">N/A</span>}
                 </td>
                 <td>{pos.maxVotesAllowed}</td>
                 <td className="d-none d-sm-table-cell">
@@ -78,7 +78,7 @@ export default function AdminPositionList({
                   style={{ maxWidth: "150px" }}
                   title={pos.description}
                 >
-                  {pos.description || "N/A"}
+                  {pos.description || <span className="text-secondary opacity-50">N/A</span>}
                 </td>
                 {canManage && (
                   <td className="text-end">

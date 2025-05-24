@@ -244,7 +244,7 @@ export default function PositionForm({
 
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <label htmlFor="pos_type" className="form-label fs-7 ms-1">
+                    <label htmlFor="pos_type" className="form-label fs-7 ms-2 text-secondary">
                       Type <span className="text-danger">*</span>
                     </label>
                     <select
@@ -296,7 +296,7 @@ export default function PositionForm({
                 <div className="mb-3">
                   <label
                     htmlFor="pos_name_select"
-                    className="form-label fs-7 ms-1"
+                    className="form-label fs-7 ms-2 text-secondary"
                   >
                     Position Name <span className="text-danger">*</span>
                   </label>
@@ -339,14 +339,14 @@ export default function PositionForm({
                 </div>
                 {/* Order input is removed as it's now automatic */}
 
-                <div className="row mb-3">
+                <div className="row">
                   {/* ... MaxVotesAllowed and MinVotesRequired inputs (unchanged from previous good version) ... */}
                   <div className="col-md-6">
                     {" "}
                     {/* Changed from col-md-4 */}
                     <label
                       htmlFor="pos_maxVotesAllowed"
-                      className="form-label fs-7 ms-1"
+                      className="form-label fs-7 ms-2 text-secondary"
                     >
                       Max Votes Allowed <span className="text-danger">*</span>
                     </label>
@@ -361,9 +361,8 @@ export default function PositionForm({
                       min="1"
                       disabled={isLoading}
                     />
-                    <div className="form-text fs-7 ms-1">
-                      Single-winner (Chair)=1. Multi-winner (Councilor)=Num.
-                      seats.
+                    <div className="form-text fs-7 ms-1 text-secondary opacity-75 text-end">
+                      Single-seat: 1 · Multi-seat: num of seats
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -371,7 +370,7 @@ export default function PositionForm({
                     {/* Changed from col-md-4 */}
                     <label
                       htmlFor="pos_minVotesRequired"
-                      className="form-label fs-7 ms-1"
+                      className="form-label fs-7 ms-2 text-secondary"
                     >
                       Min Votes Required
                     </label>
@@ -385,8 +384,8 @@ export default function PositionForm({
                       min="0"
                       disabled={isLoading}
                     />
-                    <div className="form-text fs-7 ms-1">
-                      Usually 0 (voter can skip).
+                    <div className="form-text fs-7 ms-1 text-secondary opacity-75 text-end">
+                      Usually 0 (voter can skip)
                     </div>
                   </div>
                 </div>
@@ -394,7 +393,7 @@ export default function PositionForm({
                 <div className="mb-3">
                   <label
                     htmlFor="pos_description"
-                    className="form-label fs-7 ms-1"
+                    className="form-label fs-7 ms-1 ms-2 text-secondary"
                   >
                     Description (Optional)
                   </label>
