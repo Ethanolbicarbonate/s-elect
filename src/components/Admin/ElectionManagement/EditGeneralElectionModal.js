@@ -11,6 +11,29 @@ const electionStatusEnum = [
   "ARCHIVED",
 ];
 
+function formatDateToLocalInput(dateString) {
+  if (!dateString) return "";
+  try {
+    const date = new Date(dateString); // Parses ISO string (assumed UTC from DB) into local Date object
+    // Check for invalid date
+    if (isNaN(date.getTime())) {
+        console.error("Invalid date string provided to formatDateToLocalInput:", dateString);
+        return "";
+    }
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is 0-indexed
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  } catch (error) {
+    console.error("Error formatting date for input:", dateString, error);
+    return ""; // Fallback to empty string or handle error appropriately
+  }
+}
+
 export default function EditGeneralElectionModal({
   show,
   onClose,
@@ -34,8 +57,8 @@ export default function EditGeneralElectionModal({
         id: electionData.id,
         name: electionData.name,
         description: electionData.description || "",
-        startDate: new Date(electionData.startDate).toISOString().slice(0, 16),
-        endDate: new Date(electionData.endDate).toISOString().slice(0, 16),
+        startDate: formatDateToLocalInput(electionData.startDate),
+        endDate: formatDateToLocalInput(electionData.endDate),
         status: electionData.status,
       });
       setLocalError(""); // Clear previous errors when new data is loaded

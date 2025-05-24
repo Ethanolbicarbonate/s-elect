@@ -6,9 +6,10 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path
 import prisma from '@/lib/prisma'; // Using the singleton instance
 
 // GET a specific election (already good to have)
-export async function GET(request, { params }) {
-  const session = await getServerSession(authOptions);
+export async function GET(request, context) {
+  const { params } = await context;
   const { electionId } = params;
+  const session = await getServerSession(authOptions);
 
   if (!session || !['SUPER_ADMIN', 'MODERATOR', 'AUDITOR'].includes(session.user?.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -30,9 +31,10 @@ export async function GET(request, { params }) {
 
 
 // PUT - Update an election (can be used for extending endDate, changing status, etc.)
-export async function PUT(request, { params }) {
-  const session = await getServerSession(authOptions);
+export async function PUT(request, context) {
+  const { params } = await context;
   const { electionId } = params;
+  const session = await getServerSession(authOptions);
 
   if (!session || session.user?.role !== 'SUPER_ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -83,9 +85,10 @@ export async function PUT(request, { params }) {
 // For now, let's use PUT to change status to ARCHIVED or ENDED for "cancelling".
 // If you want a dedicated DELETE:
 /*
-export async function DELETE(request, { params }) {
-    const session = await getServerSession(authOptions);
-    const { electionId } = params;
+export async function DELETE(request, context) {
+  const { params } = await context;
+  const { electionId } = params;
+  const session = await getServerSession(authOptions);
 
     if (!session || session.user?.role !== 'SUPER_ADMIN') {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });

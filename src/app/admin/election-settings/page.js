@@ -9,8 +9,25 @@ import EditGeneralElectionModal from "@/components/Admin/ElectionManagement/Edit
 import ExtendElectionModal from "@/components/Admin/ElectionManagement/ExtendElectionModal";
 
 // Enums can be defined here or imported from a shared constants file
-const collegeEnumArray = ["CAS", "CBM", "COC", "COD", "COE", "CICT", "COL", "COM", "CON", "PESCAR"];
-const electionStatusEnum = ["UPCOMING", "ONGOING", "PAUSED", "ENDED", "ARCHIVED"];
+const collegeEnumArray = [
+  "CAS",
+  "CBM",
+  "COC",
+  "COD",
+  "COE",
+  "CICT",
+  "COL",
+  "COM",
+  "CON",
+  "PESCAR",
+];
+const electionStatusEnum = [
+  "UPCOMING",
+  "ONGOING",
+  "PAUSED",
+  "ENDED",
+  "ARCHIVED",
+];
 
 export default function ElectionSettingsPage() {
   const { data: session } = useSession();
@@ -34,7 +51,6 @@ export default function ElectionSettingsPage() {
     setTimeout(() => clearPageMessages(), 5000); // Auto-clear after 5s
   };
 
-
   const fetchElections = async () => {
     setIsLoading(true);
     clearPageMessages();
@@ -57,14 +73,29 @@ export default function ElectionSettingsPage() {
     fetchElections();
   }, []);
 
-  const handleSubmitCreateElection = async (formDataToSubmit) => {
+  const handleSubmitCreateElection = async (formDataFromForm) => {
     setIsLoading(true);
     clearPageMessages();
     try {
+      const localStartDate = new Date(formDataFromForm.startDate); // Parsed as local time
+      const localEndDate = new Date(formDataFromForm.endDate); // Parsed as local time
+
+      if (localStartDate >= localEndDate) {
+        displayPageMessage("Start date must be before end date.", false);
+        setIsLoading(false);
+        return false;
+      }
+
+      const payload = {
+        ...formDataFromForm,
+        startDate: localStartDate.toISOString(), // Send UTC ISO string
+        endDate: localEndDate.toISOString(), // Send UTC ISO string
+      };
+
       const res = await fetch("/api/admin/elections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formDataToSubmit),
+        body: JSON.stringify(payload), // Send payload with UTC strings
       });
       const data = await res.json();
       if (!res.ok) {
@@ -81,16 +112,26 @@ export default function ElectionSettingsPage() {
     }
   };
 
-  const handleUpdateGeneralElection = async (electionId, formDataToUpdate) => {
+  const handleUpdateGeneralElection = async (electionId, formDataFromModal) => {
     setIsLoading(true);
     clearPageMessages();
     try {
-      const payload = { /* Construct payload carefully from formDataToUpdate */
-        name: formDataToUpdate.name,
-        description: formDataToUpdate.description,
-        startDate: formDataToUpdate.startDate,
-        endDate: formDataToUpdate.endDate,
-        status: formDataToUpdate.status,
+      // --- FIX: Convert local datetime strings to UTC ISO strings ---
+      const localStartDate = new Date(formDataFromModal.startDate);
+      const localEndDate = new Date(formDataFromModal.endDate);
+
+      if (localStartDate >= localEndDate) {
+        // This validation can also be done in the modal before calling this,
+        // but good to have a server-side check or a pre-API call check here too.
+        // For now, relying on modal's validation. If it passes, this should too.
+      }
+
+      const payload = {
+        name: formDataFromModal.name,
+        description: formDataFromModal.description,
+        startDate: localStartDate.toISOString(), // Send UTC ISO string
+        endDate: localEndDate.toISOString(), // Send UTC ISO string
+        status: formDataFromModal.status,
       };
       const res = await fetch(`/api/admin/elections/${electionId}`, {
         method: "PUT",
@@ -99,7 +140,9 @@ export default function ElectionSettingsPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to update general election details.");
+        throw new Error(
+          data.error || "Failed to update general election details."
+        );
       }
       displayPageMessage("General election details updated successfully!");
       fetchElections();
@@ -128,7 +171,9 @@ export default function ElectionSettingsPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to extend election.");
-      displayPageMessage(data.message || "Election extended successfully for selected colleges!");
+      displayPageMessage(
+        data.message || "Election extended successfully for selected colleges!"
+      );
       fetchElections();
       setExtendingElection(null); // Close modal
       return true;
@@ -168,15 +213,20 @@ export default function ElectionSettingsPage() {
     }
   };
 
-
   if (session?.user?.role !== "SUPER_ADMIN") {
-    return (<p className="text-danger p-4">Access Denied. Only Super Admins can manage election settings.</p>);
+    return (
+      <p className="text-danger p-4">
+        Access Denied. Only Super Admins can manage election settings.
+      </p>
+    );
   }
 
   return (
     <div className="container-fluid p-0 m-0">
       {pageError && <div className="alert alert-danger">{pageError}</div>}
-      {pageSuccessMessage && <div className="alert alert-success">{pageSuccessMessage}</div>}
+      {pageSuccessMessage && (
+        <div className="alert alert-success">{pageSuccessMessage}</div>
+      )}
 
       <CreateElectionForm
         isLoading={isLoading}
