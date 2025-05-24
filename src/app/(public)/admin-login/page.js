@@ -5,7 +5,12 @@ export default function AdminLoginPage() {
   return (
     <main
       className="d-flex h-100 justify-content-center align-items-center"
-      style={{ backgroundImage: "url(/assets/background-grid.svg)" }}
+      style={{
+        backgroundImage:
+          "radial-gradient(circle,rgba(116, 204, 248, 0.35) 1px, transparent 1px)",
+        backgroundSize: "10px 10px",
+        overflowY: "auto",
+      }}
     >
       <div className="h-75 w-100 custom-width-sm-min container-md text-center m-0 p-0 rounded-3 shadow border overflow-hidden justify-content-center align-items-center noshadow-sm-max noborder-sm-max bg-white">
         <div className="m-0 p-0 row justify-content-center h-100 overflow-hidden">

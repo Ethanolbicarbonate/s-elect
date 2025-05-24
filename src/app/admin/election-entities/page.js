@@ -479,7 +479,7 @@ export default function ElectionEntitiesPage() {
       )}
 
       {/* Election Selector */}
-      <div className="p-3 bg-white rounded-4 border">
+      <div className="p-3 bg-white rounded-4 border shadow-sm">
         <div className="mb-3">
           <label
             htmlFor="electionSelect"
@@ -576,7 +576,7 @@ export default function ElectionEntitiesPage() {
       </div>
 
       {selectedElectionId && managementScope.type && (
-        <div className="bg-white mt-4 rounded-4 border flex-grow-1">
+        <div className="bg-white mt-4 rounded-4 border flex-grow-1 shadow-sm">
           <div className="px-3 py-3  bg-light rounded-top-4">
             <h4 className="text-secondary fs-4 fw-normal">
               {managementScope.type}

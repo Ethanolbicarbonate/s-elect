@@ -153,7 +153,6 @@ export default function AdminNavigationPanel({
           onClick={toggleSidebar}
         />
       )}
-      {/* Removed duplicate mobile-overlay div that was always rendered if showSidebar was true */}
 
       <nav
         className={`d-flex flex-column vh-100 p-3 position-fixed top-0 left-0 transition-transform bg-white gap-4 ${
@@ -190,15 +189,13 @@ export default function AdminNavigationPanel({
           href="/admin/dashboard"
           className="d-none d-lg-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
         >
-          <div style={{ width: "180px" }}>
-            {" "}
-            {/* Constrained width for desktop logo */}
+          <div className="w-100">
             <Image
               src="/assets/logotext.svg"
               alt="sELECT"
-              width={180}
-              height={72}
-              className="w-100 h-auto object-fit-contain logo-color"
+              width={500}
+              height={200}
+              className="w-100 h-100 object-fit-contain logo-color"
             />
           </div>
         </Link>

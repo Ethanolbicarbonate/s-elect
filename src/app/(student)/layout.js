@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react'; 
-import { redirect, usePathname } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { redirect, usePathname } from "next/navigation";
 import NavigationPanel from "@/components/Layout/NavigationPanel";
 import Link from "next/link";
 
@@ -14,10 +14,12 @@ export default function StudentLayout({ children }) {
 
   // Effect to handle session loading and redirection
   useEffect(() => {
-    if (status === 'loading') return; // Do nothing while loading
-    if (!session || session.user?.role !== 'STUDENT') {
-      console.log("StudentLayout: No session or not a student, redirecting to /student-login");
-      redirect('/student-login'); // redirect is from next/navigation, works in client components
+    if (status === "loading") return; // Do nothing while loading
+    if (!session || session.user?.role !== "STUDENT") {
+      console.log(
+        "StudentLayout: No session or not a student, redirecting to /student-login"
+      );
+      redirect("/student-login"); // redirect is from next/navigation, works in client components
     }
   }, [session, status]);
 
@@ -26,12 +28,11 @@ export default function StudentLayout({ children }) {
     setShowSidebar(false);
   }, [pathname]);
 
-
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
 
-  if (status === 'loading' || !session) {
+  if (status === "loading" || !session) {
     // You can return a loading spinner or a minimal layout here
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -51,32 +52,39 @@ export default function StudentLayout({ children }) {
     }
   }
 
-  const userCollege = session.user.college || 'N/A';
+  const userCollege = session.user.college || "N/A";
 
   // Determine current page name for breadcrumb (simple example)
   let currentPageName = "Dashboard";
-  if (pathname.startsWith('/dashboard')) currentPageName = "Dashboard";
-  else if (pathname.startsWith('/candidates')) currentPageName = "Candidates";
-  else if (pathname.startsWith('/vote')) currentPageName = "Vote";
-  else if (pathname.startsWith('/about-help')) currentPageName = "About/Help";
-  else if (pathname.startsWith('/settings')) currentPageName = "Settings";
+  if (pathname.startsWith("/dashboard")) currentPageName = "Dashboard";
+  else if (pathname.startsWith("/candidates")) currentPageName = "Candidates";
+  else if (pathname.startsWith("/vote")) currentPageName = "Vote";
+  else if (pathname.startsWith("/about-help")) currentPageName = "About/Help";
+  else if (pathname.startsWith("/settings")) currentPageName = "Settings";
   // Add more else if for other top-level student pages
 
   return (
     <div className="d-flex vh-100">
-      <NavigationPanel showSidebar={showSidebar} toggleSidebar={toggleSidebar} />
+      <NavigationPanel
+        showSidebar={showSidebar}
+        toggleSidebar={toggleSidebar}
+      />
 
       <div
         className="flex-grow-1 d-flex flex-column transition-margin-lg"
         style={{
-          paddingLeft: showSidebar ? '0' : '0', 
-          marginLeft: '0px', 
+          paddingLeft: showSidebar ? "0" : "0",
+          marginLeft: "0px",
         }}
       >
         {/* Top Bar */}
         <header
-          className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top"
-          style={{ height: '60px', borderBottom: '1px solid #dee2e6', zIndex: '100'}} 
+          className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top shadow-sm"
+          style={{
+            height: "60px",
+            borderBottom: "1px solid #dee2e6",
+            zIndex: "100",
+          }}
         >
           <div className="d-flex align-items-center">
             {/* Hamburger Menu for Mobile */}
@@ -89,40 +97,54 @@ export default function StudentLayout({ children }) {
             </button>
 
             {/* Breadcrumb or Page Title */}
-            <nav aria-label="breadcrumb" className="d-none d-md-block"> {/* Hide breadcrumb on very small screens if needed */}
+            <nav aria-label="breadcrumb" className="d-none d-md-block">
+              {" "}
+              {/* Hide breadcrumb on very small screens if needed */}
               <ol className="breadcrumb mb-0 d-flex align-items-center">
                 <li className="breadcrumb-item">
                   <Link href="/dashboard" className="text-decoration-none">
                     <i className="bi bi-house-door-fill text-secondary"></i>
                   </Link>
                 </li>
-                <li className="breadcrumb-item active text-dark text-secondary opacity-75" aria-current="page">
+                <li
+                  className="breadcrumb-item active text-dark text-secondary opacity-75"
+                  aria-current="page"
+                >
                   {currentPageName}
                 </li>
               </ol>
             </nav>
-             {/* Mobile Page Title (if breadcrumb is too much) */}
-            <div className="d-md-none text-dark fw-thin">
-                {currentPageName}
-            </div>
+            {/* Mobile Page Title (if breadcrumb is too much) */}
+            <div className="d-md-none text-dark fw-thin">{currentPageName}</div>
           </div>
 
           <div className="d-flex align-items-center">
-            <span className="me-2 text-dark d-none d-sm-inline">{userName}</span> {/* Hide username on xs screens if too crowded */}
-            <span className="badge bg-warning text-dark p-2 fs-6 fw-medium">{userCollege}</span>
+            <span className="me-2 text-dark d-none d-sm-inline">
+              {userName}
+            </span>{" "}
+            {/* Hide username on xs screens if too crowded */}
+            <span className="badge bg-warning text-dark p-2 fs-6 fw-medium">
+              {userCollege}
+            </span>
           </div>
         </header>
 
         {/* Main Content Area */}
         <main
           className="flex-grow-1 p-4"
-          style={{backgroundColor: "rgba(173, 173, 173, 0.13)", backgroundImage: "url(/assets/background-grid.svg)", overflowY: 'auto' }}
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgba(116, 204, 248, 0.35) 1px, transparent 1px)",
+            backgroundSize: "10px 10px",
+            overflowY: "auto",
+          }}
         >
           {children}
         </main>
       </div>
       <style jsx global>{`
-        @media (min-width: 992px) { /* lg breakpoint */
+        @media (min-width: 992px) {
+          /* lg breakpoint */
           .transition-margin-lg {
             margin-left: 260px !important; /* Sidebar width */
             padding-left: 0 !important;

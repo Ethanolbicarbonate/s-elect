@@ -104,7 +104,7 @@ export default function ElectionCalendarWidget({ electionEvents = [] }) {
   const nextLabel = <i className="bi bi-chevron-right"></i>;
 
   return (
-    <div className="card h-100 border-1 rounded-4">
+    <div className="card h-100 border-1 rounded-4 shadow-sm">
       <div className="card-body d-flex flex-column p-3">
         <div className="d-flex justify-content-between align-items-center mb-0">
           <h6 className="card-title text-secondary mb-0 fw-normal">

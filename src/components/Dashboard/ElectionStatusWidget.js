@@ -8,7 +8,7 @@ export default function ElectionStatusWidget({ status = "N/A", message = "No ele
   else if (status === "ENDED") statusColor = "dark"; // Or other color
 
   return (
-    <div className="card h-100 border-1 rounded-4">
+    <div className="card h-100 border-1 rounded-4 shadow-sm">
       <div className="card-body d-flex flex-column">
         <div className="d-flex justify-content-between align-items-center">
           <h6 className="card-title text-secondary mb-0">Election Status</h6>

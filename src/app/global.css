@@ -43,7 +43,7 @@ a, button, .btn {
 }
 
 .logo-color {
-    filter: invert(27%) sepia(99%) saturate(2173%) hue-rotate(208deg) brightness(99%) contrast(101%);
+    filter: brightness(0) saturate(100%) invert(64%) sepia(49%) saturate(6848%) hue-rotate(173deg) brightness(103%) contrast(105%);
 }
 
 @font-face {
@@ -225,4 +225,79 @@ a, button, .btn {
 .modal-body {
   overflow-y: auto;
   max-height: calc(100vh - 200px); /* Adjust based on header/footer height */
+}
+
+:root {
+  --cstm-primary: #00aaff;
+}
+
+/* Background */
+.bg-cstm-primary {
+  background-color: var(--cstm-primary) !important;
+}
+
+/* Text */
+.text-cstm-primary {
+  color: var(--cstm-primary) !important;
+}
+
+/* Border */
+.border-cstm-primary {
+  border-color: var(--cstm-primary) !important;
+}
+
+/* Button */
+.btn-cstm-primary {
+  --bs-btn-bg: var(--cstm-primary);
+  --bs-btn-border-color: var(--cstm-primary);
+  --bs-btn-hover-bg: #0095dd;
+  --bs-btn-hover-border-color: #0095dd;
+  --bs-btn-active-bg: #007fc2;
+  --bs-btn-active-border-color: #007fc2;
+  --bs-btn-color: #fff;
+  color: #fff !important;
+  background-color: var(--bs-btn-bg) !important;
+  border-color: var(--bs-btn-border-color) !important;
+}
+
+/* Outline Button */
+.btn-outline-cstm-primary {
+  color: var(--cstm-primary) !important;
+  border-color: var(--cstm-primary) !important;
+}
+.btn-outline-cstm-primary:hover {
+  background-color: var(--cstm-primary) !important;
+  color: #fff !important;
+}
+
+/* Link */
+.link-cstm-primary {
+  color: var(--cstm-primary) !important;
+}
+.link-cstm-primary:hover {
+  color: #0077aa !important;
+}
+
+/* Badge */
+.badge-cstm-primary {
+  background-color: var(--cstm-primary) !important;
+  color: #fff !important;
+}
+
+/* Alert */
+.alert-cstm-primary {
+  background-color: var(--cstm-primary) !important;
+  color: #fff !important;
+  border-color: var(--cstm-primary) !important;
+}
+
+/* List Group */
+.list-group-item-cstm-primary {
+  background-color: var(--cstm-primary) !important;
+  color: #fff !important;
+}
+
+/* Progress */
+.progress-bar-cstm-primary {
+  background-color: var(--cstm-primary) !important;
 }

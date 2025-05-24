@@ -95,7 +95,7 @@ export default function AdminLayout({ children }) {
       >
         {/* Top Bar */}
         <header
-          className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top"
+          className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top shadow-sm"
           style={{
             height: "60px",
             borderBottom: "1px solid #dee2e6",
@@ -153,8 +153,9 @@ export default function AdminLayout({ children }) {
         <main
           className="flex-grow-1 p-4"
           style={{
-            backgroundColor: "rgba(173, 173, 173, 0.13)",
-            backgroundImage: "url(/assets/background-grid.svg)",
+            backgroundImage:
+              "radial-gradient(circle,rgba(116, 204, 248, 0.35) 1px, transparent 1px)",
+            backgroundSize: "10px 10px",
             overflowY: "auto",
           }}
         >

@@ -3,7 +3,7 @@
 
 export default function ResultsWidget() {
   return (
-    <div className="card h-100 border-1 rounded-4">
+    <div className="card h-100 border-1 rounded-4 shadow-sm">
       <div className="card-body pb-5"> {/* Consider vh-100 or other height controls if needed */}
         <h6 className="card-title text-secondary mb-0">Results</h6>
         <hr className="border-1 border-secondary opacity-20" />

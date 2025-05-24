@@ -43,7 +43,7 @@ export default function ElectionListTable({
   }
 
   return (
-    <div className="card h-100 border-1 rounded-4 mt-4" style={{minHeight: "46vh"}}>
+    <div className="card h-100 border-1 rounded-4 mt-4 shadow-sm" style={{minHeight: "46vh"}}>
       <div className="card-header rounded-top-4 bg-light">
         <h5 className="mb-0 text-secondary fw-normal">
           Manage Election Periods
