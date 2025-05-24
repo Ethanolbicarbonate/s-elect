@@ -131,7 +131,7 @@ export default function StudentLayout({ children }) {
 
         {/* Main Content Area */}
         <main
-          className="flex-grow-1 p-4"
+          className="flex-grow-1 p-4 bg-light"
           style={{
             backgroundImage:
               "radial-gradient(circle,rgba(116, 204, 248, 0.35) 1px, transparent 1px)",

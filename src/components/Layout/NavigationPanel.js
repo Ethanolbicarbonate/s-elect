@@ -103,7 +103,7 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
                   pathname === item.href ||
                   (item.href === "/dashboard" &&
                     pathname.startsWith("/dashboard"))
-                    ? "active text-white bg-primary"
+                    ? "active text-white"
                     : "text-secondary"
                 }`}
                 aria-current={pathname === item.href ? "page" : undefined}
