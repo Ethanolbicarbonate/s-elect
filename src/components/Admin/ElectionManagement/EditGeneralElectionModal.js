@@ -17,16 +17,19 @@ function formatDateToLocalInput(dateString) {
     const date = new Date(dateString); // Parses ISO string (assumed UTC from DB) into local Date object
     // Check for invalid date
     if (isNaN(date.getTime())) {
-        console.error("Invalid date string provided to formatDateToLocalInput:", dateString);
-        return "";
+      console.error(
+        "Invalid date string provided to formatDateToLocalInput:",
+        dateString
+      );
+      return "";
     }
 
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is 0-indexed
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth() is 0-indexed
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   } catch (error) {
     console.error("Error formatting date for input:", dateString, error);
@@ -40,6 +43,7 @@ export default function EditGeneralElectionModal({
   electionData, // This should be the full election object being edited
   isLoading,
   onSubmitUpdate, // Function to handle the API PUT call
+  formStartDate,
 }) {
   const [formData, setFormData] = useState({
     id: null,
@@ -79,6 +83,16 @@ export default function EditGeneralElectionModal({
     if (new Date(formData.startDate) >= new Date(formData.endDate)) {
       setLocalError("Start date must be before end date.");
       return;
+    }
+    if (formData.status === "UPCOMING") {
+      const now = new Date(); // Current local time
+      // Compare formStartDate (which is local) with current local time
+      if (formStartDate <= now) {
+        setLocalError(
+          "Cannot set status to 'UPCOMING' if the start date is in the past or is current time."
+        );
+        return;
+      }
     }
     if (
       electionData &&

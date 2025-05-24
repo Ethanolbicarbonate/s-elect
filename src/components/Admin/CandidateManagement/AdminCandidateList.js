@@ -8,7 +8,6 @@ export default function AdminCandidateList({
   onEdit,
   onDelete,
   canManage,
-  managementScope,
   partylists: allPartylistsInScope,
 }) {
   if (isLoading && candidates.length === 0) {
@@ -17,11 +16,20 @@ export default function AdminCandidateList({
 
   if (!isLoading && candidates.length === 0) {
     return (
-      <div className="alert alert-info mt-3">
+      <div className="alert alert-info">
         No candidates found for the current scope and filters.
       </div>
     );
   }
+
+  console.log(
+    "[AdminCandidateList] Props received - candidates:",
+    JSON.stringify(candidates.slice(0, 2))
+  );
+  console.log(
+    "[AdminCandidateList] Props received - allPartylistsInScope:",
+    JSON.stringify(allPartylistsInScope)
+  );
 
   const groupedCandidates = candidates.reduce((acc, candidate) => {
     const partylistIdKey =
@@ -38,47 +46,56 @@ export default function AdminCandidateList({
   const sortedGroupKeys = Object.keys(groupedCandidates).sort((a, b) => {
     if (a === "INDEPENDENT") return 1;
     if (b === "INDEPENDENT") return -1;
-    // Find partylist names for sorting from the passed 'allPartylistsInScope'
+
     const partylistA = allPartylistsInScope?.find((p) => p.id === a);
     const partylistB = allPartylistsInScope?.find((p) => p.id === b);
-    const nameA = partylistA?.name || a; // Fallback to ID if somehow not found
-    const nameB = partylistB?.name || b; // Fallback to ID if somehow not found
+    const nameA = partylistA?.name || a;
+    const nameB = partylistB?.name || b;
     return nameA.localeCompare(nameB);
   });
+  console.log("[AdminCandidateList] Sorted Group Keys:", sortedGroupKeys);
 
   return (
     <div className="mt-3">
       {sortedGroupKeys.map((partylistIdKey) => {
-        // Renamed variable for clarity
         const group = groupedCandidates[partylistIdKey];
+        let groupName = "Error: Partylist Name Not Found";
+        let partylistForHeader = null;
 
-        // --- CORRECTED LOGIC FOR groupName AND partylistDetails ---
-        let groupName = "Unknown Group";
-        let partylistForHeader = null; // To store the full partylist object for the header
+        console.log(
+          `[AdminCandidateList] Processing group key: ${partylistIdKey}`
+        );
 
         if (partylistIdKey === "INDEPENDENT") {
           groupName = "Independent Candidates";
-        } else if (allPartylistsInScope && allPartylistsInScope.length > 0) {
-          partylistForHeader = allPartylistsInScope.find(
-            (p) => p.id === partylistIdKey
-          );
-          if (partylistForHeader) {
-            groupName = partylistForHeader.name;
+        } else {
+          if (allPartylistsInScope && allPartylistsInScope.length > 0) {
+            partylistForHeader = allPartylistsInScope.find(
+              (p) => p.id === partylistIdKey
+            );
+            if (partylistForHeader) {
+              groupName = partylistForHeader.name;
+              // console.log(`[AdminCandidateList] Found partylist: ${partylistForHeader.name} (ID: ${partylistIdKey})`);
+            } else {
+              groupName = `Partylist (ID: ${partylistIdKey})`; // Fallback if not found
+              console.warn(
+                `[AdminCandidateList] Partylist with ID ${partylistIdKey} NOT FOUND in allPartylistsInScope. Displaying ID. allPartylistsInScope content:`,
+                JSON.stringify(allPartylistsInScope)
+              );
+            }
           } else {
-            // Fallback if partylist ID from candidate doesn't match any in the provided list
-            // This shouldn't happen if data is consistent
-            groupName = `Partylist (ID: ${partylistIdKey})`;
+            groupName = `Partylist (ID: ${partylistIdKey}) - No Partylist Data Provided`; // Fallback if list is empty/null
             console.warn(
-              `Partylist with ID ${partylistIdKey} not found in allPartylistsInScope for header.`
+              `[AdminCandidateList] allPartylistsInScope is empty or undefined for key ${partylistIdKey}.`
             );
           }
-        } else {
-          // Fallback if allPartylistsInScope is not available or empty, but we have a partylist ID
-          groupName = `Partylist (ID: ${partylistIdKey})`;
         }
 
         return (
-          <div key={partylistIdKey} className="mb-4 card rounded-3 pb-4">
+          <div
+            key={partylistIdKey}
+            className="mb-4 card rounded-3 pb-4 shadow-sm"
+          >
             <div className="card-header bg-light py-2 rounded-top-3">
               <h5 className="mb-0 fw-normal fs-6 text-secondary">
                 {groupName}
@@ -106,8 +123,18 @@ export default function AdminCandidateList({
                     >
                       Photo
                     </th>
-                    <th style={{ width: "30%" }} className="fw-normal fs-7 text-secondary">Name</th>
-                    <th style={{ width: "30%" }} className="fw-normal fs-7 text-secondary">Position</th>
+                    <th
+                      style={{ width: "30%" }}
+                      className="fw-normal fs-7 text-secondary"
+                    >
+                      Name
+                    </th>
+                    <th
+                      style={{ width: "30%" }}
+                      className="fw-normal fs-7 text-secondary"
+                    >
+                      Position
+                    </th>
                     {/* Hide Bio on screens smaller than md */}
                     <th
                       style={{ width: "25%" }}
@@ -116,7 +143,10 @@ export default function AdminCandidateList({
                       Bio Snippet
                     </th>
                     {canManage && (
-                      <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-secondary">
+                      <th
+                        style={{ width: "10%" }}
+                        className="text-end fw-normal fs-7 text-secondary"
+                      >
                         Actions
                       </th>
                     )}
@@ -174,13 +204,23 @@ export default function AdminCandidateList({
                             ""
                           )}
                         </td>
-                        <td>{candidate.position?.name || <span className="text-secondary opacity-50">N/A</span>}</td>
+                        <td>
+                          {candidate.position?.name || (
+                            <span className="text-secondary opacity-50">
+                              N/A
+                            </span>
+                          )}
+                        </td>
                         <td
                           className="text-truncate d-none d-md-table-cell"
                           style={{ maxWidth: "150px" }}
                           title={candidate.bio}
                         >
-                          {candidate.bio || <span className="text-secondary opacity-50">N/A</span>}
+                          {candidate.bio || (
+                            <span className="text-secondary opacity-50">
+                              N/A
+                            </span>
+                          )}
                         </td>
                         {canManage && (
                           <td className="text-end">

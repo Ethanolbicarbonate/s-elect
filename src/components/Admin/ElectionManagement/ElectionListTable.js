@@ -7,11 +7,12 @@ export default function ElectionListTable({
   onEditGeneralClick,
   onExtendClick,
   onEndElectionNow,
+  onDeleteElection,
 }) {
   // --- Loading and Empty States (remain the same) ---
   if (isLoading && elections.length === 0) {
     return (
-      <div className="card h-100 border-1 rounded-4 mt-4">
+      <div className="card h-100 border-1 rounded-4 mt-4" style={{minHeight: "46vh"}}>
         <div className="card-header rounded-top-4 bg-light">
           <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
         </div>
@@ -30,7 +31,7 @@ export default function ElectionListTable({
 
   if (!isLoading && elections.length === 0) {
     return (
-      <div className="card h-100 border-1 rounded-4 mt-4">
+      <div className="card h-100 border-1 rounded-4 mt-4" style={{minHeight: "46vh"}}>
         <div className="card-header rounded-top-4 bg-light">
           <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
         </div>
@@ -42,7 +43,7 @@ export default function ElectionListTable({
   }
 
   return (
-    <div className="card h-100 border-1 rounded-4 mt-4">
+    <div className="card h-100 border-1 rounded-4 mt-4" style={{minHeight: "46vh"}}>
       <div className="card-header rounded-top-4 bg-light">
         <h5 className="mb-0 text-secondary fw-normal">
           Manage Election Periods
@@ -57,12 +58,26 @@ export default function ElectionListTable({
               <tr>
                 <th className="fw-normal fs-7 text-secondary">Name</th>
                 {/* Hide Start/End Dates on very small screens, show on sm and up */}
-                <th className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">Start</th>
-                <th className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">End</th>
+                <th className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
+                  Start
+                </th>
+                <th className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
+                  End
+                </th>
                 <th className="fw-normal fs-7 text-secondary">Status</th>
                 {/* Hide Extensions on small screens, show on md and up */}
-                <th className="d-none d-md-table-cell fw-normal fs-7 text-secondary">Extensions</th>
-                <th className="fw-normal fs-7 text-secondary text-center" style={{ minWidth: "80px" }}>Actions</th>
+                <th className="d-none d-md-table-cell fw-normal fs-7 text-secondary">
+                  Extensions
+                </th>
+                <th
+                  className="fw-normal fs-7 text-end text-secondary"
+                  style={{
+                    minWidth: "80px",
+                    padding: "0.25rem 3.25rem 0.25rem 0.25rem",
+                  }}
+                >
+                  Actions
+                </th>
                 {/* Give actions a min-width */}
               </tr>
             </thead>
@@ -160,7 +175,18 @@ export default function ElectionListTable({
                           election.status === "ARCHIVED"
                         }
                       >
-                        <i className="bi bi-x-circle-fill"></i>
+                        <i className="bi bi-slash-circle-fill"></i>
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-danger py-0 px-1 border-0" // Changed to btn-danger, added margin
+                        title="Delete Election Period Permanently"
+                        onClick={() =>
+                          onDeleteElection(election.id, election._count)
+                        } // Pass ID and counts
+                        disabled={isLoading} // Potentially disable based on status too, e.g., not if ONGOING
+                      >
+                        <i className="bi bi-trash-fill"></i>{" "}
+                        {/* Different trash icon for distinct action */}
                       </button>
                     </div>
                   </td>

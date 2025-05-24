@@ -213,25 +213,32 @@ export default function ElectionEntitiesPage() {
 
   // Filter entities based on managementScope
   useEffect(() => {
-    if (!managementScope.type) return;
+    if (!managementScope.type) {
+      setFilteredPositions([]); // Clear if no scope
+      setFilteredPartylists([]);
+      setFilteredCandidates([]);
+      return;
+    }
 
-    setFilteredPositions(
-      positions.filter(
-        (p) =>
-          p.type === managementScope.type &&
-          (p.type === PositionTypeEnum.USC ||
-            p.college === managementScope.college)
-      )
+    const newFilteredPositions = positions.filter(
+      (p) =>
+        p.type === managementScope.type &&
+        (p.type === PositionTypeEnum.USC ||
+          p.college === managementScope.college)
     );
-    setFilteredPartylists(
-      partylists.filter(
-        (pl) =>
-          pl.type === managementScope.type &&
-          (pl.type === PositionTypeEnum.USC ||
-            pl.college === managementScope.college)
-      )
+    setFilteredPositions(newFilteredPositions);
+
+    const newFilteredPartylists = partylists.filter(
+      (pl) =>
+        pl.type === managementScope.type &&
+        (pl.type === PositionTypeEnum.USC ||
+          pl.college === managementScope.college)
     );
-    // Filter candidates: primary scope + candidate list filters
+    setFilteredPartylists(newFilteredPartylists);
+    console.log("[election-entities] managementScope:", managementScope);
+    console.log("[election-entities] Original partylists:", partylists);
+    console.log("[election-entities] newFilteredPartylists:", newFilteredPartylists);
+
     let tempFilteredCandidates = candidates.filter(
       (c) =>
         c.position?.type === managementScope.type &&
@@ -462,7 +469,10 @@ export default function ElectionEntitiesPage() {
       candidates.length === 0);
 
   return (
-    <div className="container-fluid p-0 m-0">
+    <div
+      className="container-fluid p-0 m-0 d-flex flex-column"
+      style={{ minHeight: "86vh" }}
+    >
       {pageError && <div className="alert alert-danger m-3">{pageError}</div>}
       {pageSuccessMessage && (
         <div className="alert alert-success m-3">{pageSuccessMessage}</div>
@@ -566,7 +576,7 @@ export default function ElectionEntitiesPage() {
       </div>
 
       {selectedElectionId && managementScope.type && (
-        <div className="bg-white mt-4 rounded-4 border">
+        <div className="bg-white mt-4 rounded-4 border flex-grow-1">
           <div className="px-3 py-3  bg-light rounded-top-4">
             <h4 className="text-secondary fs-4 fw-normal">
               {managementScope.type}
@@ -715,6 +725,7 @@ export default function ElectionEntitiesPage() {
                   onDelete={handleDeleteCandidate}
                   canManage={canManageCurrentScope()}
                   managementScope={managementScope} // Pass scope for potential grouping/display logic in list
+                  partylists={partylists} 
                 />
               </>
             )}

@@ -170,7 +170,7 @@ model Partylist {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([electionId, name]) // Partylist name should be unique within an election
+  @@unique([electionId, name, type, college]) // Partylist name should be unique within an election
 }
 
 model Candidate {

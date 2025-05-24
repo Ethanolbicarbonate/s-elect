@@ -26,22 +26,22 @@ export default function AdminPartylistList({
         <thead>
           <tr>
             {/* Hide Logo on xs, show sm and up */}
-            <th style={{ width: "5%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
+            <th style={{ width: "5%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
               Logo
             </th>
-            <th style={{ width: "25%" }} className="fw-normal fs-7 text-secondary">Name</th>
+            <th style={{ width: "25%" }} className="fw-normal fs-7 text-secondary text-truncate">Name</th>
             {/* Hide Acronym on xs, show sm and up */}
-            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
+            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
               Acronym
             </th>
-            <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary">Type</th>
-            <th style={{ width: "15%" }} className="fw-normal fs-7 text-secondary">College</th>
+            <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary text-truncate">Type</th>
+            <th style={{ width: "15%" }} className="fw-normal fs-7 text-secondary text-truncate">College</th>
             {/* Hide Platform on screens smaller than md */}
-            <th style={{ width: "25%" }} className="d-none d-md-table-cell fw-normal fs-7 text-secondary">
+            <th style={{ width: "25%" }} className="d-none d-md-table-cell fw-normal fs-7 text-secondary text-truncate">
               Platform Snippet
             </th>
             {canManage && (
-              <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-secondary">
+              <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-secondary text-truncate">
                 Actions
               </th>
             )}

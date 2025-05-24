@@ -185,16 +185,59 @@ export default function ElectionSettingsPage() {
     }
   };
 
+  const fetchSingleElectionForCounts = async (electionId) => {
+    // Helper to fetch specific election data if not already fully loaded with counts
+    // Or rely on `fetchElections` to always get counts if that's updated.
+    // For now, let's assume `fetchElections` will populate `_count` from the modified GET all.
+    // If `fetchElections` GET /api/admin/elections (plural) doesn't include counts for all,
+    // then you'd fetch specifically here: /api/admin/elections/${electionId}
+    const electionData = elections.find((e) => e.id === electionId);
+    if (electionData && electionData._count) {
+      return electionData._count;
+    }
+    // Fallback if counts not in main list (should be after API update)
+    try {
+      const res = await fetch(`/api/admin/elections/${electionId}`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data._count;
+    } catch {
+      return null;
+    }
+  };
+
   const handleEndElectionNow = async (electionId, currentStatus) => {
     if (currentStatus === "ENDED" || currentStatus === "ARCHIVED") {
       alert(`Election is already ${currentStatus}.`);
       return;
     }
-    if (!confirm(`Are you sure you want to "end" this election now?`)) return;
+
+    // --- WARNING FOR ENDING ---
+    const counts = await fetchSingleElectionForCounts(electionId);
+    let entityWarning = "";
+    if (counts) {
+      const { positions = 0, partylists = 0, candidates = 0 } = counts;
+      if (positions > 0 || partylists > 0 || candidates > 0) {
+        entityWarning = `\n\nWarning: This election has existing entities:
+            - Positions: ${positions}
+            - Partylists: ${partylists}
+            - Candidates: ${candidates}
+            Ending the election will not remove these entities.`;
+      }
+    }
+    // --- END WARNING ---
+
+    if (
+      !confirm(
+        `Are you sure you want to "end" this election now? ${entityWarning}`
+      )
+    )
+      return;
 
     setIsLoading(true);
     clearPageMessages();
     try {
+      // ... (rest of API call to set status to ENDED) ...
       const res = await fetch(`/api/admin/elections/${electionId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -206,6 +249,74 @@ export default function ElectionSettingsPage() {
       }
       displayPageMessage("Election ended successfully.");
       fetchElections();
+    } catch (err) {
+      displayPageMessage(err.message, false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // --- NEW: Handler for Deleting an Election ---
+  const handleDeleteElection = async (electionId, countsFromTable) => {
+    // `countsFromTable` comes from election._count if `fetchElections` is updated
+    // If not, fetch them specifically.
+    let counts = countsFromTable;
+    if (!counts) {
+      // Fallback if counts weren't passed directly from the table row's data
+      counts = await fetchSingleElectionForCounts(electionId);
+    }
+
+    let entityWarning = "This will permanently delete the election period.";
+    if (counts) {
+      const { positions = 0, partylists = 0, candidates = 0 } = counts;
+      if (positions > 0 || partylists > 0 || candidates > 0) {
+        entityWarning = `\n\nWarning: This election has existing entities:
+            - Positions: ${positions}
+            - Partylists: ${partylists}
+            - Candidates: ${candidates}
+            Deleting this election will also delete ALL associated positions, partylists, and candidates. This action cannot be undone.`;
+      }
+    }
+
+    if (
+      !window.confirm(
+        `Are you sure you want to PERMANENTLY DELETE this election period? ${entityWarning}`
+      )
+    )
+      return;
+
+    // Second confirmation for such a destructive action could be good UX
+    // const confirmationName = prompt(`To confirm deletion, please type the election name or "DELETE":`);
+    // if (confirmationName !== "DELETE" /* && confirmationName !== electionNameToDelete */) {
+    //    displayPageMessage("Deletion cancelled.", false);
+    //    return;
+    // }
+
+    setIsLoading(true);
+    clearPageMessages();
+    try {
+      const res = await fetch(`/api/admin/elections/${electionId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const errorData = await res
+          .json()
+          .catch(() => ({
+            error: "Failed to delete election. Unknown error.",
+          }));
+        throw new Error(errorData.error || "Failed to delete election period.");
+      }
+      // If DELETE returns 204, res.json() will fail. If it returns JSON (like my example API), parse it.
+      // const result = res.status === 204 ? { message: "Election deleted successfully." } : await res.json();
+      // displayPageMessage(result.message || "Election deleted successfully!");
+
+      // Assuming API returns JSON message on successful delete as per my example API
+      const result = await res.json();
+      displayPageMessage(
+        result.message || "Election and related data deleted successfully!"
+      );
+
+      fetchElections(); // Refresh the list
     } catch (err) {
       displayPageMessage(err.message, false);
     } finally {
@@ -242,6 +353,7 @@ export default function ElectionSettingsPage() {
         onEditGeneralClick={(election) => setEditingElection(election)}
         onExtendClick={(election) => setExtendingElection(election)}
         onEndElectionNow={handleEndElectionNow}
+        onDeleteElection={handleDeleteElection}
       />
 
       {editingElection && (

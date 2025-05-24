@@ -78,7 +78,6 @@ export async function POST(request, context) {
 
   try {
     const election = await prisma.election.findUnique({
-      // Ensure election exists
       where: { id: electionId },
     });
     if (!election) {
@@ -89,12 +88,10 @@ export async function POST(request, context) {
     }
 
     const data = await request.json();
-    // Destructure new fields: type and college
-    const { name, acronym, logoUrl, platform, type, college } = data;
+    const { name, acronym, logoUrl, platform, type, college } = data; // 'type' and 'college' come from client
 
-    // --- VALIDATE REQUIRED FIELDS & ENUMS ---
+    // 1. Validate required fields & enums
     if (!name || !type) {
-      // Name and Type are essential for a partylist
       return NextResponse.json(
         { error: "Missing required fields: name, type." },
         { status: 400 }
@@ -106,6 +103,7 @@ export async function POST(request, context) {
         { status: 400 }
       );
     }
+    // If type is CSC, college is required and must be a valid enum value
     if (
       type === PositionType.CSC &&
       (!college || !Object.values(College).includes(college))
@@ -116,11 +114,17 @@ export async function POST(request, context) {
       );
     }
 
-    let finalCollege = college; // Variable to hold the college to be saved
+    // 2. Determine the final college value to be saved based on role and type
+    let collegeToSave = college; // Start with what client sent
+
+    if (type === PositionType.USC) {
+      collegeToSave = null; // USC partylists ALWAYS have null college
+    }
 
     // --- SCOPE VALIDATION FOR MODERATOR ---
     if (session.user.role === "MODERATOR") {
       if (type === PositionType.USC) {
+        // Moderator creating USC partylist
         if (session.user.college !== null) {
           // College Mod trying to create USC partylist
           return NextResponse.json(
@@ -131,8 +135,9 @@ export async function POST(request, context) {
             { status: 403 }
           );
         }
-        finalCollege = null; // Ensure college is null for USC partylists created by USC Mod
+        // USC Mod creating USC partylist is fine, collegeToSave is already null.
       } else if (type === PositionType.CSC) {
+        // Moderator creating CSC partylist
         if (session.user.college === null) {
           // USC Mod trying to create CSC partylist
           return NextResponse.json(
@@ -142,8 +147,8 @@ export async function POST(request, context) {
             { status: 403 }
           );
         }
-        if (finalCollege !== session.user.college) {
-          // College Mod trying to create for wrong college
+        // College Mod creating CSC partylist: 'collegeToSave' must match their assigned college
+        if (collegeToSave !== session.user.college) {
           return NextResponse.json(
             {
               error: `Forbidden: You can only create CSC partylists for your assigned college (${session.user.college}).`,
@@ -151,46 +156,39 @@ export async function POST(request, context) {
             { status: 403 }
           );
         }
-        // College Mod creating for their college - finalCollege is already set and validated
       }
-    } else if (session.user.role === "SUPER_ADMIN") {
-      if (type === PositionType.USC) {
-        finalCollege = null; // Super Admin creating USC partylist, college must be null
-      }
-      // If type is CSC, 'college' from request body is used (already validated above)
     }
 
-    const partylist = await prisma.partylist.create({
+    // 4. Create the partylist in the database
+    const newPartylist = await prisma.partylist.create({
       data: {
         name,
         acronym,
         logoUrl,
         platform,
         electionId: electionId,
-        type: type, // Save the type
-        college: finalCollege, // Save the (potentially moderated) college
+        type: type, // The validated type from client
+        college: collegeToSave, // The determined college (null for USC, specific college for CSC)
       },
     });
-    return NextResponse.json(partylist, { status: 201 });
+    return NextResponse.json(newPartylist, { status: 201 });
   } catch (error) {
     console.error(
       `Error creating partylist for election ${electionId}:`,
       error
     );
-    // Update unique constraint error check if your @@unique now includes type/college
-    // Prisma error P2002 for unique constraint violation
-    // The target will be like ['electionId', 'name', 'type', 'college']
     if (error.code === "P2002" && error.meta?.target) {
+      // error.meta.target should be an array like ['electionId', 'name', 'type', 'college']
       const targetFields = error.meta.target.join(", ");
       return NextResponse.json(
         {
-          error: `A partylist with these details (${targetFields}) already exists for this election.`,
+          error: `A partylist with these details (${targetFields}) already exists for this election. Please use a different name, type, or college combination.`,
         },
-        { status: 409 }
+        { status: 409 } // 409 Conflict
       );
     }
     return NextResponse.json(
-      { error: "Failed to create partylist." },
+      { error: `Failed to create partylist. ${error.message}` },
       { status: 500 }
     );
   }
