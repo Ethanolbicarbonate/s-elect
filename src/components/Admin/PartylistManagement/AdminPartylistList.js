@@ -52,7 +52,7 @@ export default function AdminPartylistList({
             <tr key={pl.id}>
               <td className="d-none d-sm-table-cell">
                 {pl.logoUrl ? (
-                  <img
+                  <image
                     src={pl.logoUrl}
                     alt={`${pl.name} logo`}
                     style={{

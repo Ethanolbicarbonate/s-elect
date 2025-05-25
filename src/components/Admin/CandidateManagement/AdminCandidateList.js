@@ -163,7 +163,7 @@ export default function AdminCandidateList({
                       <tr key={candidate.id}>
                         <td className="d-none d-sm-table-cell">
                           {candidate.photoUrl ? (
-                            <img
+                            <image
                               src={candidate.photoUrl}
                               alt={`${candidate.firstName} ${candidate.lastName}`}
                               style={{
