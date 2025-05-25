@@ -57,7 +57,7 @@ export default function StudentLayout({ children }) {
   // Determine current page name for breadcrumb (simple example)
   let currentPageName = "Dashboard";
   if (pathname.startsWith("/dashboard")) currentPageName = "Dashboard";
-  else if (pathname.startsWith("/candidates")) currentPageName = "Candidates";
+  else if (pathname.startsWith("/election-details")) currentPageName = "Election Details";
   else if (pathname.startsWith("/vote")) currentPageName = "Vote";
   else if (pathname.startsWith("/about-help")) currentPageName = "About/Help";
   else if (pathname.startsWith("/settings")) currentPageName = "Settings";

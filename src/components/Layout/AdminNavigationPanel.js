@@ -99,7 +99,7 @@ export default function AdminNavigationPanel({
           {
             href: `${entityManagementPath}?scope=CSC&college=${adminCollegeContext}`, // College Mod needs specific scope
             label: `Manage ${adminCollegeContext} CSC Entities`,
-            icon: "bi-collection-fill",
+            icon: "bi-diagram-2-fill",
           },
           {
             href: `/admin/results?scope=CSC&college=${adminCollegeContext}`,

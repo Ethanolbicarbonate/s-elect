@@ -33,7 +33,7 @@ export default function NavigationPanel({ showSidebar, toggleSidebar }) {
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: "bi-grid-fill" },
-    { href: "/candidates", label: "Candidates", icon: "bi-people-fill" },
+    { href: "/election-details", label: "Election Details", icon: "bi bi-collection-fill" },
     { href: "/vote", label: "Vote", icon: "bi bi-check-square-fill" },
     { href: "/about-help", label: "About/Help", icon: "bi-info-circle-fill" },
     { href: "/settings", label: "Settings", icon: "bi-gear-fill" },

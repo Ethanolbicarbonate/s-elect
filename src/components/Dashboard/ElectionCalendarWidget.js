@@ -4,64 +4,54 @@ import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-export default function ElectionCalendarWidget({ electionEvents = [] }) {
+export default function ElectionCalendarWidget({ electionPeriod = null }) {
+  // Renamed prop
   const [activeMonth, setActiveMonth] = useState(new Date());
 
   useEffect(() => {
-    if (electionEvents && electionEvents.length > 0) {
-      // Sort by startDate to find the earliest election month
-      const sortedEvents = [...electionEvents].sort(
-        (a, b) =>
-          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-      );
-      // Use startDate from the first event in the sorted list
-      const firstEventStartDate = new Date(sortedEvents[0].startDate);
+    // If a specific election period is provided, set the calendar to its start month
+    if (electionPeriod && electionPeriod.startDate) {
+      const eventStartDate = new Date(electionPeriod.startDate);
       setActiveMonth(
-        new Date(
-          firstEventStartDate.getFullYear(),
-          firstEventStartDate.getMonth(),
-          1
-        )
+        new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), 1)
       );
     } else {
-      // If no election events, default to current month
-      setActiveMonth(
-        new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-      );
+      // If no specific election period, default to the current month
+      const now = new Date();
+      setActiveMonth(new Date(now.getFullYear(), now.getMonth(), 1));
     }
-  }, [electionEvents]); // Dependency array is correct
+  }, [electionPeriod]); // Update when the electionPeriod prop changes
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0); // Normalize today's date for comparison
 
   const handleActiveStartDateChange = ({ activeStartDate }) => {
     setActiveMonth(activeStartDate);
   };
 
+  // tileContent and tileClassName now work with a single electionPeriod
   const tileContent = ({ date, view }) => {
-    if (view === "month") {
+    if (view === "month" && electionPeriod) {
       const currentDate = new Date(date);
-      currentDate.setHours(0, 0, 0, 0); // Normalize tile date
+      currentDate.setHours(0, 0, 0, 0);
 
-      // Check if currentDate falls within the range of ANY election event
-      const isVotingDay = electionEvents.some((event) => {
-        const startDate = new Date(event.startDate);
-        startDate.setHours(0, 0, 0, 0);
-        const endDate = new Date(event.endDate);
-        endDate.setHours(0, 0, 0, 0); // Use effective end date passed from parent
+      const eventStartDate = new Date(electionPeriod.startDate);
+      eventStartDate.setHours(0, 0, 0, 0);
+      const eventEndDate = new Date(electionPeriod.endDate); // Already the effective end date
+      eventEndDate.setHours(0, 0, 0, 0);
 
-        return (
-          currentDate.getTime() >= startDate.getTime() &&
-          currentDate.getTime() <= endDate.getTime()
-        );
-      });
+      const isVotingDay =
+        currentDate.getTime() >= eventStartDate.getTime() &&
+        currentDate.getTime() <= eventEndDate.getTime();
 
       const isToday = currentDate.getTime() === today.getTime();
 
       if (isVotingDay && !isToday) {
+        // Don't put a dot on today if it's also a voting day (today-highlight handles it)
         return (
           <div className="d-flex justify-content-center mt-1">
-            <div className="election-dot-single bg-primary"></div>
+            <div className="election-dot-single bg-primary"></div>{" "}
+            {/* Your existing dot style */}
           </div>
         );
       }
@@ -73,28 +63,27 @@ export default function ElectionCalendarWidget({ electionEvents = [] }) {
     if (view === "month") {
       const normalizedDate = new Date(date);
       normalizedDate.setHours(0, 0, 0, 0);
-
       const isToday = normalizedDate.getTime() === today.getTime();
-
-      const isVotingDay = electionEvents.some((event) => {
-        const startDate = new Date(event.startDate);
-        startDate.setHours(0, 0, 0, 0);
-        const endDate = new Date(event.endDate);
-        endDate.setHours(0, 0, 0, 0);
-        return (
-          normalizedDate.getTime() >= startDate.getTime() &&
-          normalizedDate.getTime() <= endDate.getTime()
-        );
-      });
-
       let classes = [];
+
       if (isToday) {
-        classes.push("today-highlight");
-      }
-      if (isVotingDay) {
-        classes.push("voting-day"); // Add a class for general voting days
+        classes.push("today-highlight"); // Your class for today
       }
 
+      if (electionPeriod) {
+        const eventStartDate = new Date(electionPeriod.startDate);
+        eventStartDate.setHours(0, 0, 0, 0);
+        const eventEndDate = new Date(electionPeriod.endDate);
+        eventEndDate.setHours(0, 0, 0, 0);
+
+        const isVotingDay =
+          normalizedDate.getTime() >= eventStartDate.getTime() &&
+          normalizedDate.getTime() <= eventEndDate.getTime();
+
+        if (isVotingDay) {
+          classes.push("voting-day"); // Your class for voting days
+        }
+      }
       return classes.length > 0 ? classes.join(" ") : null;
     }
     return null;
@@ -108,7 +97,7 @@ export default function ElectionCalendarWidget({ electionEvents = [] }) {
       <div className="card-body d-flex flex-column p-3">
         <div className="d-flex justify-content-between align-items-center mb-0">
           <h6 className="card-title text-secondary mb-0 fw-normal">
-            Election Calendar
+            {electionPeriod ? electionPeriod.name : "Election Calendar"}
           </h6>
         </div>
         <hr className="border-1 border-secondary opacity-20" />
@@ -117,7 +106,7 @@ export default function ElectionCalendarWidget({ electionEvents = [] }) {
             locale="en-US"
             onActiveStartDateChange={handleActiveStartDateChange}
             activeStartDate={activeMonth}
-            value={null}
+            value={activeMonth} // Set value to activeMonth to highlight the month, or null if no day selection
             tileClassName={tileClassName}
             tileContent={tileContent}
             formatShortWeekday={(locale, date) =>

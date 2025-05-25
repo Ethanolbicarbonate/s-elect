@@ -329,10 +329,8 @@ export default function CandidateForm({
                     </select>
                     {compatiblePartylists.length === 0 &&
                       !formData.isIndependent && (
-                        <div className="form-text text-warning fs-7 ms-1 text-center opacity-75">
-                          No partylists compatible with the selected
-                          position&apos;s scope.<br></br> Please add/check
-                          partylists or select a different position.
+                        <div className="form-text text-warning fs-7 ms-1 text-right opacity-75">
+                          No partylists added.
                         </div>
                       )}
                   </div>
