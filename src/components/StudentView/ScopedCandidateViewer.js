@@ -287,10 +287,10 @@ export default function ScopedCandidateViewer({
               ))) && (
             <div
               key={position.id}
-              className="mt-5 mb-2 position-section border rounded-2"
+              className="mt-5 mb-2 position-section"
 
             >
-              <div className="bg-light-subtle rounded-top-2 p-3 mb-4 border-bottom">
+              <div className="p-3 mb-4">
                 <h4 className="position-title text-center lh-1 mb-0">
                   {position.name}
                   <br></br>
