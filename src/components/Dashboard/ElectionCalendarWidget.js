@@ -94,14 +94,33 @@ export default function ElectionCalendarWidget({ electionPeriod = null }) {
 
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm">
-      <div className="card-body d-flex flex-column p-3">
-        <div className="d-flex justify-content-between align-items-center mb-0">
-          <h6 className="card-title text-secondary mb-0 fw-normal">
-            {electionPeriod ? electionPeriod.name : "Election Calendar"}
+      <div className="card-body d-flex flex-column p-0">
+        <div
+          className="card-header d-flex justify-content-between align-items-center bg-white rounded-top-4"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundSize: "8px 8px",
+          }}
+        >
+          <h6 className="card-title text-secondary mb-0">
+            {electionPeriod
+              ? `${electionPeriod.name} Calendar`
+              : "Election Calendar"}{" "}
           </h6>
+          <span
+            className={`badge rounded-circle p-1 d-flex align-items-center justify-content-center ${
+              electionPeriod ? "bg-primary-subtle" : "bg-secondary-subtle"
+            }`}
+          >
+            <i
+              className={`bi bi-circle-fill ${
+                electionPeriod ? "text-primary" : "text-secondary"
+              }`}
+            ></i>
+          </span>
         </div>
-        <hr className="border-1 border-secondary opacity-20" />
-        <div className="election-calendar-custom flex-grow-1">
+        <div className="election-calendar-custom flex-grow-1 p-3">
           <Calendar
             locale="en-US"
             onActiveStartDateChange={handleActiveStartDateChange}

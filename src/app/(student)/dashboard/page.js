@@ -79,7 +79,7 @@ export default async function DashboardPage() {
   let electionStatusForWidget = "N/A";
   let electionMessageForWidget = "No active or upcoming election.";
   let electionPeriodForCalendar = null; // Singular event for calendar
-  let hasVoted = session?.user?.hasVoted || false; // Get hasVoted from session if available
+  let hasVoted = false;
 
   if (apiError) {
     electionMessageForWidget = "Could not load election data.";

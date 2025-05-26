@@ -66,6 +66,10 @@ model Election {
   positions  Position[] // Relation to Positions
   partylists Partylist[] // Relation to Partylists
   candidates Candidate[] // Relation to Candidates (direct if needed, or via Position)
+
+  StudentElectionVote StudentElectionVote[]
+  SubmittedBallot     SubmittedBallot[]
+  VoteCast            VoteCast[]
 }
 
 model ElectionExtension {
@@ -88,9 +92,6 @@ model Student {
   email      String  @unique // firstname.lastname@wvsu.edu.ph format
   password   String? // Will store hashed password
   college    College
-  // enrollmentDate DateTime  @default(now())
-  hasVoted   Boolean @default(false) // Track voting status
-
   // Fields for sign-up & verification
   isPreApproved       Boolean   @default(true) // Indicates if they are in the "enrolled" list
   emailVerified       DateTime? // Timestamp when email was verified during sign-up
@@ -103,6 +104,9 @@ model Student {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  StudentElectionVote StudentElectionVote[]
+  SubmittedBallot     SubmittedBallot[]
 }
 
 model Admin {
@@ -146,8 +150,9 @@ model Position {
 
   candidates Candidate[] // Candidates running for this position
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  VoteCast  VoteCast[]
 
   @@unique([electionId, name, college]) // A position name should be unique within an election for a specific college (or for USC if college is null)
 }
@@ -215,9 +220,68 @@ model Candidate {
   // @@unique([studentId, electionId, positionId])
   // If just names, ensure name+position+election is unique:
   // @@unique([firstName, lastName, electionId, positionId]) // This might be too strict if names are common
+  VoteCast VoteCast[]
 
   @@index([partylistId])
   @@index([positionId])
+  @@index([electionId])
+}
+
+// ... (Student and Election models) ...
+
+model StudentElectionVote {
+  id         String   @id @default(cuid())
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  electionId String
+  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade) // Cascade if election is deleted
+  votedAt    DateTime @default(now())
+
+  // Store actual votes (more complex, for later if needed, or keep votes anonymous in a separate table)
+  // For now, this model just records *that* a vote was cast.
+  // Actual ballot choices would be stored in a `Ballot` or `VoteCast` table, often anonymized from Student.
+
+  @@unique([studentId, electionId]) // Student can vote only once per election
+  @@index([electionId])
+  @@index([studentId])
+}
+
+model SubmittedBallot {
+  id          String   @id @default(cuid())
+  studentId   String // Could be made optional or linked to an anonymized voter ID later if needed
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Restrict) // Restrict deletion of student if they have a ballot
+  electionId  String
+  election    Election @relation(fields: [electionId], references: [id], onDelete: Cascade) // If election is deleted, ballots for it are too
+  submittedAt DateTime @default(now())
+
+  votesCasted VoteCast[] // Relation to individual votes in this ballot
+  // Optional: @@unique([studentId, electionId]) if a student submits only one "ballot object" per election,
+  // which is implicitly handled by StudentElectionVote model preventing re-submission.
+
+  @@index([studentId])
+  @@index([electionId])
+}
+
+model VoteCast {
+  id       String          @id @default(cuid())
+  ballotId String
+  ballot   SubmittedBallot @relation(fields: [ballotId], references: [id], onDelete: Cascade) // If ballot is deleted, its cast votes are too
+
+  positionId String
+  position   Position @relation(fields: [positionId], references: [id], onDelete: Restrict) // Don't delete position if votes are cast for it
+
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Restrict) // Don't delete candidate if they received votes
+
+  electionId String // Denormalized for easier querying of all votes in an election without going through ballot
+  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+
+  // No studentId here to help with anonymity of individual choices from the ballot submitter.
+  // The link is: Student -> SubmittedBallot -> VoteCast.
+
+  @@index([ballotId])
+  @@index([positionId])
+  @@index([candidateId])
   @@index([electionId])
 }
 

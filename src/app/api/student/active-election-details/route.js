@@ -4,55 +4,7 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path as needed
 import { ElectionStatus, PositionType, College } from "@prisma/client";
-
-// Helper: Get effective end date for a student in an election
-function getEffectiveEndDate(election, studentCollege) {
-  if (!election) return null;
-  const mainEndDate = new Date(election.endDate);
-  if (
-    !studentCollege ||
-    !election.extensions ||
-    election.extensions.length === 0
-  ) {
-    return mainEndDate;
-  }
-  const collegeExtension = election.extensions.find(
-    (ext) => ext.college === studentCollege
-  );
-  if (
-    collegeExtension &&
-    new Date(collegeExtension.extendedEndDate) > mainEndDate
-  ) {
-    return new Date(collegeExtension.extendedEndDate);
-  }
-  return mainEndDate;
-}
-
-// Helper: Get effective status for a student in an election
-function getEffectiveStatus(election, studentCollege) {
-  if (!election) return null;
-  const now = new Date();
-  const mainStartDate = new Date(election.startDate);
-  const effectiveEndDate = getEffectiveEndDate(election, studentCollege);
-
-  if (
-    election.status === ElectionStatus.ENDED ||
-    election.status === ElectionStatus.ARCHIVED
-  ) {
-    return election.status;
-  }
-  if (election.status === ElectionStatus.PAUSED) {
-    return ElectionStatus.PAUSED;
-  }
-
-  if (now >= mainStartDate && now <= effectiveEndDate) {
-    return ElectionStatus.ONGOING;
-  } else if (now < mainStartDate) {
-    return ElectionStatus.UPCOMING;
-  } else {
-    return ElectionStatus.ENDED; // Dynamically ended
-  }
-}
+import { getEffectiveStatus, getEffectiveEndDate } from '@/lib/electionUtils';
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);
