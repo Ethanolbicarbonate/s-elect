@@ -290,7 +290,6 @@ export default function VotePage() {
           >
             Go to Dashboard
           </Link>
-          {/* Optionally, link to non-sensitive results page if election is over and results are public */}
         </div>
       </div>
     );

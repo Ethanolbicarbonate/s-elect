@@ -55,7 +55,11 @@ export default function ElectionViewTabs({
         {hasUscData && (
           <li className="nav-item mt-2 ps-2" role="presentation">
             <button
-              className={`nav-link rounded-top-3 ${activeTab === "USC" ? "active fw-normal" : "text-secondary bg-light"}`}
+              className={`nav-link rounded-top-3 ${
+                activeTab === "USC"
+                  ? "active fw-normal"
+                  : "text-secondary bg-light"
+              }`}
               id="usc-tab"
               data-bs-toggle="tab" // For Bootstrap JS if you use it, otherwise just for state
               type="button"
@@ -75,7 +79,11 @@ export default function ElectionViewTabs({
         {hasCscData && (
           <li className="nav-item mt-2 pe-2" role="presentation">
             <button
-              className={`nav-link  rounded-top-3 ${activeTab === "CSC" ? "active fw-normal " : "text-secondary bg-light"}`}
+              className={`nav-link  rounded-top-3 ${
+                activeTab === "CSC"
+                  ? "active fw-normal "
+                  : "text-secondary bg-light"
+              }`}
               id="csc-tab"
               data-bs-toggle="tab"
               type="button"
@@ -89,7 +97,7 @@ export default function ElectionViewTabs({
               }}
             >
               <i className="bi bi-diagram-2-fill me-2"></i>
-              {studentCollegeName || "Your College"}
+              {studentCollegeName || "Your College"} CSC
             </button>
           </li>
         )}
@@ -128,7 +136,7 @@ export default function ElectionViewTabs({
             <ScopedCandidateViewer
               key="csc-viewer"
               scopeType="CSC"
-              scopeDisplayName={`${studentCollegeName || "Your College"}`}
+              scopeDisplayName={`${studentCollegeName || "Your College"} CSC`}
               positions={cscData.positions || []}
               partylists={cscData.partylists || []}
               candidates={cscData.candidates || []}
