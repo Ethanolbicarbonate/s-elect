@@ -65,7 +65,7 @@ model Election {
   extensions ElectionExtension[]
   positions  Position[] // Relation to Positions
   partylists Partylist[] // Relation to Partylists
-  candidates Candidate[] // Relation to Candidates (direct if needed, or via Position)
+  candidates Candidate[] // Relation to Candidates
 
   StudentElectionVote StudentElectionVote[]
   SubmittedBallot     SubmittedBallot[]
@@ -128,8 +128,6 @@ model Admin {
   @@map("admins") // Map to 'admins' table name
 }
 
-// --- NEW MODELS TO ADD ---
-
 enum PositionType {
   USC
   CSC
@@ -180,12 +178,6 @@ model Partylist {
 
 model Candidate {
   id String @id @default(cuid())
-  // Candidate details (can be linked to Student model or entered manually)
-  // Option 1: Link to Student model (if all candidates are existing students)
-  // studentId         String?  @unique // Optional: if candidate must be a student. @unique if a student can only be a candidate once globally, or remove for per-election candidacy
-  // student           Student? @relation(fields: [studentId], references: [id], onDelete: SetNull) // onDelete: SetNull or Restrict
-
-  // Option 2: Store candidate details directly (more flexible if candidates are not always students or if student data is separate)
   firstName      String
   lastName       String
   middleName     String?
@@ -208,8 +200,6 @@ model Candidate {
   // For CSC candidates, their college scope. Often derivable from their Position.
   // If position.type is CSC and position.college is set, this candidate is for that college.
   // If position.type is USC, this candidate is for USC.
-  // No separate college field needed here if it's always tied to the Position.
-
   votesReceived Int @default(0) // For tallying (can be calculated or stored) - might be better in a separate VoteTally model later
 
   createdAt DateTime @default(now())
@@ -268,10 +258,10 @@ model VoteCast {
   ballot   SubmittedBallot @relation(fields: [ballotId], references: [id], onDelete: Cascade) // If ballot is deleted, its cast votes are too
 
   positionId String
-  position   Position @relation(fields: [positionId], references: [id], onDelete: Restrict) // Don't delete position if votes are cast for it
+  position   Position @relation(fields: [positionId], references: [id], onDelete: Cascade) // Don't delete position if votes are cast for it
 
   candidateId String
-  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Restrict) // Don't delete candidate if they received votes
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade) // Don't delete candidate if they received votes
 
   electionId String // Denormalized for easier querying of all votes in an election without going through ballot
   election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
@@ -303,12 +293,6 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  // Decide if Admins and Students share the same Account/Session tables
-  // Option 1: Separate User types (more complex adapter setup)
-  // Option 2: A single User table (requires merging Student/Admin or a generic User)
-  // Option 3 (Simpler for now): Don't link accounts directly here for Credentials
-  // user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")

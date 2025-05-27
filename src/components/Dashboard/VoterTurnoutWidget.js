@@ -1,19 +1,23 @@
 // src/components/Dashboard/VoterTurnoutWidget.js
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useSession } from 'next-auth/react'; // To get student's college for CSC display
+import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react"; // To get student's college for CSC display
 
 // Helper for progress bar
 const ProgressBar = ({ percentage, label, color = "primary" }) => {
   const validPercentage = Math.max(0, Math.min(100, percentage || 0));
   return (
     <div className="mb-2">
-      {label && <div className="d-flex justify-content-between small mb-1">
-        <span>{label}</span>
-        <span className={`fw-bold text-${color}`}>{validPercentage.toFixed(1)}%</span>
-      </div>}
-      <div className="progress" style={{ height: '10px' }}>
+      {label && (
+        <div className="d-flex justify-content-between small mb-1">
+          <span className="text-secondary">{label}</span>
+          <span className={`fw-medium text-${color}`}>
+            {validPercentage.toFixed(1)}%
+          </span>
+        </div>
+      )}
+      <div className="progress" style={{ height: "10px" }}>
         <div
           className={`progress-bar bg-${color}`}
           role="progressbar"
@@ -33,7 +37,7 @@ export default function VoterTurnoutWidget({ electionId }) {
 
   const [turnoutData, setTurnoutData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [lastRefreshed, setLastRefreshed] = useState(null);
 
   const fetchTurnoutData = useCallback(async () => {
@@ -42,11 +46,15 @@ export default function VoterTurnoutWidget({ electionId }) {
       return;
     }
     setIsLoading(true);
-    setError('');
+    setError("");
     try {
-      const res = await fetch(`/api/student/election-turnout?electionId=${electionId}`);
+      const res = await fetch(
+        `/api/student/election-turnout?electionId=${electionId}`
+      );
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({ error: 'Failed to load turnout data.' }));
+        const errData = await res
+          .json()
+          .catch(() => ({ error: "Failed to load turnout data." }));
         throw new Error(errData.error || `Error: ${res.status}`);
       }
       const data = await res.json();
@@ -73,12 +81,20 @@ export default function VoterTurnoutWidget({ electionId }) {
 
   const renderContent = () => {
     if (!electionId) {
-        return <p className="text-muted text-center small p-3">No active election selected to display turnout.</p>;
+      return (
+        <p className="text-muted text-center small p-3">
+          No active election selected to display turnout.
+        </p>
+      );
     }
-    if (isLoading && !turnoutData) { // Show loading only on initial load without data
+    if (isLoading && !turnoutData) {
+      // Show loading only on initial load without data
       return (
         <div className="text-center py-3">
-          <div className="spinner-border spinner-border-sm text-primary" role="status">
+          <div
+            className="spinner-border spinner-border-sm text-primary"
+            role="status"
+          >
             <span className="visually-hidden">Loading turnout...</span>
           </div>
           <p className="small mt-1">Loading turnout data...</p>
@@ -86,79 +102,113 @@ export default function VoterTurnoutWidget({ electionId }) {
       );
     }
     if (error) {
-      return <div className="alert alert-warning small p-2 text-center">{error}</div>;
+      return (
+        <div className="alert alert-warning small p-2 text-center">{error}</div>
+      );
     }
-    if (!turnoutData || !turnoutData.overallUscTurnout) { // Check for essential data
-      return <p className="text-muted text-center small p-3">Voter turnout data is currently unavailable.</p>;
+    if (!turnoutData || !turnoutData.overallUscTurnout) {
+      // Check for essential data
+      return (
+        <p className="text-muted text-center small p-3">
+          Voter turnout data is currently unavailable.
+        </p>
+      );
     }
 
     return (
       <>
         {/* USC Turnout */}
-        <div className="mb-3">
-          <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">USC Overall Turnout</h6>
-          <ProgressBar 
+        <div className="mb-3 border p-3 rounded-3">
+          <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+            USC Overall Turnout
+          </h6>
+          <ProgressBar
             percentage={turnoutData.overallUscTurnout.percentage}
             label={`${turnoutData.overallUscTurnout.voted} / ${turnoutData.overallUscTurnout.total} students`}
             color="primary"
           />
         </div>
 
-        <div className="mb-3">
-          <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">USC Turnout by College</h6>
-          <div style={{ maxHeight: '150px', overflowY: 'auto', paddingRight: '5px' }}> {/* Scrollable list for colleges */}
+        <div className="mb-3 border p-3 rounded-3">
+          <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+            USC Turnout by College
+          </h6>
+          <div
+            style={{
+              maxHeight: "150px",
+              overflowY: "auto",
+              paddingRight: "5px",
+            }}
+          >
+            {" "}
+            {/* Scrollable list for colleges */}
             {turnoutData.uscTurnoutByCollege
-              .sort((a,b) => b.percentage - a.percentage) // Sort by highest turnout first
-              .map(collegeTurnout => (
+              .sort((a, b) => b.percentage - a.percentage) // Sort by highest turnout first
+              .map((collegeTurnout) => (
                 <ProgressBar
                   key={collegeTurnout.college}
                   label={collegeTurnout.college}
                   percentage={collegeTurnout.percentage}
-                  color="info"
+                  color="danger"
                 />
-            ))}
+              ))}
           </div>
         </div>
 
         {/* CSC Turnout for student's college */}
-        {turnoutData.specificCscTurnout && turnoutData.specificCscTurnout.college === studentCollege && (
-          <div className="mt-3 pt-2 border-top">
-            <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
-              {studentCollege} CSC Turnout
-            </h6>
-            <ProgressBar
-              percentage={turnoutData.specificCscTurnout.percentage}
-              label={`${turnoutData.specificCscTurnout.voted} / ${turnoutData.specificCscTurnout.total} students`}
-              color="success"
-            />
-          </div>
-        )}
+        {turnoutData.specificCscTurnout &&
+          turnoutData.specificCscTurnout.college === studentCollege && (
+            <div className="mt-3 p-3 border rounded-2">
+              <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+                {studentCollege} CSC Turnout
+              </h6>
+              <ProgressBar
+                percentage={turnoutData.specificCscTurnout.percentage}
+                label={`${turnoutData.specificCscTurnout.voted} / ${turnoutData.specificCscTurnout.total} students`}
+                color="success"
+              />
+            </div>
+          )}
       </>
     );
   };
 
-
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm">
-      <div className="card-body d-flex flex-column p-3">
-        <div className="d-flex justify-content-between align-items-center">
-          <h6 className="card-title text-secondary mb-0 fw-normal">Voter Turnout</h6>
+      <div className="card-body d-flex flex-column p-0">
+        <div
+          className="card-header d-flex justify-content-between align-items-center bg-white rounded-top-4"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundSize: "8px 8px",
+          }}
+        >
+          <h6 className="card-title text-secondary mb-0 fw-normal">
+            Voter Turnout
+          </h6>
           {/* Refresh button (manual) */}
-          <button 
-            className="btn btn-sm btn-link text-secondary p-0" 
-            onClick={fetchTurnoutData} 
+          <button
+            className="btn btn-sm btn-link text-secondary p-0 badge bg-secondary-subtle rounded-circle p-1 d-flex align-items-center justify-content-center"
+            onClick={fetchTurnoutData}
             disabled={isLoading}
             title="Refresh turnout data"
           >
-            <i className={`bi bi-arrow-clockwise ${isLoading ? 'fa-spin' : ''}`}></i> {/* Add spinner for refresh */}
+            <i
+              className={`text-black bi bi-arrow-clockwise ${isLoading ? "fa-spin" : ""}`}
+            ></i>{" "}
+            {/* Add spinner for refresh */}
           </button>
         </div>
-        <hr className="border-1 border-secondary opacity-20 mt-1 mb-2" />
-        <div className="flex-grow-1">
-            {renderContent()}
-        </div>
+        <div className="flex-grow-1 p-3">{renderContent()}</div>
         {lastRefreshed && turnoutData && (
-          <div className="card-footer bg-transparent border-0 text-end text-muted py-1 px-0">
+          <div className="card-footer text-end text-muted px-3 bg-white rounded-bottom-4"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundSize: "8px 8px",
+            }}
+          >
             <small className="fs-8">
               Last updated: {lastRefreshed.toLocaleTimeString()}
             </small>

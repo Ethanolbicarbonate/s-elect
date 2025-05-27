@@ -119,8 +119,8 @@ export async function PUT(request, context) {
   }
 }
 
-export async function DELETE(request, context) {
-  const { params } = await context;
+// src/app/api/admin/elections/[electionId]/route.js
+export async function DELETE(request, { params }) { // context destructuring fixed
   const { electionId } = params;
   const session = await getServerSession(authOptions);
 
@@ -132,43 +132,42 @@ export async function DELETE(request, context) {
   }
 
   try {
-    // Prisma will handle cascading deletes if your schema is set up with onDelete: Cascade
-    // For relations like Position, Partylist, Candidate to Election.
-    // If not, you'd have to delete them manually in a transaction.
-    // Assuming onDelete: Cascade is set for these relations on the Election model.
+    // With correct onDelete: Cascade on all relevant foreign keys in other models
+    // referencing Election, Prisma and the database should handle the cascade.
+    const electionToDelete = await prisma.election.findUnique({ // Fetch to get name for message
+        where: { id: electionId },
+        select: { name: true } 
+    });
 
-    // Optional: Double-check if any votes exist if votes are not directly cascaded
-    // and you want to prevent deletion if votes are cast.
+    if (!electionToDelete) {
+        return NextResponse.json({ error: "Election not found to delete." }, { status: 404 });
+    }
 
-    const deletedElection = await prisma.election.delete({
+    await prisma.election.delete({
       where: { id: electionId },
     });
 
-    // If delete is successful but returns nothing, send 204
-    // If it returns the deleted object (depends on Prisma version/config), send 200
     return NextResponse.json(
       {
-        message: `Election '${deletedElection.name}' and its related data deleted successfully.`,
+        message: `Election '${electionToDelete.name}' and its related data deleted successfully.`,
       },
       { status: 200 }
     );
-    // return new NextResponse(null, { status: 204 }); // Alternative for no content
   } catch (error) {
     console.error(`Error deleting election ${electionId}:`, error);
-    if (error.code === "P2025") {
-      // Record to delete not found
-      return NextResponse.json(
-        { error: "Election not found to delete." },
-        { status: 404 }
-      );
+    if (error.code === "P2025") { // Record to delete not found by prisma.election.delete itself
+      return NextResponse.json({ error: "Election not found to delete (P2025)." }, { status: 404 });
     }
-    // Handle other potential errors, e.g., P2003 foreign key constraint if cascades are not set up
-    // and there are still related records in other tables.
+    if (error.code === "P2003") { // Foreign key constraint violation
+        // This error means some relation ISN'T set to cascade properly, or there's a Restrict elsewhere.
+        console.error("ForeignKeyConstraintFailed (P2003) while deleting election:", error.meta?.field_name);
+        return NextResponse.json(
+            { error: "Failed to delete election. A related record is preventing deletion. Please check database relations and onDelete rules." },
+            { status: 409 } // Conflict
+        );
+    }
     return NextResponse.json(
-      {
-        error:
-          "Failed to delete election. Ensure all related entities that do not cascade are removed.",
-      },
+      { error: "Failed to delete election due to an unexpected error." },
       { status: 500 }
     );
   }
