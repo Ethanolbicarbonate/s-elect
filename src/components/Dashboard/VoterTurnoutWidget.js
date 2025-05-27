@@ -193,7 +193,7 @@ export default function VoterTurnoutWidget({ electionId }) {
           style={{
             backgroundImage:
               "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-            backgroundSize: "8px 8px",
+            backgroundSize: "6px 6px",
           }}
         >
           <h6 className="card-title text-secondary mb-0 fw-medium">
@@ -221,7 +221,7 @@ export default function VoterTurnoutWidget({ electionId }) {
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-              backgroundSize: "8px 8px",
+              backgroundSize: "6px 6px",
             }}
           >
             <small className="fs-8">

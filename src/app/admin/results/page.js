@@ -311,7 +311,7 @@ export default function AdminResultsPage() {
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-              backgroundSize: "8px 8px",
+              backgroundSize: "6px 6px",
             }}
           >
             Last refreshed: {lastRefreshed.toLocaleTimeString()}
@@ -353,11 +353,11 @@ export default function AdminResultsPage() {
       {resultsData && (
         <div className="card rounded-4 shadow-sm">
           <h3
-            className="mb-3 h5 text-secondary fw-medium card-header rounded-top-4 bg-white"
+            className="mb-3 h5 text-secondary fw-normal card-header rounded-top-4 bg-white"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-              backgroundSize: "8px 8px",
+              backgroundSize: "6px 6px",
             }}
           >
             Results for: {resultsData.electionName} ({resultsData.scope.type}

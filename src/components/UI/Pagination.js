@@ -36,7 +36,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
 
   return (
     <nav aria-label="Page navigation">
-      <ul className="pagination justify-content-center justify-content-md-end mb-0">
+      <ul className="pagination justify-content-center justify-content-md-end mb-0 bg-transparent">
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
           <button className="page-link" onClick={() => onPageChange(currentPage - 1)} aria-label="Previous">
             «

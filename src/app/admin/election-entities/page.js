@@ -237,7 +237,10 @@ export default function ElectionEntitiesPage() {
     setFilteredPartylists(newFilteredPartylists);
     console.log("[election-entities] managementScope:", managementScope);
     console.log("[election-entities] Original partylists:", partylists);
-    console.log("[election-entities] newFilteredPartylists:", newFilteredPartylists);
+    console.log(
+      "[election-entities] newFilteredPartylists:",
+      newFilteredPartylists
+    );
 
     let tempFilteredCandidates = candidates.filter(
       (c) =>
@@ -577,7 +580,14 @@ export default function ElectionEntitiesPage() {
 
       {selectedElectionId && managementScope.type && (
         <div className="bg-white mt-4 rounded-4 border flex-grow-1 shadow-sm">
-          <div className="px-3 py-3  bg-light rounded-top-4">
+          <div
+            className="px-3 py-3 rounded-top-4 bg-white"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundSize: "6px 6px",
+            }}
+          >
             <h4 className="text-secondary fs-4 fw-normal">
               {managementScope.type}
               {managementScope.type === PositionTypeEnum.CSC &&
@@ -592,7 +602,14 @@ export default function ElectionEntitiesPage() {
           </div>
 
           {/* Tabs */}
-          <ul className="nav nav-tabs px-3 bg-light">
+          <ul
+            className="nav nav-tabs px-3  bg-white"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundSize: "6px 6px",
+            }}
+          >
             <li className="nav-item">
               <button
                 className={`nav-link ${
@@ -725,7 +742,7 @@ export default function ElectionEntitiesPage() {
                   onDelete={handleDeleteCandidate}
                   canManage={canManageCurrentScope()}
                   managementScope={managementScope} // Pass scope for potential grouping/display logic in list
-                  partylists={partylists} 
+                  partylists={partylists}
                 />
               </>
             )}

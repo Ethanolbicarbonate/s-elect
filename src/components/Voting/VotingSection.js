@@ -47,7 +47,7 @@ export default function VotingSection({
               style={{
                 backgroundImage:
                   "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                backgroundSize: "8px 8px",
+                backgroundSize: "6px 6px",
               }}
             >
               <h4 className="h5 mb-0 fw-normal text-muted">{position.name}</h4>

@@ -226,3 +226,10 @@ a, button, .btn {
   overflow-y: auto;
   max-height: calc(100vh - 200px); /* Adjust based on header/footer height */
 }
+
+.truncate-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}

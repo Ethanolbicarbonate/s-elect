@@ -29,7 +29,7 @@ export default function AuditLogPage() {
     actorEmail: "",
     dateStart: "",
     dateEnd: "",
-    status: "", // ENSURE 'status' is here
+    status: "",
   };
 
   const [filters, setFilters] = useState(initialFiltersState);
@@ -151,210 +151,243 @@ export default function AuditLogPage() {
   }
 
   return (
-    <div className="container-fluid py-3 px-md-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="h4">System Audit Log</h2>
-        {/* TODO: Add Refresh button and Filter controls here */}
-      </div>
-
+    <div className="container-fluid p-0 m-0">
       {error && <div className="alert alert-danger">Error: {error}</div>}
 
-      <div className="card shadow-sm mb-3">
-        <div className="card-body bg-light p-3">
+      <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
+        <div className="card-body p-3">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleApplyFilters();
             }}
           >
-            <div className="row g-2 align-items-end">
-              <div className="col-md-2">
-                <label
-                  htmlFor="actorTypeFilter"
-                  className="form-label form-label-sm"
-                >
-                  Actor Type
-                </label>
-                <select
-                  className="form-select form-select-sm"
-                  id="actorTypeFilter"
-                  name="actorType"
-                  value={filters.actorType}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">All</option>
-                  {/* Ensure AuditActorType is accessible and correctly populated */}
-                  {Object.values(AuditActorType).map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
+            <div className="row g-3">
+              {/* --- Column 1: Actor & Action Info --- */}
+              <div className="col-lg-4 col-md-6 col-sm-12">
+                {" "}
+                {/* Responsive column sizing */}
+                <h6 className="mb-3 fw-medium text-secondary">
+                  Actor & Action
+                </h6>
+                <div className="mb-2">
+                  <label
+                    htmlFor="actorTypeFilter"
+                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                  >
+                    Actor Type
+                  </label>
+                  <select
+                    className="form-select form-select-sm"
+                    id="actorTypeFilter"
+                    name="actorType"
+                    value={filters.actorType}
+                    onChange={handleFilterChange}
+                  >
+                    <option value="">All</option>
+                    {Object.values(AuditActorType).map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-2">
+                  <label
+                    htmlFor="actionTypeFilter"
+                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                  >
+                    Action Type
+                  </label>
+                  <select
+                    className="form-select form-select-sm"
+                    id="actionTypeFilter"
+                    name="actionType"
+                    value={filters.actionType}
+                    onChange={handleFilterChange}
+                  >
+                    <option value="">All Actions</option>
+                    {Object.entries(AUDIT_ACTION_TYPES).map(([key, value]) => (
+                      <option key={key} value={value}>
+                        {value.replace(/_/g, " ")}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-2">
+                  <label
+                    htmlFor="actorEmailFilter"
+                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                  >
+                    Actor Email
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    id="actorEmailFilter"
+                    name="actorEmail"
+                    value={filters.actorEmail}
+                    onChange={handleFilterChange}
+                    placeholder="Contains..."
+                  />
+                </div>
               </div>
-              <div className="col-md-3">
-                <label
-                  htmlFor="actionTypeFilter"
-                  className="form-label form-label-sm"
-                >
-                  Action Type
-                </label>
-                <select
-                  className="form-select form-select-sm"
-                  id="actionTypeFilter"
-                  name="actionType"
-                  value={filters.actionType}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">All Actions</option>
-                  {/* Ensure AUDIT_ACTION_TYPES is accessible and correctly populated */}
-                  {Object.entries(AUDIT_ACTION_TYPES).map(([key, value]) => (
-                    <option key={key} value={value}>
-                      {value.replace(/_/g, " ")}
-                    </option>
-                  ))}
-                </select>
+              {/* --- Column 2: Entity Info --- */}
+              <div className="col-lg-4 col-md-6 col-sm-12">
+                <h6 className="mb-3 fw-medium text-secondary">
+                  Entity & Status
+                </h6>
+                <div className="mb-2">
+                  <label
+                    htmlFor="entityTypeFilter"
+                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                  >
+                    Entity Type
+                  </label>
+                  <select
+                    className="form-select form-select-sm"
+                    id="entityTypeFilter"
+                    name="entityType"
+                    value={filters.entityType}
+                    onChange={handleFilterChange}
+                  >
+                    <option value="">All</option>
+                    <option value="Election">Election</option>
+                    <option value="Position">Position</option>
+                    <option value="Partylist">Partylist</option>
+                    <option value="Candidate">Candidate</option>
+                    <option value="AdminUser">Admin User</option>
+                    <option value="Student">Student</option>{" "}
+                    {/* Added Student */}
+                    {/* Add other entity types as needed */}
+                  </select>
+                </div>
+                <div className="mb-2">
+                  <label
+                    htmlFor="entityIdFilter"
+                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                  >
+                    Entity ID
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    id="entityIdFilter"
+                    name="entityId"
+                    value={filters.entityId}
+                    onChange={handleFilterChange}
+                    placeholder="Exact ID"
+                  />
+                </div>
+                <div className="mb-2">
+                  <label
+                    htmlFor="statusFilter"
+                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                  >
+                    Status
+                  </label>
+                  <select
+                    className="form-select form-select-sm"
+                    id="statusFilter"
+                    name="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
+                  >
+                    <option value="">All</option>
+                    {Object.values(AuditLogStatus).map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="col-md-2">
-                <label
-                  htmlFor="actorEmailFilter"
-                  className="form-label form-label-sm"
-                >
-                  Actor Email
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  id="actorEmailFilter"
-                  name="actorEmail"
-                  value={filters.actorEmail}
-                  onChange={handleFilterChange}
-                  placeholder="Contains..."
-                />
-              </div>
-              <div className="col-md-2">
-                <label
-                  htmlFor="entityTypeFilter"
-                  className="form-label form-label-sm"
-                >
-                  Entity Type
-                </label>
-                <select
-                  className="form-select form-select-sm"
-                  id="entityTypeFilter"
-                  name="entityType"
-                  value={filters.entityType}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">All</option>
-                  <option value="Election">Election</option>
-                  <option value="Position">Position</option>
-                  <option value="Partylist">Partylist</option>
-                  <option value="Candidate">Candidate</option>
-                  <option value="AdminUser">Admin User</option>
-                  {/* Add other entity types as needed based on your logs */}
-                </select>
-              </div>
-              <div className="col-md-2">
-                <label
-                  htmlFor="entityIdFilter"
-                  className="form-label form-label-sm"
-                >
-                  Entity ID
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  id="entityIdFilter"
-                  name="entityId"
-                  value={filters.entityId}
-                  onChange={handleFilterChange}
-                  placeholder="ID"
-                />
-              </div>
-              <div className="col-md-2">
-                <label
-                  htmlFor="dateStartFilter"
-                  className="form-label form-label-sm"
-                >
-                  Date From
-                </label>
-                <input
-                  type="date"
-                  className="form-control form-control-sm"
-                  id="dateStartFilter"
-                  name="dateStart"
-                  value={filters.dateStart}
-                  onChange={handleFilterChange}
-                />
-              </div>
-              <div className="col-md-2">
-                <label
-                  htmlFor="dateEndFilter"
-                  className="form-label form-label-sm"
-                >
-                  Date To
-                </label>
-                <input
-                  type="date"
-                  className="form-control form-control-sm"
-                  id="dateEndFilter"
-                  name="dateEnd"
-                  value={filters.dateEnd}
-                  onChange={handleFilterChange}
-                />
-              </div>
-              <div className="col-md-2">
-                <label
-                  htmlFor="statusFilter"
-                  className="form-label form-label-sm"
-                >
-                  Status
-                </label>
-                <select
-                  className="form-select form-select-sm"
-                  id="statusFilter"
-                  name="status"
-                  value={filters.status}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">All</option>
-                  {Object.values(AuditLogStatus).map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-md-auto">
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-sm w-100"
-                  disabled={isLoading}
-                >
-                  Apply Filters
-                </button>
-              </div>
-              <div className="col-md-auto">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary btn-sm w-100"
-                  onClick={handleResetFilters}
-                  disabled={isLoading}
-                >
-                  Reset
-                </button>
+              {/* --- Column 3: Date Range --- */}
+              <div className="col-lg-4 col-md-12 col-sm-12">
+                {" "}
+                {/* Takes full width on medium if only two main groups */}
+                <h6 className="mb-3 fw-medium text-secondary">Date Range</h6>
+                <div className="mb-2">
+                  <label
+                    htmlFor="dateStartFilter"
+                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                  >
+                    Date From
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control form-control-sm"
+                    id="dateStartFilter"
+                    name="dateStart"
+                    value={filters.dateStart}
+                    onChange={handleFilterChange}
+                  />
+                </div>
+                <div className="mb-2">
+                  <label
+                    htmlFor="dateEndFilter"
+                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                  >
+                    Date To
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control form-control-sm"
+                    id="dateEndFilter"
+                    name="dateEnd"
+                    value={filters.dateEnd}
+                    onChange={handleFilterChange}
+                  />
+                </div>
               </div>
             </div>
+            {/* Buttons are moved to card-footer */}
           </form>
+        </div>
+        <div
+          className="card-footer p-3 bg-white"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundSize: "6px 6px",
+          }}
+        >
+          <div className="d-flex justify-content-end gap-2">
+            {" "}
+            {/* Align left with gap */}
+            <button
+              type="button" // Changed to type="button" as it's not submitting the form directly here
+              className="btn btn-primary btn-sm rounded-3"
+              onClick={handleApplyFilters} // Trigger apply on click
+              disabled={isLoading}
+            >
+              Apply Filters
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-secondary btn-sm rounded-3 border-secondary-subtle"
+              onClick={handleResetFilters}
+              disabled={isLoading}
+            >
+              Reset Filters
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="card shadow-sm">
-        <div className="card-body">
+      <div className="card shadow-sm rounded-4 overflow-hidden">
+        <div className="card-body p-0 m-0">
           <AuditLogTable logs={logs} isLoading={isLoading} />
         </div>
         {!isLoading && logs.length > 0 && pagination.totalPages > 1 && (
-          <div className="card-footer bg-light">
+          <div
+            className="card-footer bg-white"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundSize: "6px 6px",
+            }}
+          >
             <Pagination
               currentPage={pagination.currentPage}
               totalPages={pagination.totalPages}
