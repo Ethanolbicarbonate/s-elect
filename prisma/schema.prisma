@@ -275,6 +275,53 @@ model VoteCast {
   @@index([electionId])
 }
 
+enum AuditActorType {
+  ADMIN
+  STUDENT
+  SYSTEM // For automated actions
+  UNKNOWN // Fallback
+}
+
+enum AuditLogStatus {
+  SUCCESS
+  FAILURE
+  PENDING // For multi-step operations if needed
+  INFO    // For informational logs
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  timestamp   DateTime  @default(now())
+
+  // Actor performing the action
+  actorId     String?   // ID of the admin or student, or null for SYSTEM/UNKNOWN
+  actorType   AuditActorType @default(UNKNOWN)
+  actorEmail  String?   // Denormalized email for easier display in logs, especially if actorId might be deleted
+
+  // Action details
+  actionType  String
+  status      AuditLogStatus @default(SUCCESS) // success, failure, info
+
+  // Affected Entity (Optional)
+  entityType  String?   // e.g., "Election", "Position", "Candidate", "User"
+  entityId    String?   // ID of the primary entity affected by the action
+
+  // Target (Optional, if action is on another user/entity)
+  targetUserId String?  // e.g., if an admin resets a student's password
+  targetUserEmail String? // Denormalized
+
+  // Additional Information
+  details     Json?     // For storing arbitrary details, like changed fields (before/after), parameters, error messages
+  ipAddress   String?   // IP address of the request originator
+
+  @@index([timestamp])
+  @@index([actorId])
+  @@index([actorType])
+  @@index([actionType])
+  @@index([entityType, entityId])
+  @@index([targetUserId])
+}
+
 // --- NextAuth.js Prisma Adapter Models ---
 // Needed if you use the database session strategy or link accounts (OAuth)
 // For Credentials-only with JWT sessions, these might not be strictly required
