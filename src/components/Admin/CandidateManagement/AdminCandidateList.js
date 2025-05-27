@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 export default function AdminCandidateList({
   candidates,
@@ -163,19 +164,17 @@ export default function AdminCandidateList({
                       <tr key={candidate.id}>
                         <td className="d-none d-sm-table-cell">
                           {candidate.photoUrl ? (
-                            <image
+                            <Image
                               src={candidate.photoUrl}
                               alt={`${candidate.firstName} ${candidate.lastName}`}
+                              width={35} // Specify width attribute for next/image
+                              height={35} // Specify height attribute for next/image
                               style={{
-                                width: "35px",
-                                height: "35px",
                                 objectFit: "cover",
                                 borderRadius: "50%",
                               }}
                               onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src =
-                                  "https://via.placeholder.com/35?text=Pic";
+                                e.target.style.display = "none";
                               }}
                             />
                           ) : (

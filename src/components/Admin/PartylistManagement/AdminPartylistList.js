@@ -1,5 +1,6 @@
 // src/components/Admin/PartylistManagement/AdminPartylistList.js
 "use client";
+import Image from 'next/image';
 
 export default function AdminPartylistList({
   partylists,
@@ -52,19 +53,13 @@ export default function AdminPartylistList({
             <tr key={pl.id}>
               <td className="d-none d-sm-table-cell">
                 {pl.logoUrl ? (
-                  <image
+                  <Image
                     src={pl.logoUrl}
-                    alt={`${pl.name} logo`}
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      objectFit: "cover",
-                      borderRadius: "4px",
-                    }}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "https://via.placeholder.com/30?text=Logo";
-                    }}
+                    alt={`${pl.name} Logo`}
+                    width={30}
+                    height={30}
+                    className="rounded-1"
+                    style={{ objectFit: "contain" }}
                   />
                 ) : (
                   <div

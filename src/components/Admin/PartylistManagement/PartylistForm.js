@@ -1,10 +1,10 @@
-// src/components/Admin/PartylistManagement/PartylistForm.js
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image"; // For image preview
 
 const CollegeEnum = {
-  /* ... */ CAS: "CAS",
+  CAS: "CAS",
   CBM: "CBM",
   COC: "COC",
   COD: "COD",
@@ -22,15 +22,11 @@ export default function PartylistForm({
   onClose,
   onSubmit,
   initialData,
-  isLoading,
+  isLoading: isSubmittingEntity,
   managementScope,
   userRole,
 }) {
-  // ... (useState for formData, formError - initial formData setup is mostly fine) ...
   const getInitialFormData = useCallback(() => {
-    // For new partylist by moderator, type/college come from managementScope
-    // For new partylist by SA, type defaults, college is empty unless type is CSC
-    // For editing, type/college come from initialData
     let type =
       initialData?.type || managementScope?.type || PositionTypeEnum.USC;
     let college = "";
@@ -55,9 +51,16 @@ export default function PartylistForm({
 
   const [formData, setFormData] = useState(getInitialFormData());
   const [formError, setFormError] = useState("");
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(initialData?.logoUrl || null);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    setFormData(getInitialFormData());
+    const newInitialData = getInitialFormData();
+    setFormData(newInitialData);
+    setLogoPreview(newInitialData.logoUrl); // Reset preview if initialData changes
+    setLogoFile(null); // Reset selected file
     setFormError("");
   }, [initialData, show, managementScope, getInitialFormData]);
 
@@ -73,8 +76,46 @@ export default function PartylistForm({
     });
   };
 
-  const handleSubmit = (e) => {
-    // ... (validation is mostly fine) ...
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Client-side validation (optional but good UX)
+      if (file.size > 5 * 1024 * 1024) {
+        // 5MB
+        setFormError("Logo file is too large. Max 5MB allowed.");
+        setLogoFile(null);
+        setLogoPreview(formData.logoUrl || initialData?.logoUrl || null); // Revert to original or no preview
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Clear the file input
+        return;
+      }
+      if (
+        !["image/jpeg", "image/png", "image/webp", "image/gif"].includes(
+          file.type
+        )
+      ) {
+        setFormError(
+          "Invalid file type. Please select an image (JPG, PNG, WEBP, GIF)."
+        );
+        setLogoFile(null);
+        setLogoPreview(formData.logoUrl || initialData?.logoUrl || null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        return;
+      }
+
+      setFormError(""); // Clear previous file errors
+      setLogoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setLogoFile(null);
+      setLogoPreview(formData.logoUrl || initialData?.logoUrl || null); // Revert if file is deselected
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
     if (!formData.name.trim()) {
@@ -87,24 +128,51 @@ export default function PartylistForm({
       return;
     }
 
-    const payload = { ...formData };
+    let finalLogoUrl = formData.logoUrl; // Use existing URL if no new file
+
+    if (logoFile) {
+      // If a new file was selected, upload it
+      setIsUploadingLogo(true);
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", logoFile);
+
+      try {
+        const res = await fetch("/api/admin/upload-image", {
+          method: "POST",
+          body: uploadFormData, // No 'Content-Type' header needed, browser sets it for FormData
+        });
+        const result = await res.json();
+        if (!res.ok) {
+          throw new Error(result.error || "Logo upload failed.");
+        }
+        finalLogoUrl = result.url; // Get URL from Cloudinary upload
+      } catch (uploadError) {
+        console.error("Logo upload error:", uploadError);
+        setFormError(
+          `Logo upload failed: ${uploadError.message}. Please try again or skip logo.`
+        );
+        setIsUploadingLogo(false);
+        return; // Stop form submission if upload fails
+      } finally {
+        setIsUploadingLogo(false);
+      }
+    }
+
+    const payload = { ...formData, logoUrl: finalLogoUrl };
+    if (payload.type === PositionTypeEnum.USC) payload.college = null;
     if (userRole === "MODERATOR") {
-      // Ensure payload reflects moderator's fixed scope
       payload.type = managementScope.type;
       payload.college =
         managementScope.type === PositionTypeEnum.CSC
           ? managementScope.college
           : null;
-    } else if (userRole === "SUPER_ADMIN") {
-      // Ensure SA setting USC type has null college
-      if (payload.type === PositionTypeEnum.USC) {
-        payload.college = null;
-      }
     }
-    onSubmit(payload);
+
+    onSubmit(payload); // This is the prop function from election-entities page
   };
 
   const isModerator = userRole === "MODERATOR";
+  const totalLoading = isSubmittingEntity || isUploadingLogo;
 
   if (!show) return null;
 
@@ -117,10 +185,8 @@ export default function PartylistForm({
           role="document"
         >
           <div className="modal-content border-0 rounded-4">
-            {/* REMOVED h-100 from form */}
             <form onSubmit={handleSubmit} className="d-flex flex-column">
               <div className="modal-header">
-                {/* ... title ... */}
                 <h5 className="modal-title fw-normal text-secondary">
                   {initialData ? "Edit Partylist" : "Create New Partylist"}
                 </h5>
@@ -129,7 +195,7 @@ export default function PartylistForm({
                   className="btn-close"
                   onClick={onClose}
                   aria-label="Close"
-                  disabled={isLoading}
+                  disabled={totalLoading}
                 ></button>
               </div>
               <div className="modal-body">
@@ -138,7 +204,10 @@ export default function PartylistForm({
                 )}
 
                 <div className="mb-3">
-                  <label htmlFor="pl_name" className="form-label fs-7 ms-2 text-secondary">
+                  <label
+                    htmlFor="pl_name"
+                    className="form-label fs-7 ms-2 text-secondary"
+                  >
                     Partylist Name <span className="text-danger">*</span>
                   </label>
                   <input
@@ -149,13 +218,16 @@ export default function PartylistForm({
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    disabled={isLoading}
+                    disabled={totalLoading}
                   />
                 </div>
 
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <label htmlFor="pl_type" className="form-label fs-7 ms-2 text-secondary">
+                    <label
+                      htmlFor="pl_type"
+                      className="form-label fs-7 ms-2 text-secondary"
+                    >
                       Type <span className="text-danger">*</span>
                     </label>
                     <select
@@ -165,8 +237,7 @@ export default function PartylistForm({
                       value={isModerator ? managementScope.type : formData.type}
                       onChange={handleChange}
                       required
-                      // --- FIX: Disable for moderators ---
-                      disabled={isLoading || isModerator}
+                      disabled={totalLoading || isModerator}
                     >
                       <option value={PositionTypeEnum.USC}>USC</option>
                       <option value={PositionTypeEnum.CSC}>CSC</option>
@@ -193,8 +264,7 @@ export default function PartylistForm({
                         }
                         onChange={handleChange}
                         required
-                        // --- FIX: Disable for moderators ---
-                        disabled={isLoading || isModerator}
+                        disabled={totalLoading || isModerator}
                       >
                         <option value="">-- Select College --</option>
                         {Object.entries(CollegeEnum).map(([key, value]) => (
@@ -206,9 +276,11 @@ export default function PartylistForm({
                     </div>
                   )}
                 </div>
-                {/* ... Acronym, Logo URL, Platform inputs (unchanged from previous good version) ... */}
                 <div className="mb-3">
-                  <label htmlFor="pl_acronym" className="form-label fs-7 ms-2 text-secondary">
+                  <label
+                    htmlFor="pl_acronym"
+                    className="form-label fs-7 ms-2 text-secondary"
+                  >
                     Acronym (Optional)
                   </label>
                   <input
@@ -218,26 +290,55 @@ export default function PartylistForm({
                     name="acronym"
                     value={formData.acronym}
                     onChange={handleChange}
-                    disabled={isLoading}
+                    disabled={totalLoading}
                   />
                 </div>
+
                 <div className="mb-3">
-                  <label htmlFor="pl_logoUrl" className="form-label fs-7 ms-2 text-secondary">
-                    Logo URL (Optional - 1:1, max 5MB)
+                  <label htmlFor="pl_logoFile" className="form-label fs-7 ms-1">
+                    Partylist Logo (Optional - Max 5MB, 1:1 recommended)
                   </label>
                   <input
-                    type="text"
+                    type="file"
                     className="form-control thin-input"
-                    id="pl_logoUrl"
+                    id="pl_logoFile"
+                    name="logoFile"
+                    onChange={handleFileChange}
+                    accept="image/jpeg, image/png, image/webp, image/gif"
+                    disabled={totalLoading}
+                    ref={fileInputRef}
+                  />
+                  {logoPreview && (
+                    <div
+                      className="mt-2 text-center"
+                      style={{ maxWidth: "150px", margin: "auto" }}
+                    >
+                      <p className="small text-muted mb-1">Logo Preview:</p>
+                      <Image
+                        src={logoPreview}
+                        alt="Logo Preview"
+                        width={100}
+                        height={100}
+                        style={{
+                          objectFit: "contain",
+                          border: "1px solid #ddd",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    </div>
+                  )}
+                  {/* Hidden input to store the logoUrl if not changing the file */}
+                  <input
+                    type="hidden"
                     name="logoUrl"
                     value={formData.logoUrl}
-                    onChange={handleChange}
-                    placeholder="https://example.com/logo.png"
-                    disabled={isLoading}
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="pl_platform" className="form-label fs-7 ms-2 text-secondary">
+                  <label
+                    htmlFor="pl_platform"
+                    className="form-label fs-7 ms-2 text-secondary"
+                  >
                     Platform/Tagline (Optional)
                   </label>
                   <textarea
@@ -247,29 +348,30 @@ export default function PartylistForm({
                     value={formData.platform}
                     onChange={handleChange}
                     rows="3"
-                    disabled={isLoading}
+                    disabled={totalLoading}
                   ></textarea>
                 </div>
               </div>
               <div className="modal-footer">
-                {/* ... buttons ... */}
                 <button
                   type="button"
                   className="btn btn-light border text-secondary"
                   onClick={onClose}
-                  disabled={isLoading}
+                  disabled={totalLoading}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={isLoading}
+                  disabled={totalLoading}
                 >
-                  {isLoading
+                  {isSubmittingEntity
                     ? initialData
                       ? "Saving..."
                       : "Creating..."
+                    : isUploadingLogo
+                    ? "Uploading Logo..."
                     : initialData
                     ? "Save Changes"
                     : "Create Partylist"}
