@@ -3,17 +3,29 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react"; // To get student's college for CSC display
+import CountUp from "react-countup";
 
 // Helper for progress bar
 const ProgressBar = ({ percentage, label, color = "primary" }) => {
   const validPercentage = Math.max(0, Math.min(100, percentage || 0));
+  const [currentValue, setCurrentValue] = useState(0);
+
   return (
     <div className="mb-2">
       {label && (
         <div className="d-flex justify-content-between small mb-1">
           <span className="text-secondary">{label}</span>
           <span className={`fw-medium text-${color}`}>
-            {validPercentage.toFixed(1)}%
+            <CountUp
+              key={validPercentage}              // Re-animate on value change
+              start={0}
+              end={validPercentage}
+              decimals={1}
+              duration={1.5}
+              suffix="%"
+              onUpdate={(val) => setCurrentValue(val)}
+              onEnd={() => setCurrentValue(validPercentage)}
+            />
           </span>
         </div>
       )}
@@ -21,8 +33,8 @@ const ProgressBar = ({ percentage, label, color = "primary" }) => {
         <div
           className={`progress-bar bg-${color}`}
           role="progressbar"
-          style={{ width: `${validPercentage}%` }}
-          aria-valuenow={validPercentage}
+          style={{ width: `${currentValue}%`, transition: "width 0.2s linear" }}
+          aria-valuenow={currentValue}
           aria-valuemin="0"
           aria-valuemax="100"
         ></div>
@@ -195,14 +207,17 @@ export default function VoterTurnoutWidget({ electionId }) {
             title="Refresh turnout data"
           >
             <i
-              className={`text-black bi bi-arrow-clockwise ${isLoading ? "fa-spin" : ""}`}
+              className={`text-black bi bi-arrow-clockwise ${
+                isLoading ? "fa-spin" : ""
+              }`}
             ></i>{" "}
             {/* Add spinner for refresh */}
           </button>
         </div>
         <div className="flex-grow-1 p-3">{renderContent()}</div>
         {lastRefreshed && turnoutData && (
-          <div className="card-footer text-end text-muted px-3 bg-white rounded-bottom-4"
+          <div
+            className="card-footer text-end text-muted px-3 bg-white rounded-bottom-4"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
