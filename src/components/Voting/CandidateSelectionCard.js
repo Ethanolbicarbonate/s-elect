@@ -26,8 +26,8 @@ export default function CandidateSelectionCard({
   const affiliation = isIndependent ? "Independent" : partylist?.name || "N/A";
 
   // Determine card and button styling based on selection and disabled state
-  let cardClasses = "card h-100 shadow-sm candidate-selection-card";
-  let selectButtonClasses = "btn mt-auto w-100 fw-medium"; // mt-auto pushes button to bottom
+  let cardClasses = "card h-100 w-100 shadow-sm candidate-selection-card";
+  let selectButtonClasses = "btn custom-btn fs-6 btn-sm mt-auto w-100 rounded-3 border"; // mt-auto pushes button to bottom
   let selectButtonText = "Select";
   let selectButtonIcon = "bi-check-circle";
 
@@ -90,15 +90,15 @@ export default function CandidateSelectionCard({
           )}
         </div>
 
-        <h6 className="card-title h6 mb-1 fw-semibold text-dark-emphasis">{displayName}</h6>
-        <p className={`card-text small mb-2 ${isIndependent ? 'text-success' : 'text-info'}`}>
+        <h6 className="card-title h6 mb-1 fw-medium text-dark-emphasis">{displayName}</h6>
+        <p className={`card-text small mb-2 text-primary`}>
           {affiliation}
         </p>
 
         {/* Optional "View Details" button, or make the whole card clickable for details too */}
         <button
           type="button"
-          className="btn btn-sm btn-link text-decoration-none p-0 mb-2"
+          className="btn btn-sm btn-link text-decoration-none p-0 mb-2 text-secondary opacity-75"
           onClick={(e) => {
             e.stopPropagation(); // Prevent card click from also toggling selection
             onViewDetails();

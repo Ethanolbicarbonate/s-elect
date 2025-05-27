@@ -53,11 +53,11 @@ export default function ElectionViewTabs({
         role="tablist"
       >
         {hasUscData && (
-          <li className="nav-item mt-2 ps-2" role="presentation">
+          <li className="nav-item m-2" role="presentation">
             <button
-              className={`nav-link rounded-top-3 ${
+              className={`nav-link rounded-3 border-0 ${
                 activeTab === "USC"
-                  ? "active fw-normal"
+                  ? "active fw-normal bg-primary text-white"
                   : "text-secondary bg-light"
               }`}
               id="usc-tab"
@@ -77,11 +77,11 @@ export default function ElectionViewTabs({
           </li>
         )}
         {hasCscData && (
-          <li className="nav-item mt-2 pe-2" role="presentation">
+          <li className="nav-item m-2" role="presentation">
             <button
-              className={`nav-link  rounded-top-3 ${
+              className={`nav-link rounded-3 border-0 ${
                 activeTab === "CSC"
-                  ? "active fw-normal "
+                  ? "active fw-normal text-white bg-primary"
                   : "text-secondary bg-light"
               }`}
               id="csc-tab"

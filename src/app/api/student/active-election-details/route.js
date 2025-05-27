@@ -6,6 +6,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path
 import { ElectionStatus, PositionType } from "@prisma/client";
 import { getEffectiveStatus, getEffectiveEndDate } from "@/lib/electionUtils";
 
+const RECENTLY_ENDED_GRACE_PERIOD_DAYS = 7; // Display ended elections for 7 days after they end
+
 export async function GET(request) {
   const session = await getServerSession(authOptions);
   if (!session || !session.user || session.user.role !== "STUDENT") {
@@ -18,22 +20,32 @@ export async function GET(request) {
 
   try {
     const now = new Date();
+    const gracePeriodCutoff = new Date(now);
+    gracePeriodCutoff.setDate(now.getDate() - RECENTLY_ENDED_GRACE_PERIOD_DAYS);
 
-    // Fetch elections that are NOT explicitly ARCHIVED or PAUSED.
-    // We'll determine their effective status (ONGOING, UPCOMING, ENDED) from their dates.
+    // Fetch elections that are not ARCHIVED.
+    // We will determine their effective status.
     const candidateElections = await prisma.election.findMany({
       where: {
         status: {
-          notIn: [ElectionStatus.ARCHIVED, ElectionStatus.PAUSED],
+          notIn: [ElectionStatus.ARCHIVED], // Exclude ARCHIVED outright
+        },
+        // Optimization: Fetch elections whose end date (or potential extended end date)
+        // isn't too far in the past beyond the grace period.
+        // This is a rough filter; precise filtering happens with effectiveEndDate.
+        endDate: {
+          gte: new Date(
+            new Date().setDate(
+              now.getDate() - (RECENTLY_ENDED_GRACE_PERIOD_DAYS + 30)
+            )
+          ), // e.g., ended within last ~37 days
         },
       },
       include: {
         extensions: true,
-        // For this initial selection step, we only need extensions to calculate effective status/dates
       },
-      // Order by start date to easily find the next upcoming if no ongoing is found
       orderBy: {
-        startDate: "asc",
+        startDate: "asc", // Useful for finding soonest upcoming
       },
     });
 
@@ -47,31 +59,47 @@ export async function GET(request) {
 
     for (const election of candidateElections) {
       const status = getEffectiveStatus(election, studentCollege);
+      const effectiveEndDate = getEffectiveEndDate(election, studentCollege);
+
       if (status === ElectionStatus.ONGOING) {
         effectivelyOngoingElections.push(election);
       } else if (status === ElectionStatus.UPCOMING) {
-        // Ensure UPCOMING means its actual startDate is in the future or very soon
+        // Ensure UPCOMING means its actual startDate is in the future or today,
+        // and its effective end date hasn't passed.
         if (
-          new Date(election.startDate) >= now ||
-          getEffectiveEndDate(election, studentCollege) >= now
+          new Date(election.startDate) >=
+            new Date(new Date().setHours(0, 0, 0, 0)) &&
+          effectiveEndDate >= now
         ) {
           effectivelyUpcomingElections.push(election);
-        } else {
-          // It was marked UPCOMING in DB, but dates suggest it should have started and ended.
-          // Treat as effectively ended for student view if getEffectiveStatus also says ENDED.
-          if (status === ElectionStatus.ENDED) {
-            effectivelyEndedElections.push(election);
-          }
+        } else if (
+          effectiveEndDate >= gracePeriodCutoff &&
+          effectiveEndDate < now
+        ) {
+          // Was UPCOMING in DB, but dates make it recently ENDED
+          recentlyEndedElections.push({
+            ...election,
+            calculatedStatusForSort: ElectionStatus.ENDED,
+          });
         }
-      } else if (status === ElectionStatus.ENDED) {
-        effectivelyEndedElections.push(election);
+      } else if (
+        status === ElectionStatus.ENDED ||
+        status === ElectionStatus.PAUSED
+      ) {
+        // Check if it ended within the grace period
+        if (effectiveEndDate >= gracePeriodCutoff && effectiveEndDate < now) {
+          // Must have ended (endDate < now)
+          recentlyEndedElections.push({
+            ...election,
+            calculatedStatusForSort: status,
+          }); // Keep PAUSED if it was PAUSED
+        }
       }
     }
 
     let finalSelectedElection = null;
 
     if (effectivelyOngoingElections.length > 0) {
-      // If multiple are effectively ongoing, pick the one ending soonest
       effectivelyOngoingElections.sort(
         (a, b) =>
           getEffectiveEndDate(a, studentCollege).getTime() -
@@ -79,28 +107,26 @@ export async function GET(request) {
       );
       finalSelectedElection = effectivelyOngoingElections[0];
     } else if (effectivelyUpcomingElections.length > 0) {
-      // effectivelyUpcomingElections is already sorted by startDate asc from the DB query
+      // Already sorted by startDate asc from DB query
       finalSelectedElection = effectivelyUpcomingElections[0];
-    } else if (effectivelyEndedElections.length > 0) {
-      // Fallback: show the most recently effectively ended one
-      effectivelyEndedElections.sort(
+    } else if (recentlyEndedElections.length > 0) {
+      // If multiple recently ended, show the one that ended most recently
+      recentlyEndedElections.sort(
         (a, b) =>
           getEffectiveEndDate(b, studentCollege).getTime() -
           getEffectiveEndDate(a, studentCollege).getTime()
       );
-      finalSelectedElection = effectivelyEndedElections[0];
+      finalSelectedElection = recentlyEndedElections[0];
     }
 
     if (!finalSelectedElection) {
       return NextResponse.json(null, { status: 200 });
     }
 
-    // Now that we have the single relevant election, fetch all its associated details
-    // (The rest of your data fetching and filtering logic from Step 4 onwards remains the same)
+    // fetch all its associated details
     const electionDetails = await prisma.election.findUnique({
       where: { id: finalSelectedElection.id },
       include: {
-        /* ... your full include for positions, partylists, candidates ... */
         extensions: true,
         positions: { orderBy: { order: "asc" } },
         partylists: {

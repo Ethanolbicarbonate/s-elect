@@ -87,7 +87,7 @@ export default function ConfirmationModal({
             <div className="modal-footer bg-light border-top-0 rounded-bottom-3">
               <button
                 type="button"
-                className="btn btn-outline-secondary"
+                className="btn custom-btn btn-md text-secondary border"
                 onClick={onClose}
                 disabled={isConfirming}
               >

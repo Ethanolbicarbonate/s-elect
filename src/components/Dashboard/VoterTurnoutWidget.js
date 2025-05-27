@@ -184,7 +184,7 @@ export default function VoterTurnoutWidget({ electionId }) {
             backgroundSize: "8px 8px",
           }}
         >
-          <h6 className="card-title text-secondary mb-0 fw-normal">
+          <h6 className="card-title text-secondary mb-0 fw-medium">
             Voter Turnout
           </h6>
           {/* Refresh button (manual) */}

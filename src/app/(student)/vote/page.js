@@ -22,7 +22,9 @@ const Stepper = ({ currentStep, steps }) => {
           <li
             key={step.id}
             className={`breadcrumb-item ${
-              currentStep === step.id ? "active fw-bold" : ""
+              currentStep === step.id
+                ? "active fw-medium text-primary"
+                : "text-secondary opacity-75"
             } ${
               index < steps.findIndex((s) => s.id === currentStep)
                 ? "text-success"
@@ -276,12 +278,12 @@ export default function VotePage() {
     return (
       <div className="container py-5 text-center">
         <div className="alert alert-success">
-          <h4>
+          <h4 className="fw-normal">
             <i className="bi bi-check-circle-fill me-2"></i>Vote Cast!
           </h4>
           <p>
             You have already cast your vote for the election:{" "}
-            <strong>{electionData?.name}</strong>.
+            <span className="fw-medium">{electionData?.name}</span>.
           </p>
           <p>Thank you for participating!</p>
           <Link
@@ -316,9 +318,9 @@ export default function VotePage() {
       : null;
 
   return (
-    <div className="container py-4">
-      <div className="card shadow-lg border-0">
-        <div className="card-header bg-primary text-white text-center py-3">
+    <div className="container p-0">
+      <div className="card shadow-lg border rounded-4">
+        <div className="card-header bg-primary text-white text-center py-3 rounded-top-4">
           <h2 className="h4 mb-0">
             {electionData?.name || "Student Election"}
           </h2>
@@ -385,15 +387,15 @@ export default function VotePage() {
           )}
 
           {currentStep === "CSC" && (
-            <div className="d-flex justify-content-between mt-4">
+            <div className="d-flex flex-column flex-md-row justify-content-between mt-4 gap-2">
               <button
-                className="btn btn-outline-secondary btn-lg"
+                className="btn custom-btn fs-5 btn-lg text-secondary border"
                 onClick={() => proceedToStep("USC")}
               >
                 <i className="bi bi-arrow-left"></i> Back to USC Ballot
               </button>
               <button
-                className="btn btn-primary btn-lg"
+                className="btn btn-primary btn-lg fs-5"
                 onClick={() => proceedToStep("REVIEW")}
               >
                 Review My Ballot <i className="bi bi-arrow-right"></i>

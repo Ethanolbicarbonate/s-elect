@@ -2,7 +2,8 @@
 import ElectionStatusWidget from "@/components/Dashboard/ElectionStatusWidget";
 import VoterStatusWidget from "@/components/Dashboard/VoterStatusWidget";
 import ElectionCalendarWidget from "@/components/Dashboard/ElectionCalendarWidget";
-import VoterTurnoutWidget from "@/components/Dashboard/VoterTurnoutWidget"; // Assuming this is a placeholder or fetches its own data
+import VoterTurnoutWidget from "@/components/Dashboard/VoterTurnoutWidget";
+import ElectionNotificationWidget from "@/components/Dashboard/ElectionNotificationWidget";
 import ResultsWidget from "@/components/Dashboard/ResultsWidget"; // Assuming this is a placeholder or fetches its own data
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -29,18 +30,15 @@ export default async function DashboardPage() {
   try {
     const headersList = await headers();
     const cookieHeader = headersList.get("cookie");
-    
+
     const fetchOptions = {
       cache: "no-store",
       headers: {},
     };
 
     if (cookieHeader) {
-      fetchOptions.headers["Cookie"] = cookieHeader; // Add the cookie header to the fetch request
+      fetchOptions.headers["Cookie"] = cookieHeader;
     }
-    // --- END MODIFICATION ---
-
-    // Log what headers are being sent (optional, for deeper debugging)
     // console.log("Fetching API with options:", JSON.stringify(fetchOptions, null, 2));
 
     const res = await fetch(apiUrl, fetchOptions);
@@ -62,7 +60,6 @@ export default async function DashboardPage() {
       );
     }
   } catch (err) {
-    // Check if the error is due to fetch itself (e.g., network issue, DNS issue if NEXTAUTH_URL is bad)
     if (err instanceof TypeError && err.message.includes("fetch failed")) {
       apiError = `Network error or failed to resolve host: ${
         new URL(apiUrl).hostname
@@ -91,11 +88,9 @@ export default async function DashboardPage() {
       id: activeElectionDetails.id,
       name: activeElectionDetails.name,
       startDate: new Date(activeElectionDetails.startDate), // Use original start date
-      // Use the effective end date calculated by the backend
+      //effective end date calculated by the backend
       endDate: new Date(activeElectionDetails.effectiveEndDateForStudent),
     };
-    // TODO: Later, you might fetch a more specific 'hasVotedInThisElection' status
-    // For now, using the general 'hasVoted' from student session, which might need refinement.
   }
 
   return (
@@ -106,7 +101,7 @@ export default async function DashboardPage() {
         </div>
       )}
       <div className="row g-4 mb-4">
-        <div className="col-md-6 col-lg-4 d-flex flex-column">
+        <div className="col-md-6 col-lg-3 d-flex flex-column">
           <div className="mb-4 flex-grow-1">
             <ElectionStatusWidget
               status={electionStatusForWidget}
@@ -122,20 +117,23 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="col-md-6 col-lg-4">
+        <div className="col-md-6 col-lg-5">
           <ElectionCalendarWidget
             electionPeriod={electionPeriodForCalendar} // Pass the single election period object
           />
         </div>
 
         <div className="col-lg-4">
-          {/* VoterTurnoutWidget and ResultsWidget would also use activeElectionDetails if they show current election data */}
-          <VoterTurnoutWidget electionId={activeElectionDetails?.id} />
+          <ElectionNotificationWidget />
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-12">
+      <div className="row d-flex flex-row">
+        <div className="col-lg-4 mb-md-0 mb-4">
+          {/* VoterTurnoutWidget and ResultsWidget would also use activeElectionDetails if they show current election data */}
+          <VoterTurnoutWidget electionId={activeElectionDetails?.id} />
+        </div>
+        <div className="col-lg-8">
           <ResultsWidget electionDetails={activeElectionDetails} />
         </div>
       </div>
