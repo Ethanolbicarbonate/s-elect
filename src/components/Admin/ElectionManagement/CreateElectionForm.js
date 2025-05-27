@@ -37,7 +37,13 @@ export default function CreateElectionForm({
 
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm">
-      <div className="card-header rounded-top-4 bg-light">
+      <div className="card-header rounded-top-4 bg-white border-bottom"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundSize: "6px 6px",
+            }}
+          >
         <h5 className="mb-0 text-secondary fw-normal">
           Create New Election Period
         </h5>

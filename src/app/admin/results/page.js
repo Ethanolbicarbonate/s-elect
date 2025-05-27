@@ -353,7 +353,7 @@ export default function AdminResultsPage() {
       {resultsData && (
         <div className="card rounded-4 shadow-sm">
           <h3
-            className="mb-3 h5 text-secondary fw-normal card-header rounded-top-4 bg-white"
+            className="mb-3 h5 text-secondary fw-normal card-header rounded-top-4 bg-white border-bottom"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

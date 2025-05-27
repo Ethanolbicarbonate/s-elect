@@ -12,7 +12,10 @@ export default function ElectionListTable({
   // --- Loading and Empty States (remain the same) ---
   if (isLoading && elections.length === 0) {
     return (
-      <div className="card h-100 border-1 rounded-4 mt-4" style={{minHeight: "46vh"}}>
+      <div
+        className="card h-100 border-1 rounded-4 mt-4"
+        style={{ minHeight: "46vh" }}
+      >
         <div className="card-header rounded-top-4 bg-light">
           <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
         </div>
@@ -31,8 +34,18 @@ export default function ElectionListTable({
 
   if (!isLoading && elections.length === 0) {
     return (
-      <div className="card h-100 border-1 rounded-4 mt-4" style={{minHeight: "46vh"}}>
-        <div className="card-header rounded-top-4 bg-light">
+      <div
+        className="card h-100 border-1 rounded-4 mt-4"
+        style={{ minHeight: "46vh" }}
+      >
+        <div
+          className="card-header rounded-top-4 bg-white border-bottom"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundSize: "6px 6px",
+          }}
+        >
           <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
         </div>
         <div className="card-body text-center text-muted py-4">
@@ -43,8 +56,18 @@ export default function ElectionListTable({
   }
 
   return (
-    <div className="card h-100 border-1 rounded-4 mt-4 shadow-sm" style={{minHeight: "46vh"}}>
-      <div className="card-header rounded-top-4 bg-light">
+    <div
+      className="card h-100 border-1 rounded-4 mt-4 shadow-sm"
+      style={{ minHeight: "46vh" }}
+    >
+      <div
+        className="card-header rounded-top-4 border-bottom bg-white"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+          backgroundSize: "6px 6px",
+        }}
+      >
         <h5 className="mb-0 text-secondary fw-normal">
           Manage Election Periods
         </h5>
