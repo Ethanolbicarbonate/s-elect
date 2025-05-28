@@ -1,110 +1,203 @@
 // src/app/admin/dashboard/page.js
-import { getServerSession } from "next-auth/next"; // Keep for server-side data fetching
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { headers } from "next/headers"; // For forwarding cookies in server-side fetch
+import Link from "next/link"; // For navigation links
 
-// Import Admin Widget Components
+// Import the dashboard widgets (we will create/update these next)
 import OverviewWidget from "@/components/Admin/Dashboard/OverviewWidget";
-import RecentActivityWidget from "@/components/Admin/Dashboard/RecentActivityWidget"; // Create this
-import SystemStatusWidget from "@/components/Admin/Dashboard/SystemStatusWidget";   // Create this
-import QuickActionsWidget from "@/components/Admin/Dashboard/QuickActionsWidget"; // Create this
+import AdminVoterTurnoutWidget from "@/components/Admin/Dashboard/AdminVoterTurnoutWidget"; // New for admin-specific turnout
+import QuickActionsWidget from "@/components/Admin/Dashboard/QuickActionsWidget";
+import LiveTallyWidget from "@/components/Admin/Dashboard/LiveTallyWidget";
+import RecentActivityWidget from "@/components/Admin/Dashboard/RecentActivityWidget"; // Optional, can be placeholder
+// import SystemStatusWidget from "@/components/Admin/Dashboard/SystemStatusWidget"; // Optional, can be placeholder
+
+async function getAdminDashboardData() {
+  const appUrl =
+    process.env.NEXTAUTH_URL ||
+    process.env.VERCEL_URL ||
+    "http://localhost:3000";
+  const apiUrl = new URL("/api/admin/dashboard-data", appUrl).toString();
+
+  const cookieHeader = headers().get("cookie");
+  const fetchOptions = {
+    cache: "no-store", // Always get fresh data for dashboard
+    headers: {},
+  };
+  if (cookieHeader) {
+    fetchOptions.headers["Cookie"] = cookieHeader;
+  }
+
+  try {
+    const res = await fetch(apiUrl, fetchOptions);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      console.error(
+        "API Error fetching admin dashboard data:",
+        res.status,
+        errorData
+      );
+      return {
+        error:
+          errorData?.error ||
+          `Failed to fetch dashboard data (Status: ${res.status})`,
+      };
+    }
+    const data = await res.json();
+    return { data }; // { data: dashboardObjectOrNull }
+  } catch (error) {
+    console.error("Fetch Error getting admin dashboard data:", error);
+    return {
+      error: "Could not connect to the server to fetch dashboard data.",
+    };
+  }
+}
 
 export default async function AdminDashboardPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user) {
-    return <p>Loading or not authorized...</p>; // Should be handled by layout
+  if (
+    !session ||
+    !session.user ||
+    !["SUPER_ADMIN", "MODERATOR", "AUDITOR"].includes(session.user.role)
+  ) {
+    return (
+      <div className="container py-5 text-center">
+        <div className="alert alert-danger" role="alert">
+          <h4>
+            <i className="bi bi-x-circle-fill me-2"></i>Access Denied
+          </h4>
+          <p>
+            You do not have permission to view this page. Please log in with an
+            authorized administrator account.
+          </p>
+          <Link href="/admin-login" className="btn btn-primary">
+            Go to Admin Login
+          </Link>
+        </div>
+      </div>
+    );
   }
 
-  // Dummy data - replace with actual data fetching
-  const overviewData = {
-    electionStatus: "Upcoming", // Example: "Not Started", "Ongoing", "Ended"
-    totalVoters: 1250, // Example
-    candidatesRegistered: 45, // Example
-  };
+  const { data: dashboardData, error } = await getAdminDashboardData();
 
-  return (
-    <div>
-      {/* Row 1: Overview, Quick Actions */}
-      <div className="row g-4 mb-4">
-        <div className="col-lg-8">
-          <OverviewWidget {...overviewData} />
-        </div>
-        <div className="col-lg-4">
-          <QuickActionsWidget userRole={session.user.role} /> {/* Pass role for conditional actions */}
+  if (error) {
+    return (
+      <div className="container py-5 text-center">
+        <div className="alert alert-danger" role="alert">
+          <h4>
+            <i className="bi bi-exclamation-triangle-fill me-2"></i>Error
+            Loading Dashboard
+          </h4>
+          <p>{error}</p>
+          <p>Please try refreshing the page or contact support.</p>
         </div>
       </div>
+    );
+  }
 
-      {/* Row 2: Recent Activity, System Status */}
-      <div className="row g-4">
-        <div className="col-lg-7">
-          <RecentActivityWidget />
-        </div>
-        <div className="col-lg-5">
-          <SystemStatusWidget />
-        </div>
-      </div>
-    </div>
-  );
-}
+  const activeElectionDetails = dashboardData?.activeElectionDetails || null;
+  const userRole = session.user.role;
+  const userCollege = session.user.college; // Used to pass scope to quick actions/live tally if needed
 
-// --- Create these placeholder components in src/components/Admin/Dashboard/ ---
-
-// Example for QuickActionsWidget.js (create the actual file)
-/*
-'use client';
-import Link from 'next/link';
-export default function QuickActionsWidget({ userRole }) {
   return (
-    <div className="card h-100 border-0 shadow-sm">
-      <div className="card-body">
-        <h5 className="card-title text-primary mb-3">Quick Actions</h5>
-        <div className="d-grid gap-2">
-          {userRole === 'SUPER_ADMIN' && (
-            <Link href="/admin/election-settings" className="btn btn-outline-primary">Manage Election</Link>
+    <div className="container-fluid p-0">
+      {activeElectionDetails ? (
+        <>
+          <div className="row g-4 mb-4">
+            {/* Overview Widget */}
+            <div className="col-12 col-md-6 col-lg-4 d-flex">
+              {" "}
+              {/* All stack on mobile, then 2x2 on md, then 3x1 on lg */}
+              <OverviewWidget election={activeElectionDetails} />
+            </div>
+
+            {/* Voter Turnout Widget */}
+            <div className="col-12 col-md-6 col-lg-4 d-flex">
+              <AdminVoterTurnoutWidget
+                electionId={activeElectionDetails.id}
+                eligibleVoters={
+                  activeElectionDetails.voterTurnout.eligibleVoters
+                }
+                votesCastInScope={
+                  activeElectionDetails.voterTurnout.votesCastInScope
+                }
+                turnoutPercentage={
+                  activeElectionDetails.voterTurnout.turnoutPercentage
+                }
+                scopeType={activeElectionDetails.scope.type}
+                college={activeElectionDetails.scope.college}
+              />
+            </div>
+
+            {/* Quick Actions Widget */}
+            <div className="col-12 col-md-6 col-lg-4 d-flex">
+              <QuickActionsWidget
+                userRole={userRole}
+                userCollege={userCollege}
+                electionId={activeElectionDetails.id}
+                electionStatus={activeElectionDetails.effectiveStatus}
+              />
+            </div>
+          </div>
+
+          <div className="row g-4">
+            {/* Live Tally Widget (Conditional) */}
+            <div className="col-12 col-xl-8 d-flex">
+              {" "}
+              {/* col-12 on mobile, then 2/3 width on xl */}
+              {/* ... LiveTallyWidget or "No Live Results" message ... */}
+              {["ONGOING", "ENDED"].includes(
+                activeElectionDetails.effectiveStatus
+              ) ? (
+                <LiveTallyWidget
+                  electionId={activeElectionDetails.id}
+                  electionStatus={activeElectionDetails.effectiveStatus}
+                  positionsResults={
+                    activeElectionDetails.electionResults.positionsResults
+                  }
+                  userRole={userRole}
+                  userCollege={userCollege}
+                  generatedAt={activeElectionDetails.generatedAt}
+                />
+              ) : (
+                <div className="card shadow-sm flex-grow-1 p-4 text-center text-muted">
+                  <i className="bi bi-bar-chart-line display-4 mb-3"></i>
+                  <h5 className="mb-0">No Live Results</h5>
+                  <p className="small mb-0">
+                    Results will be displayed here once an election is ongoing
+                    or has concluded.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Recent Activity Widget */}
+            <div className="col-12 col-xl-4 d-flex">
+              {" "}
+              {/* col-12 on mobile, then 1/3 width on xl */}
+              <RecentActivityWidget userRole={userRole} />
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="card shadow-sm p-5 text-center">
+          <i className="bi bi-exclamation-circle-fill display-4 text-muted mb-3"></i>
+          <h5 className="mb-3">No Election Data Available</h5>
+          <p className="text-muted">
+            There is currently no active, upcoming, or recently ended election
+            to display on the dashboard.
+          </p>
+          {userRole === "SUPER_ADMIN" && (
+            <Link
+              href="/admin/election-settings"
+              className="btn btn-primary mt-3"
+            >
+              <i className="bi bi-plus-circle me-2"></i>Create New Election
+            </Link>
           )}
-          {(userRole === 'SUPER_ADMIN' || userRole === 'MODERATOR') && (
-            <Link href="/admin/candidates/add" className="btn btn-outline-success">Add Candidate</Link>
-          )}
-          <Link href="/admin/results" className="btn btn-outline-info">View Results</Link>
         </div>
-      </div>
+      )}
     </div>
   );
 }
-*/
-
-// Example for RecentActivityWidget.js (create the actual file)
-/*
-'use client';
-export default function RecentActivityWidget() {
-  return (
-    <div className="card h-100 border-0 shadow-sm">
-      <div className="card-body">
-        <h5 className="card-title text-primary mb-3">Recent Activity</h5>
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item">Admin 'superadmin' logged in.</li>
-          <li className="list-group-item">Election 'USC 2025' status changed to Upcoming.</li>
-          <li className="list-group-item">New candidate 'John Doe' added.</li>
-        </ul>
-      </div>
-    </div>
-  );
-}
-*/
-
-// Example for SystemStatusWidget.js (create the actual file)
-/*
-'use client';
-export default function SystemStatusWidget() {
-  return (
-    <div className="card h-100 border-0 shadow-sm">
-      <div className="card-body">
-        <h5 className="card-title text-primary mb-3">System Status</h5>
-        <p><i className="bi bi-hdd-fill text-success me-2"></i>Database: Connected</p>
-        <p><i className="bi bi-envelope-fill text-success me-2"></i>Email Service: Operational</p>
-        <p><i className="bi bi-shield-check-fill text-success me-2"></i>Security: Monitored</p>
-      </div>
-    </div>
-  );
-}
-*/

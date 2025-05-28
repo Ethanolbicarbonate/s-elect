@@ -28,7 +28,7 @@ export default function CandidateResultRow({
   const barColorClass = isWinner
     ? "bg-success"
     : percentage > 0
-    ? "bg-info"
+    ? "bg-warning"
     : "bg-secondary opacity-50";
 
   return (

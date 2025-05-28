@@ -110,7 +110,8 @@ export async function POST(request, context) {
 
     requestDataForLog = await request.json(); // Store incoming data
     const data = requestDataForLog;
-    const { name, acronym, logoUrl, platform, type, college } = data;
+    const { name, acronym, logoUrl, logoPublicId, platform, type, college } =
+      data;
 
     // 1. Validate required fields & enums
     if (!name || !type) {
@@ -258,6 +259,7 @@ export async function POST(request, context) {
         name,
         acronym,
         logoUrl,
+        logoPublicId,
         platform,
         electionId: electionId,
         type: type, // The validated type from client
@@ -277,7 +279,8 @@ export async function POST(request, context) {
         name: newPartylist.name,
         acronym: newPartylist.acronym,
         type: newPartylist.type,
-        college: newPartylist.college,
+        logoUrl: newPartylist.logoUrl,
+        logoPublicId: newPartylist.logoPublicId,
       },
       ipAddress: getIpAddressFromRequest(request),
     });

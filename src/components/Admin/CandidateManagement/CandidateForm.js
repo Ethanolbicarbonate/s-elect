@@ -21,7 +21,8 @@ export default function CandidateForm({
       lastName: initialData?.lastName || "",
       middleName: initialData?.middleName || "",
       nickname: initialData?.nickname || "",
-      photoUrl: initialData?.photoUrl || "", // Will hold the URL from DB or successful upload
+      photoUrl: initialData?.photoUrl || "",
+      photoPublicId: initialData?.photoPublicId || null,
       bio: initialData?.bio || "",
       platformPoints: Array.isArray(initialData?.platformPoints)
         ? initialData.platformPoints.join(", ")
@@ -39,6 +40,7 @@ export default function CandidateForm({
     initialData?.photoUrl || null
   ); // For the data URL preview
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [isDeletingPhoto, setIsDeletingPhoto] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -93,6 +95,48 @@ export default function CandidateForm({
     }
   };
 
+  const handleRemovePhoto = async () => {
+    setFormError(""); // Clear any general form errors
+
+    // If there's an existing publicId (meaning it's saved in Cloudinary)
+    if (formData.photoPublicId) {
+      setIsDeletingPhoto(true);
+      try {
+        const res = await fetch("/api/admin/upload-image", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ publicId: formData.photoPublicId }),
+        });
+        const result = await res.json();
+        if (!res.ok) {
+          throw new Error(result.error || "Image deletion failed.");
+        }
+        // Cloudinary deletion successful, now clear local state
+        setFormData((prev) => ({ ...prev, photoUrl: "", photoPublicId: null }));
+        setPhotoFile(null); // Clear any selected file
+        setPhotoPreview(null); // Clear preview
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Clear file input
+      } catch (deleteError) {
+        console.error("Photo deletion error:", deleteError);
+        setFormError(
+          `Photo deletion failed: ${deleteError.message}. Please try again.`
+        );
+        // Don't clear local state if deletion fails, so user knows it's still linked.
+      } finally {
+        setIsDeletingPhoto(false);
+      }
+    } else {
+      // If no publicId, it's either a new file not yet uploaded or no image at all.
+      // Just clear local state.
+      setFormData((prev) => ({ ...prev, photoUrl: "", photoPublicId: null }));
+      setPhotoFile(null);
+      setPhotoPreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
@@ -132,6 +176,7 @@ export default function CandidateForm({
     }
 
     let finalPhotoUrl = formData.photoUrl; // Use existing URL if no new file
+    let finalPhotoPublicId = formData.photoPublicId;
 
     if (photoFile) {
       setIsUploadingPhoto(true);
@@ -149,6 +194,7 @@ export default function CandidateForm({
           throw new Error(result.error || "Photo upload failed.");
         }
         finalPhotoUrl = result.url;
+        finalPhotoPublicId = result.publicId;
       } catch (uploadError) {
         console.error("Photo upload error:", uploadError);
         setFormError(
@@ -164,6 +210,7 @@ export default function CandidateForm({
     const payload = {
       ...formData,
       photoUrl: finalPhotoUrl, // Use the determined photo URL
+      photoPublicId: finalPhotoPublicId,
       platformPoints: formData.platformPoints
         .split(",")
         .map((p) => p.trim())
@@ -255,13 +302,14 @@ export default function CandidateForm({
           {/* modal-xl for more space */}
           <div className="modal-content border-0 rounded-4">
             <form onSubmit={handleSubmit} className="d-flex flex-column h-100">
-              <div className="modal-header bg-white border-bottom-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+              <div
+                className="modal-header bg-white border-bottom-0"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundSize: "6px 6px",
+                }}
+              >
                 <h5 className="modal-title fw-normal text-secondary">
                   {initialData ? "Edit Candidate" : "Add New Candidate"}
                 </h5>
@@ -351,7 +399,6 @@ export default function CandidateForm({
                   />
                 </div>
 
-                {/* --- Candidate Photo --- */}
                 <div className="mb-3">
                   <label
                     htmlFor="cand_photoFile"
@@ -366,34 +413,44 @@ export default function CandidateForm({
                     type="file"
                     className="form-control thin-input"
                     id="cand_photoFile"
-                    name="photoFile" // Name of the input itself
+                    name="photoFile"
                     onChange={handleFileChange}
                     accept="image/jpeg, image/png, image/webp"
                     disabled={totalLoading}
                     ref={fileInputRef}
                   />
-                  {photoPreview && (
+                  {(photoPreview || formData.photoUrl) && ( // Show preview if a file is selected or an existing URL
                     <div
                       className="mt-2 text-center"
                       style={{ maxWidth: "150px", margin: "auto" }}
                     >
                       <p className="small text-muted mb-1">Photo Preview:</p>
                       <Image
-                        src={photoPreview}
+                        src={photoPreview || formData.photoUrl} // Use photoPreview (new file) or formData.photoUrl (existing)
                         alt="Candidate Photo Preview"
-                        width={120} // Slightly larger preview
+                        width={120}
                         height={120}
                         style={{
                           objectFit: "cover",
                           border: "1px solid #ddd",
                           borderRadius: "8px",
                         }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
                       />
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger btn-sm mt-2"
+                        onClick={handleRemovePhoto} // Call the new handler
+                        disabled={totalLoading}
+                      >
+                        {isDeletingPhoto ? "Removing..." : "Remove Photo"}
+                      </button>
                     </div>
                   )}
-                  {/* Hidden input to store photoUrl if not changing file, handled by formData.photoUrl */}
                 </div>
-
+                
                 <div className="mb-3">
                   <label
                     htmlFor="cand_positionId"
@@ -519,13 +576,14 @@ export default function CandidateForm({
                   ></textarea>
                 </div>
               </div>
-              <div className="modal-footer bg-white border-top-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+              <div
+                className="modal-footer bg-white border-top-0"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundSize: "6px 6px",
+                }}
+              >
                 <button
                   type="button"
                   className="btn btn-light border text-secondary"

@@ -198,7 +198,8 @@ export async function PUT(request, context) {
 
     requestDataForLog = await request.json(); // Store incoming data
     const dataToUpdate = requestDataForLog;
-    const { name, acronym, logoUrl, platform, type, college } = dataToUpdate;
+    const { name, acronym, logoUrl, logoPublicId, platform, type, college } =
+      dataToUpdate;
 
     // --- SCOPE VALIDATION FOR MODERATOR (on existingPartylist) ---
     if (session.user.role === "MODERATOR") {
@@ -389,8 +390,9 @@ export async function PUT(request, context) {
     const updatePayload = {};
     if (name !== undefined) updatePayload.name = name;
     if (acronym !== undefined) updatePayload.acronym = acronym;
-    if (logoUrl !== undefined) updatePayload.logoUrl = logoUrl;
     if (platform !== undefined) updatePayload.platform = platform;
+    if (logoUrl !== undefined) updatePayload.logoUrl = logoUrl;
+    if (logoPublicId !== undefined) updatePayload.logoPublicId = logoPublicId;
 
     // SUPER_ADMIN can change type and college
     if (session.user.role === "SUPER_ADMIN") {
@@ -543,6 +545,8 @@ export async function PUT(request, context) {
           acronym: updatedPartylist.acronym,
           type: updatedPartylist.type,
           college: updatedPartylist.college,
+          logoUrl: updatedPartylist.logoUrl, // Log the URL
+          logoPublicId: updatedPartylist.logoPublicId, // Log the publicId
         },
       },
       ipAddress: getIpAddressFromRequest(request),

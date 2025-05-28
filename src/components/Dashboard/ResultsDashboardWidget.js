@@ -275,7 +275,7 @@ export default function ResultsDashboardWidget({
 
   // --- ACTUAL RENDER (JSX) ---
   return (
-    <div className="card shadow-sm h-100 d-flex flex-column rounded-4 overflow-hidden">
+    <div className="card shadow-sm h-100 d-flex flex-column rounded-4 overflow-hidden pb-4">
       <div
         className="card-header bg-white border-bottom-0"
         style={{
@@ -380,7 +380,7 @@ export default function ResultsDashboardWidget({
 
             {/* Winners Overview - NEW Section */}
             <div className="flex-grow-1 d-flex flex-column">
-              <h4 className="fs-6 text-center text-secondary-emphasis pb-1">
+              <h4 className="fs-6 text-center text-secondary pb-1">
                 Elected Officials
               </h4>
               <div

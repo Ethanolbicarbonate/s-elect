@@ -43,6 +43,7 @@ export default function PartylistForm({
       name: initialData?.name || "",
       acronym: initialData?.acronym || "",
       logoUrl: initialData?.logoUrl || "",
+      logoPublicId: initialData?.logoPublicId || null,
       platform: initialData?.platform || "",
       type: type,
       college: college,
@@ -54,6 +55,7 @@ export default function PartylistForm({
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(initialData?.logoUrl || null);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [isDeletingLogo, setIsDeletingLogo] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -115,6 +117,48 @@ export default function PartylistForm({
     }
   };
 
+  const handleRemoveLogo = async () => {
+    setFormError(""); // Clear any general form errors
+
+    // If there's an existing publicId (meaning it's saved in Cloudinary)
+    if (formData.logoPublicId) {
+      setIsDeletingLogo(true);
+      try {
+        const res = await fetch("/api/admin/upload-image", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ publicId: formData.logoPublicId }),
+        });
+        const result = await res.json();
+        if (!res.ok) {
+          throw new Error(result.error || "Image deletion failed.");
+        }
+        // Cloudinary deletion successful, now clear local state
+        setFormData((prev) => ({ ...prev, logoUrl: "", logoPublicId: null }));
+        setLogoFile(null); // Clear any selected file
+        setLogoPreview(null); // Clear preview
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Clear file input
+      } catch (deleteError) {
+        console.error("Logo deletion error:", deleteError);
+        setFormError(
+          `Logo deletion failed: ${deleteError.message}. Please try again.`
+        );
+        // Don't clear local state if deletion fails, so user knows it's still linked.
+      } finally {
+        setIsDeletingLogo(false);
+      }
+    } else {
+      // If no publicId, it's either a new file not yet uploaded or no image at all.
+      // Just clear local state.
+      setFormData((prev) => ({ ...prev, logoUrl: "", logoPublicId: null }));
+      setLogoFile(null);
+      setLogoPreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
@@ -128,7 +172,8 @@ export default function PartylistForm({
       return;
     }
 
-    let finalLogoUrl = formData.logoUrl; // Use existing URL if no new file
+    let finalLogoUrl = formData.logoUrl;
+    let finalLogoPublicId = formData.logoPublicId;
 
     if (logoFile) {
       // If a new file was selected, upload it
@@ -146,6 +191,7 @@ export default function PartylistForm({
           throw new Error(result.error || "Logo upload failed.");
         }
         finalLogoUrl = result.url; // Get URL from Cloudinary upload
+        finalLogoPublicId = result.publicId; // Store publicId from upload result
       } catch (uploadError) {
         console.error("Logo upload error:", uploadError);
         setFormError(
@@ -158,7 +204,11 @@ export default function PartylistForm({
       }
     }
 
-    const payload = { ...formData, logoUrl: finalLogoUrl };
+    const payload = {
+      ...formData,
+      logoUrl: finalLogoUrl,
+      logoPublicId: finalLogoPublicId,
+    };
     if (payload.type === PositionTypeEnum.USC) payload.college = null;
     if (userRole === "MODERATOR") {
       payload.type = managementScope.type;
@@ -172,8 +222,7 @@ export default function PartylistForm({
   };
 
   const isModerator = userRole === "MODERATOR";
-  const totalLoading = isSubmittingEntity || isUploadingLogo;
-
+  const totalLoading = isSubmittingEntity || isUploadingLogo || isDeletingLogo;
   if (!show) return null;
 
   return (
@@ -186,13 +235,14 @@ export default function PartylistForm({
         >
           <div className="modal-content border-0 rounded-4">
             <form onSubmit={handleSubmit} className="d-flex flex-column">
-              <div className="modal-header bg-white border-bottom-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+              <div
+                className="modal-header bg-white border-bottom-0"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundSize: "6px 6px",
+                }}
+              >
                 <h5 className="modal-title fw-normal text-secondary">
                   {initialData ? "Edit Partylist" : "Create New Partylist"}
                 </h5>
@@ -300,6 +350,7 @@ export default function PartylistForm({
                   />
                 </div>
 
+                {/* --- Logo File Input & Preview with Remove Button --- */}
                 <div className="mb-3">
                   <label htmlFor="pl_logoFile" className="form-label fs-7 ms-1">
                     Partylist Logo (Optional - Max 5MB, 1:1 recommended)
@@ -314,14 +365,15 @@ export default function PartylistForm({
                     disabled={totalLoading}
                     ref={fileInputRef}
                   />
-                  {logoPreview && (
+                  {/* Preview and Remove button */}
+                  {(logoPreview || formData.logoUrl) && ( // Show preview if a file is selected or an existing URL
                     <div
                       className="mt-2 text-center"
                       style={{ maxWidth: "150px", margin: "auto" }}
                     >
                       <p className="small text-muted mb-1">Logo Preview:</p>
                       <Image
-                        src={logoPreview}
+                        src={logoPreview || formData.logoUrl} // Use logoPreview (new file) or formData.logoUrl (existing)
                         alt="Logo Preview"
                         width={100}
                         height={100}
@@ -330,16 +382,23 @@ export default function PartylistForm({
                           border: "1px solid #ddd",
                           borderRadius: "4px",
                         }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
                       />
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger btn-sm mt-2"
+                        onClick={handleRemoveLogo}
+                        disabled={totalLoading}
+                      >
+                        {isDeletingLogo ? "Removing..." : "Remove Logo"}
+                      </button>
                     </div>
                   )}
-                  {/* Hidden input to store the logoUrl if not changing the file */}
-                  <input
-                    type="hidden"
-                    name="logoUrl"
-                    value={formData.logoUrl}
-                  />
                 </div>
+                {/* --- End Logo Section --- */}
+
                 <div className="mb-3">
                   <label
                     htmlFor="pl_platform"
@@ -358,13 +417,14 @@ export default function PartylistForm({
                   ></textarea>
                 </div>
               </div>
-              <div className="modal-footer bg-white border-top-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+              <div
+                className="modal-footer bg-white border-top-0"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundSize: "6px 6px",
+                }}
+              >
                 <button
                   type="button"
                   className="btn btn-light border text-secondary"
@@ -384,6 +444,8 @@ export default function PartylistForm({
                       : "Creating..."
                     : isUploadingLogo
                     ? "Uploading Logo..."
+                    : isDeletingLogo
+                    ? "Removing Logo..."
                     : initialData
                     ? "Save Changes"
                     : "Create Partylist"}

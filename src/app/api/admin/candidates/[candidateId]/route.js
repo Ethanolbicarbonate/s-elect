@@ -118,6 +118,7 @@ export async function PUT(request, context) {
       middleName,
       nickname,
       photoUrl,
+      photoPublicId,
       bio,
       platformPoints,
       isIndependent,
@@ -513,6 +514,7 @@ export async function PUT(request, context) {
     if (middleName !== undefined) updateData.middleName = middleName;
     if (nickname !== undefined) updateData.nickname = nickname;
     if (photoUrl !== undefined) updateData.photoUrl = photoUrl;
+    if (photoPublicId !== undefined) updateData.photoPublicId = photoPublicId;
     if (bio !== undefined) updateData.bio = bio;
     if (platformPoints !== undefined)
       updateData.platformPoints = Array.isArray(platformPoints)

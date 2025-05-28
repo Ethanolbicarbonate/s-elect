@@ -84,7 +84,10 @@ export default function VoterStatusWidget({
 
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm overflow-hidden d-flex flex-column flex-md-row">
-      <div className={`bg-${statusColor} p-1`}></div>
+      <div
+        className={`bg-${statusColor}`}
+        style={{ padding: "0.1rem" }}
+      ></div>
 
       <div className="p-0 card-body d-flex flex-column justify-content-between p-0 justify-content-evenly">
         <div

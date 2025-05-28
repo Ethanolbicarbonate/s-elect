@@ -60,7 +60,6 @@ export default function StudentLayout({ children }) {
   else if (pathname.startsWith("/election-details")) currentPageName = "Election Details";
   else if (pathname.startsWith("/vote")) currentPageName = "Vote";
   else if (pathname.startsWith("/about-help")) currentPageName = "About/Help";
-  else if (pathname.startsWith("/settings")) currentPageName = "Settings";
   // Add more else if for other top-level student pages
 
   return (

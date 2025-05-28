@@ -28,7 +28,7 @@ export default function PositionDetailedResults({ position, candidates }) {
     <div className="card h-100 border-0 d-flex flex-column">
       {" "}
       {/* Ensure card takes available height */}
-      <h5 className="card-title small mb-3 text-secondary-emphasis text-center">
+      <h5 className="card-title small mb-3 text-secondary text-center">
         {position.name}
       </h5>
       <div className="flex-grow-1 overflow-auto pe-2" style={{height: "180px"}}>
@@ -52,7 +52,7 @@ export default function PositionDetailedResults({ position, candidates }) {
               const barColorClass = isWinner
                 ? "bg-success"
                 : percentage > 0
-                ? "bg-info"
+                ? "bg-warning"
                 : "bg-secondary opacity-50";
 
               return (

@@ -85,13 +85,13 @@ model ElectionExtension {
 }
 
 model Student {
-  id         String  @id @default(cuid())
-  firstName  String
-  lastName   String
-  middleName String? // Optional middle name
-  email      String  @unique // firstname.lastname@wvsu.edu.ph format
-  password   String? // Will store hashed password
-  college    College
+  id                  String    @id @default(cuid())
+  firstName           String
+  lastName            String
+  middleName          String? // Optional middle name
+  email               String    @unique // firstname.lastname@wvsu.edu.ph format
+  password            String? // Will store hashed password
+  college             College
   // Fields for sign-up & verification
   isPreApproved       Boolean   @default(true) // Indicates if they are in the "enrolled" list
   emailVerified       DateTime? // Timestamp when email was verified during sign-up
@@ -156,11 +156,12 @@ model Position {
 }
 
 model Partylist {
-  id       String  @id @default(cuid())
-  name     String
-  acronym  String?
-  logoUrl  String? // URL to the party list's logo
-  platform String? // General platform of the party list
+  id           String  @id @default(cuid())
+  name         String
+  acronym      String?
+  logoUrl      String? // URL to the party list's logo
+  logoPublicId String?
+  platform     String? // General platform of the party list
 
   electionId String
   election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade) // Each partylist is for a specific election period
@@ -177,12 +178,13 @@ model Partylist {
 }
 
 model Candidate {
-  id String @id @default(cuid())
+  id             String   @id @default(cuid())
   firstName      String
   lastName       String
   middleName     String?
   nickname       String?
-  photoUrl       String? // URL to the candidate's photo
+  photoUrl       String? // URL to the candidate's 
+  photoPublicId  String?
   bio            String? // Short biography
   platformPoints String[] @default([]) // Array of strings for platform points
 
@@ -197,19 +199,11 @@ model Candidate {
   partylistId String? // Optional: if affiliated with a partylist
   partylist   Partylist? @relation(fields: [partylistId], references: [id], onDelete: SetNull) // SetNull so if partylist is deleted, candidate becomes independent (or Restrict)
 
-  // For CSC candidates, their college scope. Often derivable from their Position.
-  // If position.type is CSC and position.college is set, this candidate is for that college.
-  // If position.type is USC, this candidate is for USC.
   votesReceived Int @default(0) // For tallying (can be calculated or stored) - might be better in a separate VoteTally model later
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // A candidate (student) can run for one position in one election.
-  // If linking to Student model and a student CAN be a candidate multiple times across different elections:
-  // @@unique([studentId, electionId, positionId])
-  // If just names, ensure name+position+election is unique:
-  // @@unique([firstName, lastName, electionId, positionId]) // This might be too strict if names are common
   VoteCast VoteCast[]
 
   @@index([partylistId])
@@ -226,10 +220,6 @@ model StudentElectionVote {
   electionId String
   election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade) // Cascade if election is deleted
   votedAt    DateTime @default(now())
-
-  // Store actual votes (more complex, for later if needed, or keep votes anonymous in a separate table)
-  // For now, this model just records *that* a vote was cast.
-  // Actual ballot choices would be stored in a `Ballot` or `VoteCast` table, often anonymized from Student.
 
   @@unique([studentId, electionId]) // Student can vote only once per election
   @@index([electionId])
@@ -286,33 +276,33 @@ enum AuditLogStatus {
   SUCCESS
   FAILURE
   PENDING // For multi-step operations if needed
-  INFO    // For informational logs
+  INFO // For informational logs
 }
 
 model AuditLog {
-  id          String    @id @default(cuid())
-  timestamp   DateTime  @default(now())
+  id        String   @id @default(cuid())
+  timestamp DateTime @default(now())
 
   // Actor performing the action
-  actorId     String?   // ID of the admin or student, or null for SYSTEM/UNKNOWN
-  actorType   AuditActorType @default(UNKNOWN)
-  actorEmail  String?   // Denormalized email for easier display in logs, especially if actorId might be deleted
+  actorId    String? // ID of the admin or student, or null for SYSTEM/UNKNOWN
+  actorType  AuditActorType @default(UNKNOWN)
+  actorEmail String? // Denormalized email for easier display in logs, especially if actorId might be deleted
 
   // Action details
-  actionType  String
-  status      AuditLogStatus @default(SUCCESS) // success, failure, info
+  actionType String
+  status     AuditLogStatus @default(SUCCESS) // success, failure, info
 
   // Affected Entity (Optional)
-  entityType  String?   // e.g., "Election", "Position", "Candidate", "User"
-  entityId    String?   // ID of the primary entity affected by the action
+  entityType String? // e.g., "Election", "Position", "Candidate", "User"
+  entityId   String? // ID of the primary entity affected by the action
 
   // Target (Optional, if action is on another user/entity)
-  targetUserId String?  // e.g., if an admin resets a student's password
+  targetUserId    String? // e.g., if an admin resets a student's password
   targetUserEmail String? // Denormalized
 
   // Additional Information
-  details     Json?     // For storing arbitrary details, like changed fields (before/after), parameters, error messages
-  ipAddress   String?   // IP address of the request originator
+  details   Json? // For storing arbitrary details, like changed fields (before/after), parameters, error messages
+  ipAddress String? // IP address of the request originator
 
   @@index([timestamp])
   @@index([actorId])

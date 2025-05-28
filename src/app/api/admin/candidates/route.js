@@ -126,6 +126,7 @@ export async function POST(request) {
       middleName,
       nickname,
       photoUrl,
+      photoPublicId,
       bio,
       platformPoints,
       isIndependent,
@@ -486,6 +487,7 @@ export async function POST(request) {
         middleName,
         nickname,
         photoUrl,
+        photoPublicId,
         bio,
         platformPoints: Array.isArray(platformPoints)
           ? platformPoints
@@ -514,6 +516,8 @@ export async function POST(request) {
         isIndependent: candidate.isIndependent,
         positionName: position.name,
         partylistName: partylist?.name || "N/A",
+        photoUrl: candidate.photoUrl, // Log the URL
+        photoPublicId: candidate.photoPublicId, // Log the publicId
       },
       ipAddress: getIpAddressFromRequest(request),
     });
@@ -536,10 +540,6 @@ export async function POST(request) {
       },
       ipAddress: getIpAddressFromRequest(request),
     });
-    // Add specific error handling for unique constraints if needed
-    // if (error.code === "P2002") { // For cases like unique constraint on name+position+election
-    //   return NextResponse.json({ error: "A candidate with this name already exists for this position/election." }, { status: 409 });
-    // }
     return NextResponse.json(
       { error: `Failed to create candidate. Please check logs.` },
       { status: 500 }

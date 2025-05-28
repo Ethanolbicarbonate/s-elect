@@ -57,19 +57,17 @@ export default function ElectionStatusWidget({
 
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm overflow-hidden d-flex flex-column flex-md-row">
-      <div className={`bg-${statusColor} p-1`}></div>
+      <div className={`bg-${statusColor}`} style={{ padding: "0.1rem" }}></div>
       <div className="card-body d-flex flex-column p-0 justify-content-evenly">
         <div
           className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white"
           style={{
             backgroundImage:
               "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-            backgroundSize: "6px 6px"
+            backgroundSize: "6px 6px",
           }}
         >
-          <h6 className="card-title text-secondary m-0 p-0">
-            Election Status
-          </h6>
+          <h6 className="card-title text-secondary m-0 p-0">Election Status</h6>
           <span
             className={`badge bg-${statusColor}-soft rounded-circle p-1 d-flex align-items-center justify-content-center`}
           >
@@ -87,7 +85,7 @@ export default function ElectionStatusWidget({
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-              backgroundSize: "6px 6px"
+              backgroundSize: "6px 6px",
             }}
           >
             {finalMessage}
