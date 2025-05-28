@@ -37,7 +37,7 @@ export default function CandidateCard({ candidate, onViewDetails }) {
       {/* h-100 for equal height in flex rows */}
       <div
         className="card-img-top-wrapper bg-light text-center rounded-3"
-        style={{ height: "180px", overflow: "hidden" }}
+        style={{height: "180px", overflow: "hidden" }}
       >
         {photoUrl ? (
           <Image

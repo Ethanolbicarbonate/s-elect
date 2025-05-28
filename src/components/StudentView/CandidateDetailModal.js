@@ -37,8 +37,12 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
   return (
     <>
       {/* Backdrop: Increased z-index to be reliably above other content but below modal */}
-      <div className="modal-backdrop-blur fade show" style={{ zIndex: 1050 }} onClick={onClose}></div>
-      
+      <div
+        className="modal-backdrop-blur fade show"
+        style={{ zIndex: 1050 }}
+        onClick={onClose}
+      ></div>
+
       <div
         className="modal fade show d-block" // d-block makes it visible
         tabIndex="-1"
@@ -53,10 +57,16 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
           role="document"
           onClick={(e) => e.stopPropagation()} // Prevent modal close when clicking on modal-content
         >
-          <div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden"> {/* Added overflow-hidden for better rounded corners with image */}
-            
-            <div className="modal-header bg-light py-3 px-4 border-bottom-0"> {/* Softer header, no bottom border for seamless look */}
-              <h4 className="modal-title text-primary fw-medium" id="candidateDetailModalTitle">
+          <div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            {" "}
+            {/* Added overflow-hidden for better rounded corners with image */}
+            <div className="modal-header bg-light py-3 px-4 border-bottom-0">
+              {" "}
+              {/* Softer header, no bottom border for seamless look */}
+              <h4
+                className="modal-title text-primary fw-medium"
+                id="candidateDetailModalTitle"
+              >
                 {displayName}
               </h4>
               <button
@@ -66,50 +76,67 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
                 aria-label="Close"
               ></button>
             </div>
-
-            <div className="modal-body p-4"> {/* Increased padding a bit */}
-              <div className="row g-4"> {/* g-4 for slightly more gutter */}
+            <div className="modal-body p-4">
+              {" "}
+              {/* Increased padding a bit */}
+              <div className="row g-4">
+                {" "}
                 <div className="col-md-4 text-center d-flex flex-column align-items-center">
-                  {photoUrl ? (
-                    <Image
-                      src={photoUrl}
-                      alt={displayName}
-                      width={220} // Slightly larger
-                      height={220}
-                      className="img-fluid rounded-circle shadow mb-3" // Kept shadow
-                      style={{ 
-                        objectFit: "cover", 
-                        border: "4px solid white", // White border for a "sticker" effect
-                        boxShadow: "0 0 15px rgba(0,0,0,0.15)" // Softer shadow
-                      }}
-                      // Consider adding placeholder="blur" and blurDataURL if you have low-res versions
-                      onError={(e) => { e.currentTarget.style.display = 'none'; /* Hide broken image */ }}
-                    />
-                  ) : (
-                    <div
-                      className="d-flex align-items-center justify-content-center mb-3 bg-light" // Added bg-light
-                      style={{
-                        width: "220px",
-                        height: "220px",
-                        borderRadius: "50%",
-                        border: "4px solid white",
-                        boxShadow: "0 0 15px rgba(0,0,0,0.1)"
-                      }}
-                    >
-                      <i className="bi bi-person-fill display-1 text-secondary opacity-25"></i>
-                    </div>
-                  )}
-                  <div className="mt-2"> {/* Grouped info below image */}
-                    <p className="text-muted mb-1 fs-7 text-uppercase">Running for</p>
-                    <h5 className="mb-2 h6 fw-medium text-primary">{runningFor}</h5>
-                    
-                    <p className="text-muted mb-1 fs-7 text-uppercase">Affiliation</p>
+                  <div
+                    className="mb-3" // Outer wrapper for spacing
+                    style={{
+                      width: "220px", // Explicit square size
+                      height: "220px", // Explicit square size
+                      borderRadius: "50%",
+                      overflow: "hidden", // This is key to clip the image to the circle
+                      border: "4px solid white",
+                      boxShadow: "0 0 15px rgba(0,0,0,0.15)",
+                      position: "relative", // Needed if the Image component itself is absolutely positioned by next/image internals
+                    }}
+                  >
+                    {photoUrl ? (
+                      <Image
+                        src={photoUrl}
+                        alt={displayName}
+                        fill // Use "fill" layout
+                        style={{
+                          objectFit: "cover",
+                        }}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Optional: for optimization with layout="fill"
+                        onError={(e) => {
+                          /* Handle error, e.g., show placeholder */
+                        }}
+                      />
+                    ) : (
+                      <div
+                        className="d-flex align-items-center justify-content-center bg-light"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          // borderRadius: "50%", // Not needed here as parent clips
+                        }}
+                      >
+                        <i className="bi bi-person-fill display-1 text-secondary opacity-25"></i>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-2">
+                    {" "}
+                    {/* Grouped info below image */}
+                    <p className="text-muted mb-1 fs-7 text-uppercase">
+                      Running for
+                    </p>
+                    <h5 className="mb-2 h6 fw-medium text-primary">
+                      {runningFor}
+                    </h5>
+                    <p className="text-muted mb-1 fs-7 text-uppercase">
+                      Affiliation
+                    </p>
                     <h5 className={`fw-medium h6 text-primary`}>
-                        {affiliation}
+                      {affiliation}
                     </h5>
                   </div>
                 </div>
-
                 <div className="col-md-8">
                   {bio && (
                     <div className="mb-4">
@@ -126,14 +153,24 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
                   )}
 
                   {platformPoints && platformPoints.length > 0 && (
-                    <div className="mb-3"> {/* Added mb-3 for spacing if bio is also present */}
+                    <div className="mb-3">
+                      {" "}
+                      {/* Added mb-3 for spacing if bio is also present */}
                       <h5 className="text-primary border-start border-primary border-3 ps-2 mb-3">
                         Platform
                       </h5>
-                      <ul className="list-group list-group-flush px-3"> {/* Changed to list-group for better styling */}
+                      <ul className="list-group list-group-flush px-3">
+                        {" "}
+                        {/* Changed to list-group for better styling */}
                         {platformPoints.map((point, index) => (
-                          <li key={index} className="list-group-item d-flex align-items-start border-0 px-0 py-2"> {/* No borders, custom padding */}
-                            <i className="bi bi-check-circle-fill text-success me-3 mt-1 fs-7"></i> {/* Larger icon */}
+                          <li
+                            key={index}
+                            className="list-group-item d-flex align-items-start border-0 px-0 py-2"
+                          >
+                            {" "}
+                            {/* No borders, custom padding */}
+                            <i className="bi bi-check-circle-fill text-success me-3 mt-1 fs-7"></i>{" "}
+                            {/* Larger icon */}
                             <span className="text-secondary">{point}</span>
                           </li>
                         ))}
@@ -142,18 +179,20 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
                   )}
 
                   {!bio && (!platformPoints || platformPoints.length === 0) && (
-                     <div className="text-center p-4 border rounded-3 bg-light mt-3">
-                        <i className="bi bi-info-circle fs-2 text-muted mb-2"></i>
-                        <p className="text-muted mb-0">
-                        No detailed profile or platform has been provided by this candidate.
-                        </p>
+                    <div className="text-center p-4 border rounded-3 bg-light mt-3">
+                      <i className="bi bi-info-circle fs-2 text-muted mb-2"></i>
+                      <p className="text-muted mb-0">
+                        No detailed profile or platform has been provided by
+                        this candidate.
+                      </p>
                     </div>
                   )}
                 </div>
               </div>
             </div>
-
-            <div className="modal-footer bg-light border-top-0 rounded-bottom-4 py-3 px-4"> {/* Softer footer */}
+            <div className="modal-footer bg-light border-top-0 rounded-bottom-4 py-3 px-4">
+              {" "}
+              {/* Softer footer */}
               <button
                 type="button"
                 className="btn btn-primary" // Changed to primary for a clearer close action
