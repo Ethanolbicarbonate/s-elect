@@ -11,6 +11,8 @@ export default function CandidateSelectionCard({
   isDisabled, // True if max selections for the position are reached & this isn't selected
   onViewDetails,
 }) {
+  const [imageError, setImageError] = useState(false);
+
   if (!candidate) return null;
 
   const {
@@ -22,6 +24,10 @@ export default function CandidateSelectionCard({
     partylist,
     isIndependent,
   } = candidate;
+
+  useEffect(() => {
+    setImageError(false);
+  }, [photoUrl]);
 
   const displayName = `${firstName} ${lastName}${
     nickname ? ` (${nickname})` : ""
@@ -56,13 +62,6 @@ export default function CandidateSelectionCard({
       onSelectToggle();
     }
   };
-
-  const [imageError, setImageError] = useState(false);
-
-  // Reset imageError when photoUrl changes (e.g., if the component re-renders with a new candidate)
-  useEffect(() => {
-    setImageError(false);
-  }, [photoUrl]);
 
   return (
     <div
