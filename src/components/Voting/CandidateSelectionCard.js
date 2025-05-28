@@ -13,6 +13,14 @@ export default function CandidateSelectionCard({
 }) {
   const [imageError, setImageError] = useState(false);
 
+  useEffect(() => {
+    if (candidate && candidate.photoUrl) {
+      setImageError(false); // Reset error if there's a new photoUrl
+    } else {
+      setImageError(false);
+    }
+  }, [candidate]);
+
   if (!candidate) return null;
 
   const {
@@ -20,14 +28,9 @@ export default function CandidateSelectionCard({
     lastName,
     nickname,
     photoUrl,
-    // position, // Position name is usually displayed as the section header in VotingSection
     partylist,
     isIndependent,
   } = candidate;
-
-  useEffect(() => {
-    setImageError(false);
-  }, [photoUrl]);
 
   const displayName = `${firstName} ${lastName}${
     nickname ? ` (${nickname})` : ""
