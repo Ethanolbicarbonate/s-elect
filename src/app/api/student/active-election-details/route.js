@@ -2,11 +2,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path as needed
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { ElectionStatus, PositionType } from "@prisma/client";
 import { getEffectiveStatus, getEffectiveEndDate } from "@/lib/electionUtils";
 
-const RECENTLY_ENDED_GRACE_PERIOD_DAYS = 7; // Display ended elections for 7 days after they end
+const RECENTLY_ENDED_GRACE_PERIOD_DAYS = 7;
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);
@@ -23,49 +23,55 @@ export async function GET(request) {
     const gracePeriodCutoff = new Date(now);
     gracePeriodCutoff.setDate(now.getDate() - RECENTLY_ENDED_GRACE_PERIOD_DAYS);
 
-    // Fetch elections that are not ARCHIVED.
-    // We will determine their effective status.
     const candidateElections = await prisma.election.findMany({
       where: {
         status: {
-          notIn: [ElectionStatus.ARCHIVED], // Exclude ARCHIVED outright
+          notIn: [ElectionStatus.ARCHIVED],
         },
-        // Optimization: Fetch elections whose end date (or potential extended end date)
-        // isn't too far in the past beyond the grace period.
-        // This is a rough filter; precise filtering happens with effectiveEndDate.
         endDate: {
           gte: new Date(
             new Date().setDate(
               now.getDate() - (RECENTLY_ENDED_GRACE_PERIOD_DAYS + 30)
             )
-          ), // e.g., ended within last ~37 days
+          ),
         },
       },
       include: {
         extensions: true,
       },
       orderBy: {
-        startDate: "asc", // Useful for finding soonest upcoming
+        startDate: "asc",
       },
     });
 
     if (!candidateElections || candidateElections.length === 0) {
-      return NextResponse.json(null, { status: 200 }); // No suitable elections
+      return NextResponse.json(null, { status: 200 });
     }
 
+    // --- FIX: Declare these arrays OUTSIDE the loop ---
     let effectivelyOngoingElections = [];
     let effectivelyUpcomingElections = [];
-    let effectivelyEndedElections = []; // For fallback
+    let recentlyEndedElections = [];
+    // --- END FIX ---
 
     for (const election of candidateElections) {
       const status = getEffectiveStatus(election, studentCollege);
       const effectiveEndDate = getEffectiveEndDate(election, studentCollege);
 
+      // --- ADDED DEFENSIVE CHECK FOR EFFECTIVE DATES (if it's still possible for them to be null) ---
+      // This is a belt-and-suspenders approach, as getEffectiveEndDate should return a valid Date or null
+      // and we handle the null cases at the end of the loop where finalSelectedElection is used.
+      if (!effectiveEndDate || !status) {
+        console.warn(
+          `Skipping election ${election.id} due to invalid effective status or end date.`
+        );
+        continue; // Skip to next election if status/date cannot be reliably determined
+      }
+      // --- END DEFENSIVE CHECK ---
+
       if (status === ElectionStatus.ONGOING) {
         effectivelyOngoingElections.push(election);
       } else if (status === ElectionStatus.UPCOMING) {
-        // Ensure UPCOMING means its actual startDate is in the future or today,
-        // and its effective end date hasn't passed.
         if (
           new Date(election.startDate) >=
             new Date(new Date().setHours(0, 0, 0, 0)) &&
@@ -76,7 +82,6 @@ export async function GET(request) {
           effectiveEndDate >= gracePeriodCutoff &&
           effectiveEndDate < now
         ) {
-          // Was UPCOMING in DB, but dates make it recently ENDED
           recentlyEndedElections.push({
             ...election,
             calculatedStatusForSort: ElectionStatus.ENDED,
@@ -86,13 +91,11 @@ export async function GET(request) {
         status === ElectionStatus.ENDED ||
         status === ElectionStatus.PAUSED
       ) {
-        // Check if it ended within the grace period
         if (effectiveEndDate >= gracePeriodCutoff && effectiveEndDate < now) {
-          // Must have ended (endDate < now)
           recentlyEndedElections.push({
             ...election,
             calculatedStatusForSort: status,
-          }); // Keep PAUSED if it was PAUSED
+          });
         }
       }
     }
@@ -107,10 +110,8 @@ export async function GET(request) {
       );
       finalSelectedElection = effectivelyOngoingElections[0];
     } else if (effectivelyUpcomingElections.length > 0) {
-      // Already sorted by startDate asc from DB query
       finalSelectedElection = effectivelyUpcomingElections[0];
     } else if (recentlyEndedElections.length > 0) {
-      // If multiple recently ended, show the one that ended most recently
       recentlyEndedElections.sort(
         (a, b) =>
           getEffectiveEndDate(b, studentCollege).getTime() -
@@ -123,7 +124,6 @@ export async function GET(request) {
       return NextResponse.json(null, { status: 200 });
     }
 
-    // fetch all its associated details
     const electionDetails = await prisma.election.findUnique({
       where: { id: finalSelectedElection.id },
       include: {
@@ -131,13 +131,14 @@ export async function GET(request) {
         positions: { orderBy: { order: "asc" } },
         partylists: {
           orderBy: [{ type: "asc" }, { college: "asc" }, { name: "asc" }],
-        }, // Updated order
+        },
         candidates: {
           include: { position: true, partylist: true },
           orderBy: [{ position: { order: "asc" } }, { lastName: "asc" }],
         },
       },
     });
+
     if (!electionDetails) {
       return NextResponse.json(
         { error: "Failed to fetch details for the selected election." },
@@ -145,7 +146,6 @@ export async function GET(request) {
       );
     }
 
-    // Recalculate effective status & end date based on the fully loaded electionDetails (with extensions)
     const effectiveStatusForStudent = getEffectiveStatus(
       electionDetails,
       studentCollege
@@ -155,18 +155,18 @@ export async function GET(request) {
       studentCollege
     );
 
+    // --- Defensive check from last time, should be okay now with valid dates ---
     if (!effectiveStatusForStudent || !effectiveEndDateForStudent) {
       console.error(
-        `CRITICAL: effectiveStatusForStudent or effectiveEndDateForStudent is null for election ${electionDetails.id}. This indicates invalid date data or logic flaw.`
+        `CRITICAL: effectiveStatusForStudent or effectiveEndDateForStudent is null for election ${electionDetails.id} after re-fetch. This indicates a deeper data or logic flaw.`
       );
       return NextResponse.json(
         { error: "Could not process election dates. Data might be invalid." },
         { status: 500 }
       );
     }
+    // --- End Defensive check ---
 
-    // Filter entities (USC/CSC)
-    // ... (your existing filtering logic for uscPositions, cscPositions, etc.)
     const uscPositions = electionDetails.positions.filter(
       (p) => p.type === PositionType.USC
     );
@@ -195,8 +195,8 @@ export async function GET(request) {
         description: electionDetails.description,
         startDate: electionDetails.startDate,
         endDate: electionDetails.endDate,
-        status: electionDetails.status, // Original DB status
-        effectiveStatusForStudent: effectiveStatusForStudent, // The CRITICAL status for student view
+        status: electionDetails.status,
+        effectiveStatusForStudent: effectiveStatusForStudent,
         effectiveEndDateForStudent: effectiveEndDateForStudent.toISOString(),
         uscPositions,
         cscPositions,
