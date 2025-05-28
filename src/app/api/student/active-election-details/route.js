@@ -155,6 +155,16 @@ export async function GET(request) {
       studentCollege
     );
 
+    if (!effectiveStatusForStudent || !effectiveEndDateForStudent) {
+      console.error(
+        `CRITICAL: effectiveStatusForStudent or effectiveEndDateForStudent is null for election ${electionDetails.id}. This indicates invalid date data or logic flaw.`
+      );
+      return NextResponse.json(
+        { error: "Could not process election dates. Data might be invalid." },
+        { status: 500 }
+      );
+    }
+
     // Filter entities (USC/CSC)
     // ... (your existing filtering logic for uscPositions, cscPositions, etc.)
     const uscPositions = electionDetails.positions.filter(

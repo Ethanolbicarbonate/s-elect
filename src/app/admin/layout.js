@@ -76,8 +76,6 @@ export default function AdminLayout({ children }) {
     currentPageName = "Audit Log";
   else if (pathname.startsWith("/admin/feedback"))
     currentPageName = "User Feedback";
-  else if (pathname.startsWith("/admin/sessions"))
-    currentPageName = "Active Sessions";
   else if (pathname.startsWith("/admin/results"))
     currentPageName = "Election Results";
   return (

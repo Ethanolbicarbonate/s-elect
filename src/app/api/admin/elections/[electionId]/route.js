@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path
 import prisma from "@/lib/prisma"; // Using the singleton instance
+import { ElectionStatus } from "@prisma/client";
 import { logAdminActivity, getIpAddressFromRequest } from "@/lib/auditLogger";
 import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";
 import { AuditLogStatus } from "@prisma/client";

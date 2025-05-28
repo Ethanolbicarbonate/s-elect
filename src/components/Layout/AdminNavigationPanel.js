@@ -71,11 +71,6 @@ export default function AdminNavigationPanel({
           href: "/admin/feedback",
           label: "User Feedback",
           icon: "bi-chat-left-dots-fill",
-        },
-        {
-          href: "/admin/sessions",
-          label: "Active Sessions",
-          icon: "bi-person-bounding-box",
         }
       );
     } else if (role === "MODERATOR") {
