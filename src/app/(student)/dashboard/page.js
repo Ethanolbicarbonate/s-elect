@@ -4,7 +4,7 @@ import VoterStatusWidget from "@/components/Dashboard/VoterStatusWidget";
 import ElectionCalendarWidget from "@/components/Dashboard/ElectionCalendarWidget";
 import VoterTurnoutWidget from "@/components/Dashboard/VoterTurnoutWidget";
 import ElectionNotificationWidget from "@/components/Dashboard/ElectionNotificationWidget";
-import ResultsWidget from "@/components/Dashboard/ResultsWidget"; // Assuming this is a placeholder or fetches its own data
+import ResultsDashboardWidget from "@/components/Dashboard/ResultsDashboardWidget";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { headers } from "next/headers"; // <--- IMPORT THIS
@@ -93,6 +93,13 @@ export default async function DashboardPage() {
     };
   }
 
+  const showResults =
+    activeElectionDetails &&
+    activeElectionDetails.effectiveStatusForStudent === "ENDED";
+  // additional check here if results are to be published explicitly by admin: not implemented
+  // && activeElectionDetails.resultsPublished === true
+  // (requires: resultsPublished field to Election model and admin UI)
+
   return (
     <div>
       {apiError && (
@@ -100,8 +107,8 @@ export default async function DashboardPage() {
           Error loading election data: {apiError}
         </div>
       )}
-      <div className="row g-4 mb-4">
-        <div className="col-md-6 col-lg-3 d-flex flex-column">
+      <div className="row mb-4 g-4">
+        <div className="col-md-6 col-lg-4 d-flex flex-column">
           <div className="mb-4 flex-grow-1">
             <ElectionStatusWidget
               status={electionStatusForWidget}
@@ -117,7 +124,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="col-md-6 col-lg-5">
+        <div className="col-md-6 col-lg-4">
           <ElectionCalendarWidget
             electionPeriod={electionPeriodForCalendar} // Pass the single election period object
           />
@@ -128,14 +135,26 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="row d-flex flex-row">
-        <div className="col-lg-4 mb-md-0 mb-4">
-          {/* VoterTurnoutWidget and ResultsWidget would also use activeElectionDetails if they show current election data */}
-          <VoterTurnoutWidget electionId={activeElectionDetails?.id} />
-        </div>
-        <div className="col-lg-8">
-          <ResultsWidget electionDetails={activeElectionDetails} />
-        </div>
+      <div className="col-lg-12 mb-4">
+        <VoterTurnoutWidget electionId={activeElectionDetails?.id} />
+      </div>
+
+      <div className="col-lg-12 d-flex flex-column">
+        {showResults ? (
+          <ResultsDashboardWidget
+            electionDetails={activeElectionDetails}
+            studentCollege={session?.user?.college} // Pass student's college for CSC filtering
+          />
+        ) : (
+          <div className="card shadow-sm p-4 text-center text-muted">
+            <i className="bi bi-bar-chart-fill display-4 mb-3"></i>
+            <h5 className="mb-0">Election Results Coming Soon</h5>
+            <p className="small mb-0">
+              Results will be displayed here once the election concludes and
+              final tallies are complete.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

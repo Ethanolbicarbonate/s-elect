@@ -61,15 +61,15 @@ export default function CandidateCard({ candidate, onViewDetails }) {
         )}
       </div>
       <div className="card-body d-flex flex-column">
-        <h5 className="card-title h6 mb-0 text-primary">{displayName}</h5>
+        <h5 className="card-title h6 mb-0 text-muted">{displayName}</h5>
         <hr className="border-1 border-secondary opacity-20 my-2" />
 
-        <p className="card-text text-primary opacity-75 fs-7 small mb-1">
-          <i className="bi bi-person-fill fs-7 text-primary me-2"></i>{" "}
+        <p className="card-text text-secondary fs-7 small mb-1">
+          <i className="bi bi-person-fill fs-7 text-secondary me-2"></i>{" "}
           {runningFor}
         </p>
-        <p className="card-text text-primary opacity-75 fs-7 small mb-1">
-          <i className="bi bi bi-people-fill fs-7 text-primary me-2"></i>{" "}
+        <p className="card-text text-secondary fs-7 small mb-1">
+          <i className="bi bi bi-people-fill fs-7 text-secondary me-2"></i>{" "}
           {affiliation}
         </p>
         <div className="text-center">

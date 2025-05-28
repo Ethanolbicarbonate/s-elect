@@ -57,8 +57,8 @@ export default function ElectionViewTabs({
             <button
               className={`nav-link rounded-3 border-0 ${
                 activeTab === "USC"
-                  ? "active fw-normal bg-primary text-white"
-                  : "text-secondary bg-light"
+                  ? "active text-dark"
+                  : "text-secondary opacity-75"
               }`}
               id="usc-tab"
               data-bs-toggle="tab" // For Bootstrap JS if you use it, otherwise just for state
@@ -81,8 +81,8 @@ export default function ElectionViewTabs({
             <button
               className={`nav-link rounded-3 border-0 ${
                 activeTab === "CSC"
-                  ? "active fw-normal text-white bg-primary"
-                  : "text-secondary bg-light"
+                  ? "active text-dark"
+                  : "text-secondary opacity-75"
               }`}
               id="csc-tab"
               data-bs-toggle="tab"

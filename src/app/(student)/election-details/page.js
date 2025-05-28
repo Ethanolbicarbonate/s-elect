@@ -149,7 +149,7 @@ export default async function ElectionDetailsPage() {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid m-0 p-0">
       <div className="card shadow-sm mb-4 rounded-4">
         <div className="card-header bg-primary text-white rounded-top-4 border-bottom-0">
           <h2 className="mb-0 h4">{electionDetails.name}</h2>
