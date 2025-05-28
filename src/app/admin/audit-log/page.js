@@ -345,7 +345,7 @@ export default function AuditLogPage() {
           </form>
         </div>
         <div
-          className="card-footer p-3 bg-white"
+          className="card-footer border-top-0 p-3 bg-white"
           style={{
             backgroundImage:
               "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
@@ -381,7 +381,7 @@ export default function AuditLogPage() {
         </div>
         {!isLoading && logs.length > 0 && pagination.totalPages > 1 && (
           <div
-            className="card-footer bg-white"
+            className="card-footer border-top-0 bg-white"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

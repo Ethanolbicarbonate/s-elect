@@ -158,7 +158,7 @@ export default function ReviewBallotSection({
       {/* USC Selections */}
       <div className="card mb-4 shadow-sm rounded-3">
         <div
-          className="card-header bg-light d-flex justify-content-between align-items-center rounded-top-3 bg-white"
+          className="card-header border-bottom-0 bg-light d-flex justify-content-between align-items-center rounded-top-3 bg-white"
           style={{
             backgroundImage:
               "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
@@ -189,7 +189,7 @@ export default function ReviewBallotSection({
       {electionData?.cscPositions && electionData.cscPositions.length > 0 && (
         <div className="card mb-4 shadow-sm">
           <div
-            className="card-header bg-light d-flex justify-content-between align-items-center bg-white"
+            className="card-header border-bottom-0 border-bottom-0 bg-light d-flex justify-content-between align-items-center bg-white"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

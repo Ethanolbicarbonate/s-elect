@@ -42,7 +42,7 @@ export default async function VoteSubmittedPage() {
             </Link>
           </div>
         </div>
-        <div className="card-footer text-muted small py-3 bg-light border-top-0 rounded-bottom-4">
+        <div className="card-footer border-top-0 text-muted small py-3 bg-light border-top-0 rounded-bottom-4">
           sELECT - University Student Voting System
         </div>
       </div>

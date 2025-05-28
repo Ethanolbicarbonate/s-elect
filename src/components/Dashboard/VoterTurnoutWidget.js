@@ -189,7 +189,7 @@ export default function VoterTurnoutWidget({ electionId }) {
     <div className="card h-100 border-1 rounded-4 shadow-sm">
       <div className="card-body d-flex flex-column p-0">
         <div
-          className="card-header d-flex justify-content-between align-items-center bg-white rounded-top-4"
+          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white rounded-top-4"
           style={{
             backgroundImage:
               "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
@@ -217,7 +217,7 @@ export default function VoterTurnoutWidget({ electionId }) {
         <div className="flex-grow-1 p-3">{renderContent()}</div>
         {lastRefreshed && turnoutData && (
           <div
-            className="card-footer text-end text-muted px-3 bg-white rounded-bottom-4"
+            className="card-footer border-top-0 text-end text-muted px-3 bg-white rounded-bottom-4"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

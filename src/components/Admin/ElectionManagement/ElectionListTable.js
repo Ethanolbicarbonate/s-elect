@@ -16,7 +16,7 @@ export default function ElectionListTable({
         className="card h-100 border-1 rounded-4 mt-4"
         style={{ minHeight: "46vh" }}
       >
-        <div className="card-header rounded-top-4 bg-light">
+        <div className="card-header rounded-top-4 bg-light border-bottom-0">
           <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
         </div>
         <div className="card-body text-center py-4">
@@ -39,7 +39,7 @@ export default function ElectionListTable({
         style={{ minHeight: "46vh" }}
       >
         <div
-          className="card-header rounded-top-4 bg-white border-bottom"
+          className="card-header rounded-top-4 bg-white border-bottom-0"
           style={{
             backgroundImage:
               "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
@@ -61,7 +61,7 @@ export default function ElectionListTable({
       style={{ minHeight: "46vh" }}
     >
       <div
-        className="card-header rounded-top-4 border-bottom bg-white"
+        className="card-header rounded-top-4 border-bottom-0 bg-white"
         style={{
           backgroundImage:
             "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

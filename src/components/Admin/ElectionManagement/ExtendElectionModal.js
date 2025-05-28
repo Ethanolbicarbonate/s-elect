@@ -115,7 +115,14 @@ export default function ExtendElectionModal({
                 onSubmit={handleSubmit}
                 className="d-flex flex-column h-100"
               >
-                <div className="modal-header">
+                <div
+                  className="modal-header bg-white border-bottom-0"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundSize: "6px 6px",
+                  }}
+                >
                   <h5 className="modal-title fw-normal text-secondary">
                     Extend Election for Colleges: {formData.electionName}
                   </h5>
@@ -208,7 +215,15 @@ export default function ExtendElectionModal({
                     ></textarea>
                   </div>
                 </div>
-                <div className="modal-footer" style={{ flexShrink: 0 }}>
+                <div
+                  className="modal-footer bg-white border-top-0"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundSize: "6px 6px",
+                    flexShrink: 0,
+                  }}
+                >
                   <button
                     type="button"
                     className="btn btn-light border text-secondary"

@@ -96,7 +96,7 @@ export default function ElectionCalendarWidget({ electionPeriod = null }) {
     <div className="card h-100 border-1 rounded-4 shadow-sm">
       <div className="card-body d-flex flex-column p-0">
         <div
-          className="card-header d-flex justify-content-between align-items-center bg-white rounded-top-4"
+          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white rounded-top-4"
           style={{
             backgroundImage:
               "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

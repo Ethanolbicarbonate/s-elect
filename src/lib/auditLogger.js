@@ -91,7 +91,7 @@ export function getIpAddressFromRequest(request) {
 }
 
 
-// Example of a more specific logger if you want to pre-fill some actor details
+// Admin specific logger
 // This is optional; you can just use writeAuditLog directly.
 export async function logAdminActivity({
   session,      // The NextAuth session object for the admin

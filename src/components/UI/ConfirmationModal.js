@@ -69,7 +69,13 @@ export default function ConfirmationModal({
           onClick={(e) => e.stopPropagation()} // Prevent close when clicking inside modal content
         >
           <div className="modal-content shadow-lg rounded-3 border-0">
-            <div className="modal-header bg-light border-bottom-0 rounded-top-3">
+            <div className="modal-header rounded-top-3 bg-white border-bottom-0"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundSize: "6px 6px",
+                  }}
+                >
               <h5 className="modal-title" id="confirmationModalTitle">
                 {title}
               </h5>
@@ -84,7 +90,13 @@ export default function ConfirmationModal({
             <div className="modal-body py-4 px-4">
               <p className="mb-0">{bodyText}</p>
             </div>
-            <div className="modal-footer bg-light border-top-0 rounded-bottom-3">
+            <div className="modal-footer rounded-bottom-3 bg-white border-top-0"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundSize: "6px 6px",
+                  }}
+                >
               <button
                 type="button"
                 className="btn custom-btn btn-md text-secondary border"

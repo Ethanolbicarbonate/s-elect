@@ -43,7 +43,7 @@ export default function VotingSection({
             className="position-group mb-5 card shadow-sm rounded-3"
           >
             <div
-              className="card-header bg-light rounded-top-3 bg-white"
+              className="card-header bg-light rounded-top-3 bg-white border-bottom-0"
               style={{
                 backgroundImage:
                   "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

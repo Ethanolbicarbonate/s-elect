@@ -320,7 +320,7 @@ export default function VotePage() {
   return (
     <div className="container p-0">
       <div className="card shadow-lg border rounded-4">
-        <div className="card-header bg-primary text-white text-center py-3 rounded-top-4">
+        <div className="card-header bg-primary text-white text-center py-3 rounded-top-4 border-bottom-0">
           <h2 className="h4 mb-0">
             {electionData?.name || "Student Election"}
           </h2>

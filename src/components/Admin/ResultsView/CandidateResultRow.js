@@ -1,14 +1,20 @@
-// src/components/Admin/ResultsView/CandidateResultRow.js
 "use client";
 
 import Image from "next/image";
-import CountUp from "react-countup"; // Optional
+import CountUp from "react-countup";
+import { useState, useEffect } from "react";
 
 export default function CandidateResultRow({
   candidate,
   totalVotesForPosition,
   isWinner,
 }) {
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [candidate?.photoUrl]);
+
   if (!candidate) return null;
 
   const percentage =
@@ -27,27 +33,44 @@ export default function CandidateResultRow({
 
   return (
     <tr className={isWinner ? "table-success" : ""}>
-      <td style={{ width: "50px" }}>
-        {candidate.photoUrl ? (
-          <Image
-            src={candidate.photoUrl}
-            alt={`${candidate.firstName} ${candidate.lastName}`}
-            width={40}
-            height={40}
-            className="img-fluid rounded-circle"
-            style={{ objectFit: "cover" }}
-            onError={(e) => {
-              /* Basic hide on error */ e.currentTarget.style.display = "none";
-            }}
-          />
-        ) : (
-          <div
-            className="d-flex align-items-center justify-content-center bg-light rounded-circle"
-            style={{ width: "40px", height: "40px" }}
-          >
-            <i className="bi bi-person-fill fs-5 text-secondary opacity-50"></i>
-          </div>
-        )}
+      <td style={{ width: "50px" }} className="align-middle text-center">
+        {" "}
+        <div
+          className="rounded-circle"
+          style={{
+            width: "40px",
+            height: "40px",
+            overflow: "hidden",
+            position: "relative",
+            border: "2px solid #dee2e6",
+            backgroundColor: "#f8f9fa",
+            margin: "0 auto",
+          }}
+        >
+          {candidate.photoUrl && !imageError ? (
+            <Image
+              src={candidate.photoUrl}
+              alt={`${candidate.firstName} ${candidate.lastName}`}
+              fill
+              style={{ objectFit: "cover" }}
+              sizes="40px"
+              onError={() => {
+                console.warn(
+                  `Failed to load image for ${candidate.firstName} ${candidate.lastName}: ${candidate.photoUrl}`
+                );
+                setImageError(true);
+              }}
+            />
+          ) : (
+            // Fallback div (shown if no photoUrl or if imageError is true)
+            <div
+              className="d-flex align-items-center justify-content-center w-100 h-100"
+              title={`${candidate.firstName} ${candidate.lastName} (No photo)`}
+            >
+              <i className="bi bi-person-fill fs-5 text-secondary opacity-50"></i>
+            </div>
+          )}
+        </div>
       </td>
       <td>
         <div className="fw-medium text-dark-emphasis">

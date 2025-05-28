@@ -97,7 +97,7 @@ export default function AdminCandidateList({
             key={partylistIdKey}
             className="mb-4 card rounded-3 pb-4 shadow-sm"
           >
-            <div className="card-header bg-light py-2 rounded-top-3">
+            <div className="card-header bg-light py-2 rounded-top-3 border-bottom-0">
               <h5 className="mb-0 fw-normal fs-6 text-secondary">
                 {groupName}
                 {partylistForHeader && (

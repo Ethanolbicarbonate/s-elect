@@ -224,7 +224,13 @@ export default function PositionForm({
         >
           <div className="modal-content border-0 rounded-4">
             <form onSubmit={handleSubmit} className="d-flex flex-column h-100">
-              <div className="modal-header">
+              <div className="modal-header bg-white border-bottom-0"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundSize: "6px 6px",
+                  }}
+                >
                 <h5 className="modal-title fw-normal text-secondary">
                   {initialData ? "Edit Position" : "Create New Position"}
                 </h5>
@@ -408,7 +414,13 @@ export default function PositionForm({
                   ></textarea>
                 </div>
               </div>
-              <div className="modal-footer">
+              <div className="modal-footer bg-white border-top-0"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundSize: "6px 6px",
+                  }}
+                >
                 {/* ... buttons ... */}
                 <button
                   type="button"

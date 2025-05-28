@@ -37,7 +37,7 @@ export default function CreateElectionForm({
 
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm">
-      <div className="card-header rounded-top-4 bg-white border-bottom"
+      <div className="card-header rounded-top-4 bg-white border-bottom-0"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

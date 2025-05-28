@@ -203,7 +203,7 @@ export default function AuditLogTable({ logs, isLoading }) {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div
-                  className="modal-header bg-white"
+                  className="modal-header bg-white border-bottom-0"
                   style={{
                     backgroundImage:
                       "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
@@ -244,7 +244,7 @@ export default function AuditLogTable({ logs, isLoading }) {
                   </pre>
                 </div>
                 <div
-                  className="modal-footer bg-white"
+                  className="modal-footer bg-white border-top-0"
                   style={{
                     backgroundImage:
                       "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

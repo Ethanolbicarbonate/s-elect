@@ -307,7 +307,7 @@ export default function AdminResultsPage() {
 
         {resultsData && lastRefreshed && (
           <small
-            className="text-secondary opacity-75 text-end card-footer rounded-bottom-4 bg-white"
+            className="text-secondary opacity-75 text-end card-footer border-top-0 rounded-bottom-4 bg-white"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
@@ -353,7 +353,7 @@ export default function AdminResultsPage() {
       {resultsData && (
         <div className="card rounded-4 shadow-sm">
           <h3
-            className="mb-3 h5 text-secondary fw-normal card-header rounded-top-4 bg-white border-bottom"
+            className="mb-3 h5 text-secondary fw-normal card-header rounded-top-4 bg-white border-bottom-0"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
