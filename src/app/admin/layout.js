@@ -130,7 +130,7 @@ export default function AdminLayout({ children }) {
           </div>
 
           <div className="d-flex align-items-center">
-            <div className="px-3">{adminName}</div>
+            <div className="px-3 d-none d-md-block">{adminName}</div>
             <span
               className={`fw-medium fs-6 badge p-2 ${
                 adminRole === "SUPER_ADMIN"

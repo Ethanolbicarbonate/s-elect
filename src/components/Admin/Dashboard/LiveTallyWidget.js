@@ -189,7 +189,7 @@ export default function LiveTallyWidget({
                 <h6 className="fw-medium text-secondary-emphasis fs-7 mb-1">
                   Total Votes Counted
                 </h6>
-                <p className="fs-4 fw-bold text-primary mb-0">
+                <p className="fs-4 fw-medium text-primary mb-0">
                   {totalVotesOverall.toLocaleString()}
                 </p>
               </div>
@@ -208,7 +208,7 @@ export default function LiveTallyWidget({
                 >
                   {" "}
                   {/* Smaller card for each position */}
-                  <h6 className="fw-semibold text-dark-emphasis mb-2 fs-7 d-flex justify-content-between align-items-center">
+                  <h6 className="fw-medium text-dark-emphasis mb-2 fs-7 d-flex justify-content-between align-items-center">
                     <span>{position.name}</span>
                     <span className="badge fw-medium bg-secondary-subtle text-secondary-emphasis rounded-pill">
                       {position.totalVotesCastForPosition} votes
@@ -262,7 +262,7 @@ export default function LiveTallyWidget({
                               ></i>
                             )}
                           </div>
-                          <div className="ms-2 fw-bold text-primary">
+                          <div className="ms-2 fw-medium text-primary">
                             {candidate.votesReceived}
                           </div>
                         </li>

@@ -139,7 +139,7 @@ export default function AdminNotificationManager() {
         {/* flex-column */}
         {/* Create New Notification Form */}
         <div className="mb-4 pb-3 border-bottom flex-shrink-0">
-          <h6 className="fw-semibold text-secondary mb-2">Create New</h6>
+          <h6 className="fw-medium text-secondary mb-2">Create New</h6>
           <form onSubmit={handleCreateNotification}>
             <div className="mb-2">
               <label
@@ -194,7 +194,7 @@ export default function AdminNotificationManager() {
         <div className="flex-grow-1 overflow-auto pe-2">
           {" "}
           {/* List area fills remaining space and scrolls */}
-          <h6 className="fw-semibold text-secondary mb-2">
+          <h6 className="fw-medium text-secondary mb-2">
             Existing Notifications
           </h6>
           {isLoading ? (

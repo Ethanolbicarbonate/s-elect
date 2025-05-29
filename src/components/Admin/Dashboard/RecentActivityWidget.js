@@ -71,11 +71,16 @@ export default function RecentActivityWidget({ userRole }) {
             {recentLogs.map((log) => (
               <li
                 key={log.id}
-                className="list-group-item d-flex align-items-start px-0 py-2 gap-2"
+                // FIX: Use responsive gap - gap-1 on mobile, gap-2 on md+
+                // Keep flex-nowrap
+                className="list-group-item d-flex align-items-start px-0 py-2 gap-1 gap-md-2 flex-nowrap"
               >
                 <div
+                  // FIX: Add a very small min-width and flex-basis
+                  // Keep flex-shrink-0
+                  // Removed me-md-2, gap-md-2 handles spacing
                   className="text-primary flex-shrink-0"
-                  style={{ width: "20px" }}
+                  style={{ minWidth: "1.5em", flexBasis: "1.5em" }} // Roughly icon size + padding
                 >
                   {log.status === "SUCCESS" ? (
                     <i className="bi bi-check-circle-fill fs-7"></i>
@@ -86,15 +91,15 @@ export default function RecentActivityWidget({ userRole }) {
                   )}
                 </div>
                 <div className="flex-grow-1 text-truncate pe-2 min-w-0">
+                  {/* ... Action Type and Actor Details paragraphs ... */}
                   <p
                     className="mb-0 fw-medium text-dark-emphasis fs-7 text-truncate"
                     title={log.actionType.replace(/_/g, " ")}
                   >
                     {log.actionType.replace(/_/g, " ")}
                   </p>
-                  {/* FIX: Hide actor details on extra-small/small screens, show from medium (md) up */}
                   <p
-                    className="d-none d-md-block mb-0 text-secondary opacity-75 fs-7 text-truncate"
+                    className="d-none d-md-block mb-0 text-secondary opacity-75 fs-8 text-truncate"
                     title={`${log.actorEmail || log.actorId} ${
                       log.entityType
                         ? `on ${log.entityType} (ID: ${log.entityId || "N/A"})`
@@ -111,7 +116,10 @@ export default function RecentActivityWidget({ userRole }) {
                       : ""}
                   </p>
                 </div>
-                <div className="text-end flex-shrink-0">
+                <div
+                  // FIX: Keep flex-shrink-0
+                  className="text-end flex-shrink-0"
+                >
                   <span className="badge fw-medium bg-light text-dark-emphasis smaller py-1 px-2">
                     {format(new Date(log.timestamp), "MMM d, hh:mm a")}
                   </span>
