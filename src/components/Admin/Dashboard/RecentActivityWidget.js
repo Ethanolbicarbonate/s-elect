@@ -41,9 +41,15 @@ export default function RecentActivityWidget({ userRole }) {
   }, [fetchRecentLogs]);
 
   return (
-    <div className="card shadow-sm w-100 h-100 d-flex flex-column">
+    <div className="card shadow-sm w-100 h-100 d-flex flex-column rounded-4 overflow-hidden">
       {/* Header */}
-      <div className="card-header bg-primary text-white py-2">
+      <div className="card-header bg-primary text-white py-2 "
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgba(241, 241, 241, 0.23) 1px, transparent 1px)",
+            backgroundSize: "6px 6px",
+          }}
+        >
         <h5 className="mb-0 h6">Recent Activity</h5>
       </div>
 

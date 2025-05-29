@@ -3,12 +3,14 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { headers } from "next/headers"; // For forwarding cookies in server-side fetch
 import Link from "next/link"; // For navigation links
+
+// Import the dashboard widgets
 import OverviewWidget from "@/components/Admin/Dashboard/OverviewWidget";
-import AdminVoterTurnoutWidget from "@/components/Admin/Dashboard/AdminVoterTurnoutWidget"; // New for admin-specific turnout
+import AdminVoterTurnoutWidget from "@/components/Admin/Dashboard/AdminVoterTurnoutWidget";
 import QuickActionsWidget from "@/components/Admin/Dashboard/QuickActionsWidget";
 import LiveTallyWidget from "@/components/Admin/Dashboard/LiveTallyWidget";
 import RecentActivityWidget from "@/components/Admin/Dashboard/RecentActivityWidget";
-import AdminNotificationManager from "@/components/Admin/Dashboard/AdminNotificationManager";
+import AdminNotificationManager from "@/components/Admin/Dashboard/AdminNotificationManager"; // Notification manager widget
 
 async function getAdminDashboardData() {
   const appUrl =
@@ -19,7 +21,7 @@ async function getAdminDashboardData() {
 
   const cookieHeader = headers().get("cookie");
   const fetchOptions = {
-    cache: "no-store", // Always get fresh data for dashboard
+    cache: "no-store",
     headers: {},
   };
   if (cookieHeader) {
@@ -42,7 +44,7 @@ async function getAdminDashboardData() {
       };
     }
     const data = await res.json();
-    return { data }; // { data: dashboardObjectOrNull }
+    return { data };
   } catch (error) {
     console.error("Fetch Error getting admin dashboard data:", error);
     return {
@@ -96,21 +98,20 @@ export default async function AdminDashboardPage() {
 
   const activeElectionDetails = dashboardData?.activeElectionDetails || null;
   const userRole = session.user.role;
-  const userCollege = session.user.college; // Used to pass scope to quick actions/live tally if needed
+  const userCollege = session.user.college;
 
   return (
     <div className="container-fluid p-0">
       {activeElectionDetails ? (
         <>
-          <div className="row g-4 mb-4">
-            {/* Overview Widget */}
+          <div className="row g-4 mb-4 p-0">
+            {" "}
+            {/* Added p-0 for row padding */}
+            {/* Overview Widget - Visible to all admins */}
             <div className="col-12 col-md-6 col-lg-4 d-flex">
-              {" "}
-              {/* All stack on mobile, then 2x2 on md, then 3x1 on lg */}
               <OverviewWidget election={activeElectionDetails} />
             </div>
-
-            {/* Voter Turnout Widget */}
+            {/* Voter Turnout Widget - Visible to all admins, internal logic handles scope */}
             <div className="col-12 col-md-6 col-lg-4 d-flex">
               <AdminVoterTurnoutWidget
                 electionId={activeElectionDetails.id}
@@ -127,8 +128,7 @@ export default async function AdminDashboardPage() {
                 college={activeElectionDetails.scope.college}
               />
             </div>
-
-            {/* Quick Actions Widget */}
+            {/* Quick Actions Widget - Visible to all admins, internal logic handles scope */}
             <div className="col-12 col-md-6 col-lg-4 d-flex">
               <QuickActionsWidget
                 userRole={userRole}
@@ -139,12 +139,11 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
 
-          <div className="row g-4 mb-4">
-            {/* Live Tally Widget (Conditional) */}
+          <div className="row g-4 mb-4 p-0">
+            {" "}
+            {/* Added p-0 for row padding */}
+            {/* Live Tally Widget (Conditional) - Visible to all admins, internal logic handles scope */}
             <div className="col-12 col-xl-8 d-flex">
-              {" "}
-              {/* col-12 on mobile, then 2/3 width on xl */}
-              {/* ... LiveTallyWidget or "No Live Results" message ... */}
               {["ONGOING", "ENDED"].includes(
                 activeElectionDetails.effectiveStatus
               ) ? (
@@ -169,20 +168,25 @@ export default async function AdminDashboardPage() {
                 </div>
               )}
             </div>
+            {/* Recent Activity Widget - NOT for Moderators */}
+            {userRole !== "MODERATOR" && (
+              <div className="col-12 col-xl-4 d-flex">
+                <RecentActivityWidget userRole={userRole} />
+              </div>
+            )}
+          </div>
 
-            {/* Recent Activity Widget */}
-            <div className="col-12 col-xl-4 d-flex">
-              {" "}
-              {/* col-12 on mobile, then 1/3 width on xl */}
-              <RecentActivityWidget userRole={userRole} />
+          {/* Admin Notification Manager - Only for Super Admin */}
+          {userRole === "SUPER_ADMIN" && (
+            <div className="p-0 col-12 d-flex">
+              <AdminNotificationManager />
             </div>
-          </div>
-          <div className="col-12 w-100">
-            <AdminNotificationManager/>
-          </div>
+          )}
         </>
       ) : (
-        <div className="card shadow-sm p-5 text-center">
+        <div className="card shadow-sm p-0 text-center m-0">
+          {" "}
+          {/* Added mx-md-4 for centering/spacing */}
           <i className="bi bi-exclamation-circle-fill display-4 text-muted mb-3"></i>
           <h5 className="mb-3">No Election Data Available</h5>
           <p className="text-muted">

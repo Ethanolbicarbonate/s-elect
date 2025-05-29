@@ -100,8 +100,14 @@ export default function AdminVoterTurnoutWidget({
   };
 
   return (
-    <div className="card h-100 shadow-sm flex-grow-1">
-      <div className="card-header bg-primary text-white py-2">
+    <div className="card h-100 shadow-sm flex-grow-1 rounded-4 overflow-hidden">
+      <div className="card-header bg-primary text-white py-2 "
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgba(241, 241, 241, 0.23) 1px, transparent 1px)",
+            backgroundSize: "6px 6px",
+          }}
+        >
         <h5 className="mb-0 h6">
           Voter Turnout
         </h5>

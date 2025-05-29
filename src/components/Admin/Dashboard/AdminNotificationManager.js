@@ -128,10 +128,16 @@ export default function AdminNotificationManager() {
   };
 
   return (
-    <div className="card shadow-sm mb-4 h-100 d-flex flex-column">
+    <div className="card shadow-sm h-100 d-flex flex-column w-100 rounded-4 overflow-hidden">
       {" "}
       {/* h-100 and flex-column */}
-      <div className="card-header bg-primary text-white py-2">
+      <div className="card-header bg-primary text-white py-2 "
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgba(241, 241, 241, 0.23) 1px, transparent 1px)",
+            backgroundSize: "6px 6px",
+          }}
+        >
         <h5 className="mb-0 h6">Manage Notifications</h5>
       </div>
       <div className="card-body p-3 d-flex flex-column">

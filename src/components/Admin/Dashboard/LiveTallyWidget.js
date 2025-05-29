@@ -139,10 +139,16 @@ export default function LiveTallyWidget({
   );
 
   return (
-    <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column">
+    <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column rounded-4 overflow-hidden">
       {" "}
       {/* Added flex-column here */}
-      <div className="card-header bg-primary text-white py-2 d-flex justify-content-between align-items-center">
+      <div className="card-header bg-primary text-white py-2 d-flex justify-content-between align-items-center "
+          style={{
+            backgroundImage:
+              "radial-gradient(circle,rgba(241, 241, 241, 0.23) 1px, transparent 1px)",
+            backgroundSize: "6px 6px",
+          }}
+        >
         <h5 className="mb-0 h6">
           {widgetTitle} ({scopeDisplay})
         </h5>
