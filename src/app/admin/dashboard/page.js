@@ -108,11 +108,11 @@ export default async function AdminDashboardPage() {
             {" "}
             {/* Added px-md-4 for row padding */}
             {/* Overview Widget - Visible to all admins */}
-            <div className="col-12 col-md-6 col-lg-4 d-flex">
+            <div className="col-12 col-md-6 col-lg-4 d-flex ">
               <OverviewWidget election={activeElectionDetails} />
             </div>
             {/* Voter Turnout Widget - Visible to all admins, internal logic handles scope */}
-            <div className="col-12 col-md-6 col-lg-4 d-flex">
+            <div className="col-12 col-md-6 col-lg-4 d-flex  ">
               <AdminVoterTurnoutWidget
                 electionId={activeElectionDetails.id}
                 eligibleVoters={
@@ -129,7 +129,7 @@ export default async function AdminDashboardPage() {
               />
             </div>
             {/* Quick Actions Widget - Visible to all admins, internal logic handles scope */}
-            <div className="col-12 col-md-6 col-lg-4 d-flex">
+            <div className="col-12 col-md-6 col-lg-4 d-flex ">
               <QuickActionsWidget
                 userRole={userRole}
                 userCollege={userCollege}
@@ -143,7 +143,7 @@ export default async function AdminDashboardPage() {
             {" "}
             {/* Added px-md-4 for row padding */}
             {/* Live Tally Widget (Conditional) - Visible to all admins, internal logic handles scope */}
-            <div className="col-12 col-xl-8 d-flex">
+            <div className="col-12 col-xl-8 d-flex ">
               {["ONGOING", "ENDED"].includes(
                 activeElectionDetails.effectiveStatus
               ) ? (
@@ -170,7 +170,7 @@ export default async function AdminDashboardPage() {
             </div>
             {/* Recent Activity Widget - NOT for Moderators */}
             {userRole !== "MODERATOR" && (
-              <div className="col-12 col-xl-4 d-flex">
+              <div className="col-12 col-xl-4 d-flex ">
                 <RecentActivityWidget userRole={userRole} />
               </div>
             )}
@@ -179,14 +179,14 @@ export default async function AdminDashboardPage() {
           {/* Admin Notification Manager - Only for Super Admin */}
           {userRole === "SUPER_ADMIN" && (
             <div className="row m-0 p-0">
-              <div className="col-12 d-flex w-100 p-0">
+              <div className="col-12 d-flex w-100 p-0 ">
                 <AdminNotificationManager />
               </div>
             </div>
           )}
         </>
       ) : (
-        <div className="card shadow-sm p-5 text-center mx-md-4">
+        <div className="card shadow-sm p-5 text-center mx-md-4 ">
           {" "}
           {/* Added mx-md-4 for centering/spacing */}
           <i className="bi bi-exclamation-circle-fill display-4 text-muted mb-3"></i>
