@@ -150,7 +150,7 @@ export default function AdminNotificationManager() {
             <div className="mb-2">
               <label
                 htmlFor="new-notif-title"
-                className="form-label small text-muted mb-1"
+                className="form-label fs-7 text-secondary ms-2 mb-1"
               >
                 Title (Optional)
               </label>
@@ -167,7 +167,7 @@ export default function AdminNotificationManager() {
             <div className="mb-2">
               <label
                 htmlFor="new-notif-content"
-                className="form-label small text-muted mb-1"
+                className="form-label fs-7 text-secondary ms-2 mb-1"
               >
                 Content <span className="text-danger">*</span>
               </label>
@@ -216,7 +216,7 @@ export default function AdminNotificationManager() {
           ) : error ? (
             <div className="alert alert-danger small py-2">{error}</div> // Use general error for fetch
           ) : notifications.length === 0 ? (
-            <div className="text-center text-muted small p-3">
+            <div className="text-center text-secondary opacity-50 small p-3">
               No notifications have been published yet.
             </div>
           ) : (

@@ -331,7 +331,7 @@ export default function ResultsDashboardWidget({
           <div className="col-lg-5 col-md-6 d-flex flex-column">
             {/* Overall Turnout Chart (Doughnut) */}
             <div
-              className="w-100 w-md-50 w-lg-33 mb-4 rounded-3"
+              className="w-100 w-md-50 w-lg-33 rounded-3 mb-1 p-0"
               style={{ minHeight: "200px" }}
             >
               {turnoutChartData ? (
@@ -341,6 +341,7 @@ export default function ResultsDashboardWidget({
                     height: "180px",
                     width: "100%",
                   }}
+                  className="border rounded-3 p-2"
                 >
                   <Doughnut
                     data={turnoutChartData}
@@ -352,39 +353,19 @@ export default function ResultsDashboardWidget({
                   />
                 </div>
               ) : (
-                <p className="text-muted small text-center mt-3 mb-0">
+                <p className="text-muted small text-center mt-3">
                   Turnout data unavailable.
                 </p>
-              )}
-
-              {activeTab === "USC" && turnout?.colleges?.length > 0 && (
-                <div className="mt-3 pt-3 border-top">
-                  <h6 className="text-secondary-emphasis fw-medium fs-7 mb-2">
-                    Turnout by College
-                  </h6>
-                  <div style={{ maxHeight: "120px", overflowY: "auto" }}>
-                    {turnout.colleges
-                      .sort((a, b) => b.percentage - a.percentage)
-                      .map((collegeTurnout) => (
-                        <ProgressBar
-                          key={collegeTurnout.college}
-                          label={collegeTurnout.college}
-                          percentage={collegeTurnout.percentage}
-                          color="danger"
-                        />
-                      ))}
-                  </div>
-                </div>
               )}
             </div>
 
             {/* Winners Overview - NEW Section */}
-            <div className="flex-grow-1 d-flex flex-column">
+            <div className="flex-grow-1 d-flex flex-column border rounded-3 p-2 m-0 pt-3">
               <h4 className="fs-6 text-center text-secondary pb-1">
                 Elected Officials
               </h4>
               <div
-                className="overflow-y-scroll pe-2 border-top border-bottom"
+                className="overflow-y-scroll pe-2 border-top"
                 style={{ maxHeight: "300px" }}
               >
                 <WinnersOverview positionsResults={currentPositions} />

@@ -55,7 +55,7 @@ export default function OverviewWidget({ election }) {
           <p className="mb-0 small text-muted">
             Period: {formattedStartDate} - {formattedEndDate}
           </p>
-          <span className={`badge bg-${statusColor}`}>
+          <span className={`badge fw-medium bg-${statusColor}`}>
             {effectiveStatus?.replace("_", " ")}
           </span>
         </div>

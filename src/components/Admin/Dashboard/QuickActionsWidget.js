@@ -65,17 +65,13 @@ export default function QuickActionsWidget({
         <h5 className="mb-0 h6">Quick Actions</h5>
       </div>
       <div className="card-body d-flex flex-column p-3">
-        <p className="card-text small text-muted mb-3">
-          Quick links to perform common tasks.
-        </p>
-
         <div className="list-group list-group-flush flex-grow-1">
           {" "}
           {/* Flex-grow-1 to push footer down */}
           {canCreateElection && (
             <Link
               href="/admin/election-settings"
-              className="list-group-item list-group-item-action d-flex align-items-center"
+              className="list-group-item list-group-item-action d-flex align-items-center h-100"
             >
               <i className="bi bi-calendar-plus-fill me-3 fs-5 text-primary"></i>
               <div>
@@ -89,7 +85,7 @@ export default function QuickActionsWidget({
           {canManageEntities && (
             <Link
               href={manageEntitiesBasePath}
-              className="list-group-item list-group-item-action d-flex align-items-center"
+              className="list-group-item list-group-item-action d-flex align-items-center h-100"
             >
               <i className="bi bi-stack me-3 fs-5 text-primary"></i>
               <div>
@@ -103,7 +99,7 @@ export default function QuickActionsWidget({
           {canViewResults && (
             <Link
               href={viewResultsBasePath}
-              className="list-group-item list-group-item-action d-flex align-items-center"
+              className="list-group-item list-group-item-action d-flex align-items-center h-100"
             >
               <i className="bi bi-bar-chart-line-fill me-3 fs-5 text-primary"></i>
               <div>
@@ -117,7 +113,7 @@ export default function QuickActionsWidget({
           {canViewAuditLog && (
             <Link
               href="/admin/audit-log"
-              className="list-group-item list-group-item-action d-flex align-items-center"
+              className="list-group-item list-group-item-action d-flex align-items-center h-100"
             >
               <i className="bi bi-journal-check me-3 fs-5 text-primary"></i>
               <div>

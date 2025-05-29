@@ -109,7 +109,7 @@ export default function PositionDetailedResults({ position, candidates }) {
                           </span>
                         )}
                       </span>
-                      <span className="fw-medium text-primary small">
+                      <span className="fw-medium text-primary fs-7">
                         <CountUp
                           end={candidate.votesReceived}
                           duration={1.5}
