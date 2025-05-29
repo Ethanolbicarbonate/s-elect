@@ -1,23 +1,13 @@
 export default function LoadingDashboardSkeleton() {
   return (
-    <div className="container py-4 placeholder-glow">
+    <div className="container p-0 m-0 placeholder-glow">
       <div className="row mb-0 mb-sm-4 g-4">
         <div className="col-md-6 col-lg-4 d-flex flex-column">
           <div className="mb-4 flex-grow-1">
-            <div
-              className="placeholder rounded-4 w-100"
-              style={{
-                height: "150px",
-              }}
-            ></div>
+            <div className="placeholder rounded-4 w-100 h-100"></div>
           </div>
           <div className="flex-grow-1">
-            <div
-              className="placeholder rounded-4 w-100"
-              style={{
-                height: "150px",
-              }}
-            ></div>
+            <div className="placeholder rounded-4 w-100 h-100"></div>
           </div>
         </div>
 
@@ -25,7 +15,7 @@ export default function LoadingDashboardSkeleton() {
           <div
             className="placeholder rounded-4 w-100 flex-grow-1"
             style={{
-              minHeight: "324px",
+              minHeight: "380px",
             }}
           ></div>
         </div>
@@ -34,7 +24,7 @@ export default function LoadingDashboardSkeleton() {
           <div
             className="placeholder rounded-4 w-100 flex-grow-1"
             style={{
-              minHeight: "324px",
+              minHeight: "380px",
             }}
           ></div>
         </div>
@@ -45,7 +35,7 @@ export default function LoadingDashboardSkeleton() {
             className="placeholder rounded-4 w-100"
             style={{
               height: "180px",
-            }} 
+            }}
           ></div>
         </div>
       </div>
