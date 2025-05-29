@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { logAdminActivity, getIpAddressFromRequest } from "@/lib/auditLogger";
 import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";
-import { AuditLogStatus } from "@prisma/client";
+import { AuditLogStatus, AuditActorType } from "@prisma/client";
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);

@@ -15,7 +15,10 @@ datasource db {
   relationMode = "prisma"
 }
 
-// Enum for Colleges
+// --- ENUMS (Enumerated Types) ---
+// Enums define a set of allowed values for a field.
+
+// Enum for Colleges within the university.
 enum College {
   CAS
   CBM
@@ -29,53 +32,56 @@ enum College {
   PESCAR
 }
 
-// Enum for Admin Roles
+// Enum for Admin Roles, defining different levels of administrative access.
 enum AdminRole {
   SUPER_ADMIN
   AUDITOR
   MODERATOR
 }
 
+// Enum for the overall status of an election.
 enum ElectionStatus {
   UPCOMING
   ONGOING
-  PAUSED // Admin can pause the entire event
-  ENDED // General end, or explicitly ended by admin
+  PAUSED
+  ENDED
   ARCHIVED
 }
 
+// Enum for defining the scope of an election, especially relevant for moderator roles.
+// USC: University Student Council (university-wide positions).
+// CSC: College Student Council (college-specific positions).
 enum ElectionScopeType {
   USC
   CSC
 }
 
+// Represents an Election event.
 model Election {
-  id          String         @id @default(cuid())
-  name        String
-  description String?
-  startDate   DateTime
-  endDate     DateTime
-  status      ElectionStatus @default(UPCOMING)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-
-  scopeType ElectionScopeType? // Indicates if this election is primarily for USC or CSC
-  college   College? // If scopeType is CSC, which college is it for?
-
-  extensions ElectionExtension[]
-  positions  Position[] // Relation to Positions
-  partylists Partylist[] // Relation to Partylists
-  candidates Candidate[] // Relation to Candidates
-
-  StudentElectionVote StudentElectionVote[]
-  SubmittedBallot     SubmittedBallot[]
-  VoteCast            VoteCast[]
+  id                  String                @id @default(cuid())
+  name                String
+  description         String?
+  startDate           DateTime
+  endDate             DateTime
+  status              ElectionStatus        @default(UPCOMING)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  scopeType           ElectionScopeType? // Indicates if this election is primarily for USC or CSC
+  college             College? // If scopeType is CSC, this specifies which college the election belongs to (null for USC).
+  extensions          ElectionExtension[] // Related extensions for specific colleges in this election.
+  positions           Position[] // Relation to Positions
+  partylists          Partylist[] // Relation to Partylists
+  candidates          Candidate[] // Relation to Candidates
+  StudentElectionVote StudentElectionVote[] // Records of students who have voted in this election.
+  SubmittedBallot     SubmittedBallot[] // All submitted ballots for this election.
+  VoteCast            VoteCast[] // Individual votes cast within this election.
 }
 
+// Represents an extension of the voting period for a specific college within an election.
 model ElectionExtension {
   id              String   @id @default(cuid())
   electionId      String
-  election        Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  election        Election @relation(fields: [electionId], references: [id], onDelete: Cascade) // Relation to the Election model.
   college         College
   extendedEndDate DateTime
   reason          String?
@@ -84,50 +90,43 @@ model ElectionExtension {
   @@unique([electionId, college])
 }
 
+// Represents a Student user who can participate in elections.
 model Student {
-  id                  String    @id @default(cuid())
-  firstName           String
-  lastName            String
-  middleName          String? // Optional middle name
-  email               String    @unique // firstname.lastname@wvsu.edu.ph format
-  password            String? // Will store hashed password
-  college             College
-  // Fields for sign-up & verification
-  isPreApproved       Boolean   @default(true) // Indicates if they are in the "enrolled" list
-  emailVerified       DateTime? // Timestamp when email was verified during sign-up
-  verificationToken   String? // Stores the OTP or verification token
-  verificationExpires DateTime? // Expiry for the verification token
-
-  // Fields for Password Reset
+  id                   String                @id @default(cuid())
+  firstName            String
+  lastName             String
+  middleName           String?
+  email                String                @unique // firstname.lastname@wvsu.edu.ph format
+  password             String? // Will store hashed password
+  college              College
+  isPreApproved        Boolean               @default(true) // Indicates if they are in the "enrolled" list from the csv file that has been seeded
+  emailVerified        DateTime?
+  verificationToken    String?
+  verificationExpires  DateTime?
   passwordResetToken   String?
   passwordResetExpires DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  StudentElectionVote StudentElectionVote[]
-  SubmittedBallot     SubmittedBallot[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  StudentElectionVote  StudentElectionVote[] // Records of elections this student has voted in.
+  SubmittedBallot      SubmittedBallot[] // Ballots submitted by this student.
 }
 
 model Admin {
-  id       String    @id @default(cuid())
-  email    String    @unique
-  password String // Will store hashed password
-  role     AdminRole
-  college  College? // Nullable, only set for MODERATOR role
-
-  // Fields for Password Reset
+  id                   String    @id @default(cuid())
+  email                String    @unique
+  password             String // Will store hashed password
+  role                 AdminRole // Role of the admin (SUPER_ADMIN, AUDITOR, MODERATOR).
+  college              College? // Nullable, only set for MODERATOR role
   passwordResetToken   String?
   passwordResetExpires DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Ensure a moderator always has a college assigned
-  @@index([role, college]) // Index for faster lookups maybe
-  @@map("admins") // Map to 'admins' table name
+  @@index([role, college]) // Creates an index for faster lookups by role and college.
+  @@map("admins") // Maps this model to a database table named 'admins'
 }
 
+// Type of position (USC or CSC). Is the candidate running for a position in CSC or USC?
 enum PositionType {
   USC
   CSC
@@ -141,78 +140,65 @@ model Position {
   college          College? // Required if type is CSC, null if USC
   maxVotesAllowed  Int // Max number of candidates a voter can select for this position (e.g., 1 for Chairperson, multiple for Councilor)
   minVotesRequired Int          @default(0) // Min number of selections (usually 0, meaning voter can skip)
-  order            Int // For display sequence on ballot
-
-  electionId String
-  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade) // Each position belongs to an election period
-
-  candidates Candidate[] // Candidates running for this position
-
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  VoteCast  VoteCast[]
+  order            Int // For display sequence on ballot in hierarchical order (0 is the Chairperson)
+  electionId       String
+  election         Election     @relation(fields: [electionId], references: [id], onDelete: Cascade) // Each position belongs to an election period
+  candidates       Candidate[] // Candidates running for this position
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  VoteCast         VoteCast[]
 
   @@unique([electionId, name, college]) // A position name should be unique within an election for a specific college (or for USC if college is null)
 }
 
+// Represents a Partylist (political party) participating in an election.
 model Partylist {
-  id           String  @id @default(cuid())
+  id           String       @id @default(cuid())
   name         String
   acronym      String?
-  logoUrl      String? // URL to the party list's logo
-  logoPublicId String?
+  logoUrl      String? // URL to the party list's logo (stored in cloudinary when superadmin/moderator adds the photo)
+  logoPublicId String? // Cloudinary public ID of the logo for deletion/management
   platform     String? // General platform of the party list
-
-  electionId String
-  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade) // Each partylist is for a specific election period
-
-  type    PositionType // USC or CSC (use the same enum as Position)
-  college College? // Required if type is CSC, null if USC
-
-  candidates Candidate[] // Candidates belonging to this partylist
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  electionId   String
+  election     Election     @relation(fields: [electionId], references: [id], onDelete: Cascade) // Each partylist is for a specific election period
+  type         PositionType // USC or CSC (use the same enum as Position)
+  college      College? // Required if type is CSC, null if USC
+  candidates   Candidate[] // Candidates belonging to this partylist
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   @@unique([electionId, name, type, college]) // Partylist name should be unique within an election
 }
 
 model Candidate {
-  id             String   @id @default(cuid())
+  id             String     @id @default(cuid())
   firstName      String
   lastName       String
   middleName     String?
   nickname       String?
-  photoUrl       String? // URL to the candidate's 
-  photoPublicId  String?
+  photoUrl       String? // URL to the candidate's photo on Cloudinary)
+  photoPublicId  String? // Cloudinary public ID of the photo for deletion
   bio            String? // Short biography
-  platformPoints String[] @default([]) // Array of strings for platform points
-
-  isIndependent Boolean @default(false) // True if not affiliated with any partylist for this election
-
-  electionId String // Which election period this candidacy is for
-  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
-
-  positionId String // The position they are running for
-  position   Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
-
-  partylistId String? // Optional: if affiliated with a partylist
-  partylist   Partylist? @relation(fields: [partylistId], references: [id], onDelete: SetNull) // SetNull so if partylist is deleted, candidate becomes independent (or Restrict)
-
-  votesReceived Int @default(0) // For tallying (can be calculated or stored) - might be better in a separate VoteTally model later
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  VoteCast VoteCast[]
+  platformPoints String[]   @default([]) // Array of strings for platform points
+  isIndependent  Boolean    @default(false) // True if not affiliated with any partylist for this election
+  electionId     String // Which election period this candidacy is for
+  election       Election   @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  positionId     String // The position they are running for
+  position       Position   @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  partylistId    String? // Optional: if affiliated with a partylist
+  partylist      Partylist? @relation(fields: [partylistId], references: [id], onDelete: SetNull) // SetNull so if partylist is deleted, candidate becomes independent (or Restrict)
+  votesReceived  Int        @default(0) // Total votes received by this candidate.
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  VoteCast       VoteCast[]
 
   @@index([partylistId])
   @@index([positionId])
   @@index([electionId])
 }
 
-// ... (Student and Election models) ...
-
+// Records that a specific Student has cast a ballot in a specific Election.
+// This ensures a student can only vote once per election.
 model StudentElectionVote {
   id         String   @id @default(cuid())
   studentId  String
@@ -226,35 +212,30 @@ model StudentElectionVote {
   @@index([studentId])
 }
 
+// Represents a complete ballot submitted by a student for an election
 model SubmittedBallot {
-  id          String   @id @default(cuid())
-  studentId   String // Could be made optional or linked to an anonymized voter ID later if needed
-  student     Student  @relation(fields: [studentId], references: [id], onDelete: Restrict) // Restrict deletion of student if they have a ballot
+  id          String     @id @default(cuid())
+  studentId   String
+  student     Student    @relation(fields: [studentId], references: [id], onDelete: Restrict) // Restrict deletion of student if they have a ballot
   electionId  String
-  election    Election @relation(fields: [electionId], references: [id], onDelete: Cascade) // If election is deleted, ballots for it are too
-  submittedAt DateTime @default(now())
-
+  election    Election   @relation(fields: [electionId], references: [id], onDelete: Cascade) // If election is deleted, ballots for it are too
+  submittedAt DateTime   @default(now())
   votesCasted VoteCast[] // Relation to individual votes in this ballot
-  // Optional: @@unique([studentId, electionId]) if a student submits only one "ballot object" per election,
-  // which is implicitly handled by StudentElectionVote model preventing re-submission.
 
   @@index([studentId])
   @@index([electionId])
 }
 
 model VoteCast {
-  id       String          @id @default(cuid())
-  ballotId String
-  ballot   SubmittedBallot @relation(fields: [ballotId], references: [id], onDelete: Cascade) // If ballot is deleted, its cast votes are too
-
-  positionId String
-  position   Position @relation(fields: [positionId], references: [id], onDelete: Cascade) // Don't delete position if votes are cast for it
-
+  id          String          @id @default(cuid())
+  ballotId    String
+  ballot      SubmittedBallot @relation(fields: [ballotId], references: [id], onDelete: Cascade) // If ballot is deleted, its cast votes are too
+  positionId  String
+  position    Position        @relation(fields: [positionId], references: [id], onDelete: Cascade) // Don't delete position if votes are cast for it
   candidateId String
-  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade) // Don't delete candidate if they received votes
-
-  electionId String // Denormalized for easier querying of all votes in an election without going through ballot
-  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  candidate   Candidate       @relation(fields: [candidateId], references: [id], onDelete: Cascade) // Don't delete candidate if they received votes
+  electionId  String // Denormalized for easier querying of all votes in an election without going through ballot
+  election    Election        @relation(fields: [electionId], references: [id], onDelete: Cascade)
 
   // No studentId here to help with anonymity of individual choices from the ballot submitter.
   // The link is: Student -> SubmittedBallot -> VoteCast.
@@ -265,6 +246,9 @@ model VoteCast {
   @@index([electionId])
 }
 
+// --- Audit Log Models ---
+
+// Enum for the type of actor performing an audited action
 enum AuditActorType {
   ADMIN
   STUDENT
@@ -275,34 +259,25 @@ enum AuditActorType {
 enum AuditLogStatus {
   SUCCESS
   FAILURE
-  PENDING // For multi-step operations if needed
-  INFO // For informational logs
+  PENDING // For multi-step operations (not implemented)
+  INFO // For informational logs (not implemented)
 }
 
+// Records significant actions and events within the system for auditing purposes.
 model AuditLog {
-  id        String   @id @default(cuid())
-  timestamp DateTime @default(now())
-
-  // Actor performing the action
-  actorId    String? // ID of the admin or student, or null for SYSTEM/UNKNOWN
-  actorType  AuditActorType @default(UNKNOWN)
-  actorEmail String? // Denormalized email for easier display in logs, especially if actorId might be deleted
-
-  // Action details
-  actionType String
-  status     AuditLogStatus @default(SUCCESS) // success, failure, info
-
-  // Affected Entity (Optional)
-  entityType String? // e.g., "Election", "Position", "Candidate", "User"
-  entityId   String? // ID of the primary entity affected by the action
-
-  // Target (Optional, if action is on another user/entity)
+  id              String         @id @default(cuid())
+  timestamp       DateTime       @default(now())
+  actorId         String? // ID of the admin or student, or null for SYSTEM/UNKNOWN
+  actorType       AuditActorType @default(UNKNOWN)
+  actorEmail      String? // Denormalized email for easier display in logs, especially if actorId might be deleted
+  actionType      String
+  status          AuditLogStatus @default(SUCCESS) // success, failure
+  entityType      String? // e.g., "Election", "Position", "Candidate", "User"
+  entityId        String? // ID of the primary entity affected by the action
   targetUserId    String? // e.g., if an admin resets a student's password
   targetUserEmail String? // Denormalized
-
-  // Additional Information
-  details   Json? // For storing arbitrary details, like changed fields (before/after), parameters, error messages
-  ipAddress String? // IP address of the request originator
+  details         Json? // For storing arbitrary details, like changed fields (before/after), parameters, error messages
+  ipAddress       String? // IP address of the request originator
 
   @@index([timestamp])
   @@index([actorId])
@@ -313,9 +288,7 @@ model AuditLog {
 }
 
 // --- NextAuth.js Prisma Adapter Models ---
-// Needed if you use the database session strategy or link accounts (OAuth)
-// For Credentials-only with JWT sessions, these might not be strictly required
-// But it's good practice to include them for flexibility
+// For Credentials-only with JWT sessions, these is not strictly required
 
 model Account {
   id                String  @id @default(cuid())
@@ -340,7 +313,6 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  // user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -354,13 +326,10 @@ model VerificationToken {
   @@map("verificationtokens")
 }
 
-//notif
-
+//notification
 model Notification {
   id        String   @id @default(cuid())
   title     String? // Optional title
   content   String
   createdAt DateTime @default(now())
-
-  // Optional: `createdByAdminId String? @relation(...)`, `expiresAt DateTime?` not needed for now
 }

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path
-import { College, ElectionStatus } from "@prisma/client"; // Assuming College enum is available
+import { College, ElectionStatus, AuditActorType, AuditLogStatus, } from "@prisma/client"; // Assuming College enum is available
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);

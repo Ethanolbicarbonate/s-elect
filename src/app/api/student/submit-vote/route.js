@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { ElectionStatus, PositionType } from "@prisma/client";
+import { ElectionStatus, PositionType, AuditActorType, AuditLogStatus } from "@prisma/client";
 import { getEffectiveStatus, getEffectiveEndDate } from "@/lib/electionUtils";
 import { writeAuditLog, getIpAddressFromRequest } from "@/lib/auditLogger";
 import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";

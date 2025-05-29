@@ -3,10 +3,9 @@ import { NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary"; // Your Cloudinary config
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path as needed
-// Assuming you have audit logging
 import { logAdminActivity, getIpAddressFromRequest } from "@/lib/auditLogger";
 import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";
-import { AuditLogStatus } from "@prisma/client";
+import { AuditLogStatus, AuditActorType} from "@prisma/client";
 
 // --- POST - Upload Image (Existing Code) ---
 export async function POST(request) {
