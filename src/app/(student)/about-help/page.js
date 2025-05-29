@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
@@ -109,8 +108,10 @@ export default function AboutPage() {
 
   // --- Feedback Form State ---
   const [feedbackContent, setFeedbackContent] = useState("");
+  // Optional: Add state for feedback title if needed (and its input field below)
+  // const [feedbackTitle, setFeedbackTitle] = useState("");
   const [isSendingFeedback, setIsSendingFeedback] = useState(false);
-  const [feedbackStatus, setFeedbackStatus] = useState(null); // 'success' or 'error'
+  const [feedbackStatus, setFeedbackStatus] = useState(null); // 'success' or 'danger'
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
   // --- Handle Text Area Change ---
@@ -123,61 +124,103 @@ export default function AboutPage() {
     }
   };
 
+  // Optional: Handle title change if you add a title input
+  // const handleTitleChange = (e) => {
+  //   setFeedbackTitle(e.target.value);
+  //   setFeedbackStatus(null);
+  //   setFeedbackMessage("");
+  // };
+
   // --- Handle Form Submission ---
-  const handleSendFeedback = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setFeedbackStatus(null);
-    setFeedbackMessage("");
+  // Use useCallback as it's an event handler passed to the form
+  const handleSendFeedback = useCallback(
+    async (e) => {
+      e.preventDefault(); // Prevent default form submission
+      setFeedbackStatus(null);
+      setFeedbackMessage("");
 
-    if (!feedbackContent.trim()) {
-      setFeedbackStatus("error");
-      setFeedbackMessage("Feedback content cannot be empty.");
-      return;
-    }
+      const trimmedContent = feedbackContent.trim();
+      // Optional: const trimmedTitle = feedbackTitle.trim();
 
-    // Check if user is logged in (required to get sender email)
-    if (sessionStatus !== "authenticated" || !studentEmail) {
-      setFeedbackStatus("error");
-      setFeedbackMessage("You must be logged in to send feedback.");
-      console.error(
-        "Attempted to send feedback without authenticated session."
-      );
-      return;
-    }
-
-    setIsSendingFeedback(true);
-
-    try {
-      const res = await fetch("/api/feedback", {
-        // Call the new API route
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: feedbackContent,
-          // No need to send sender email here, backend gets it from session
-        }),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.error || `API Error: ${res.status}`);
+      if (!trimmedContent) {
+        setFeedbackStatus("danger");
+        setFeedbackMessage("Feedback content cannot be empty.");
+        return;
       }
 
-      // Success
-      setFeedbackStatus("success");
-      setFeedbackMessage(result.message || "Feedback sent successfully!");
-      setFeedbackContent(""); // Clear the textarea on success
-    } catch (error) {
-      console.error("Error sending feedback:", error);
-      setFeedbackStatus("error");
-      setFeedbackMessage(error.message || "Failed to send feedback.");
-    } finally {
-      setIsSendingFeedback(false);
-    }
-  };
+      // Check if user is logged in (required by your backend API)
+      // useSession status check is more reliable than just checking session object
+      if (
+        sessionStatus !== "authenticated" ||
+        session?.user?.role !== "STUDENT"
+      ) {
+        // This condition should ideally align with the button/textarea disabled state logic
+        setFeedbackStatus("danger");
+        setFeedbackMessage(
+          "You must be logged in as a student to submit feedback."
+        );
+        return;
+      }
+      // Optional: Check if session.user.email is also available if your backend requires it
+      if (!session.user.email) {
+        setFeedbackStatus("danger");
+        setFeedbackMessage("Your session does not include an email address.");
+        console.error("Session exists but email is missing.", session);
+        return;
+      }
+
+      setIsSendingFeedback(true);
+
+      try {
+        const res = await fetch("/api/feedback", {
+          // Call your backend API route
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: trimmedContent,
+            // title: trimmedTitle || undefined, // Include optional title if implemented
+          }),
+        });
+
+        const result = await res.json(); // API should return { message: '...' } or { error: '...' }
+
+        if (!res.ok) {
+          // API returned an error status (4xx or 5xx)
+          setFeedbackStatus("danger");
+          setFeedbackMessage(
+            result.error || "Failed to send feedback due to an API error."
+          );
+          console.error("Feedback API Error Response:", result);
+        } else {
+          // API returned success status (200)
+          setFeedbackStatus("success");
+          setFeedbackMessage(result.message || "Feedback sent successfully!");
+          setFeedbackContent(""); // Clear the textarea on success
+          // setFeedbackTitle(""); // Clear title on success
+        }
+      } catch (error) {
+        // Handle network errors or errors during response parsing
+        setFeedbackStatus("danger");
+        setFeedbackMessage("An unexpected error occurred. Please try again.");
+        console.error("Network or unexpected error sending feedback:", error);
+      } finally {
+        setIsSendingFeedback(false);
+      }
+    },
+    [feedbackContent, sessionStatus, session] // Dependencies for useCallback (add feedbackTitle if implemented)
+  );
+
+  // Determine if the submit button should be disabled
+  const isSubmitDisabled =
+    isSendingFeedback ||
+    sessionStatus === "loading" ||
+    sessionStatus !== "authenticated" ||
+    !feedbackContent.trim();
+
+  // Show login required message only if unauthenticated
+  const showLoginRequiredMessage = sessionStatus === "unauthenticated";
 
   return (
     <div className="container py-4">
@@ -207,7 +250,6 @@ export default function AboutPage() {
       </div>
 
       {/* About the Project Section */}
-      {/* ... (unchanged) ... */}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
         <div className="card-header bg-light py-3">
           <h6 className="h6 mb-0 fw-medium text-secondary">Project Overview</h6>
@@ -229,7 +271,6 @@ export default function AboutPage() {
       </div>
 
       {/* How to Vote Section */}
-      {/* ... (unchanged) ... */}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
         <div className="card-header bg-light py-3">
           <h6 className="h6 mb-0 fw-medium text-secondary">How to Vote</h6>
@@ -264,7 +305,6 @@ export default function AboutPage() {
       </div>
 
       {/* Frequently Asked Questions Section */}
-      {/* ... (unchanged) ... */}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
         <div className="card-header bg-light py-3">
           <h6 className="h6 mb-0 fw-medium text-secondary">FAQs</h6>
@@ -307,7 +347,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Contact & Support Section (Now a functional form) */}
+      {/* Contact & Support Section (Now includes the functional form) */}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
         <div className="card-header bg-light py-3">
           <h6 className="h6 mb-0 fw-medium text-secondary">
@@ -330,6 +370,7 @@ export default function AboutPage() {
             </a>
           </p>
 
+          {/* --- Feedback Form --- */}
           <form
             onSubmit={handleSendFeedback}
             className="d-flex flex-column h-100"
@@ -349,12 +390,12 @@ export default function AboutPage() {
               <textarea
                 className="form-control form-control-sm h-100" // h-100 to fill container height
                 id="feedbackTextarea"
-                // rows="4" // Remove fixed rows when using h-100 and flex-grow
                 placeholder="Write your feedback or details about the issue here. Please include relevant details like your student ID and steps to reproduce issues if reporting a technical problem."
                 value={feedbackContent}
                 onChange={handleFeedbackChange}
+                // FIX: Disable textarea while session is loading or sending
                 disabled={isSendingFeedback || sessionStatus === "loading"}
-                style={{ resize: "vertical" }} // Allow only vertical resize
+                style={{ resize: "vertical", minHeight: "180px" }} // Allow only vertical resize
               ></textarea>
             </div>
             {/* Status/Message Area */}
@@ -363,10 +404,10 @@ export default function AboutPage() {
               <div
                 className={`alert ${
                   feedbackStatus === "success"
-                    ? "alert-success border-success" // Added border color for success
-                    : "alert-danger border-danger" // Added border color for danger
-                } small py-2 mb-3`} // mb-3 for space below
-                role="alert" // Add role for accessibility
+                    ? "alert-success border-success"
+                    : "alert-danger border-danger"
+                } small py-2 mb-3 flex-shrink-0`}
+                role="alert"
               >
                 {feedbackMessage}
               </div>
@@ -375,7 +416,7 @@ export default function AboutPage() {
             <div className="d-flex justify-content-end align-items-center flex-shrink-0">
               {" "}
               {/* Flex to align items, prevent shrinking */}
-              {sessionStatus === "unauthenticated" && (
+              {sessionStatus === "unauthenticated" && ( // Use sessionStatus directly
                 <p className="text-danger small mb-0 me-3">
                   {" "}
                   {/* me-3 for space before button */}
@@ -385,8 +426,10 @@ export default function AboutPage() {
               <button
                 type="submit"
                 className="btn btn-primary btn-sm"
+                // FIX: Disable button while session is loading, or not authenticated, or content is empty
                 disabled={
                   isSendingFeedback ||
+                  sessionStatus === "loading" ||
                   sessionStatus !== "authenticated" ||
                   !feedbackContent.trim()
                 }
