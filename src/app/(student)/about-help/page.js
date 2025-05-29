@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import Image from "next/image";
 
 const logoPublicPath = "/assets/sELECTLogo.svg";
@@ -268,37 +267,27 @@ export default function AboutPage() {
             West Visayas State University as a project.
           </p>
           <ul className="list-group list-group-flush small">
-            {" "}
-            {/* Removed text-muted from ul */}
             {projectTeam.map((member, index) => (
               <li
                 key={index}
                 className="list-group-item px-0 py-2 border-bottom d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center" // Flex column on mobile, row on md+
               >
-                {/* Member Name - Always show, allow wrapping */}
                 <span className="text-dark-emphasis fw-medium flex-grow-1 me-md-3 mb-1 mb-md-0">
-                  {" "}
-                  {/* mb-1 on mobile */}
                   {member.name}
                 </span>
 
                 {/* Member Role - Break role string, display roles */}
                 <div className="text-muted small flex-shrink-0">
-                  {" "}
-                  {/* Ensure this doesn't shrink name */}
-                  {/* FIX: Display roles properly, removing "QA, Tester" */}
                   {member.role
-                    .replace(/, QA, Tester/g, "") // Remove the specific string
-                    .split(",") // Split by comma
-                    .map((role) => role.trim()) // Trim each role
-                    .filter((role) => role) // Remove empty strings
+                    .replace(/, QA, Tester/g, "")
+                    .split(",")
+                    .map((role) => role.trim())
+                    .filter((role) => role)
                     .map((role, roleIndex) => (
                       <span
                         key={roleIndex}
                         className="badge fw-medium bg-secondary-subtle text-secondary-emphasis me-1"
                       >
-                        {" "}
-                        {/* Use badges for roles */}
                         {role}
                       </span>
                     ))}

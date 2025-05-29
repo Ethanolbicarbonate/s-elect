@@ -43,11 +43,12 @@ export default function StudentLayout({ children }) {
     );
   }
 
+  let userName = session.user.email || "Guest";
   if (session.user.firstName) {
     if (session.user.lastName) {
       userName = `${session.user.firstName} ${session.user.lastName}`;
     } else {
-      userName = session.user.firstName; // Fallback to only firstName if lastName is missing
+      userName = session.user.firstName;
     }
   }
 
