@@ -9,7 +9,9 @@ import { useMediaQuery } from "react-responsive"; // Assuming you have react-res
 const NotificationListDisplay = ({ notifications, title }) => {
   if (!notifications || notifications.length === 0) {
     return (
-      <p className="text-muted small text-center">No recent notifications.</p>
+      <div className="text-center my-auto">
+        <p className="small text-secondary opacity-50 m-0">No recent notifications</p>
+      </div>
     );
   }
 

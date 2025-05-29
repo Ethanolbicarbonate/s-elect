@@ -105,7 +105,7 @@ export default function VoterTurnoutWidget({ electionId }) {
     if (isLoading && !turnoutData) {
       // Show loading only on initial load without data
       return (
-        <div className="text-center py-3">
+        <div className="text-center py-3 w-100">
           <div
             className="spinner-border spinner-border-sm text-primary"
             role="status"
