@@ -24,7 +24,7 @@ export default function AdminVoterTurnoutWidget({
     eligibleVoters <= 0
   ) {
     return (
-      <div className="rounded-4 overflow-hidden card h-100 shadow-sm flex-grow-1 d-flex flex-column justify-content-center align-items-center p-3 text-center text-muted">
+      <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column justify-content-center align-items-center p-3 text-center text-muted">
         <i className="bi bi-people display-4 mb-3"></i>
         <p className="mb-0">
           Eligible voter data not available or zero for this scope ({scopeType}
@@ -100,7 +100,7 @@ export default function AdminVoterTurnoutWidget({
   };
 
   return (
-    <div className="rounded-4 overflow-hidden card h-100 shadow-sm flex-grow-1">
+    <div className="card h-100 shadow-sm flex-grow-1">
       <div className="card-header bg-primary text-white py-2">
         <h5 className="mb-0 h6">
           Voter Turnout

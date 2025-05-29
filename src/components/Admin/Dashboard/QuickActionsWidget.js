@@ -54,7 +54,7 @@ export default function QuickActionsWidget({
     userRole === "AUDITOR";
 
   return (
-    <div className="card h-100 shadow-sm flex-grow-1 rounded-4 overflow-hidden">
+    <div className="card h-100 shadow-sm flex-grow-1">
       <div className="card-header bg-primary text-white py-2">
         <h5 className="mb-0 h6">Quick Actions</h5>
       </div>

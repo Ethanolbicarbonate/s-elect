@@ -128,7 +128,7 @@ export default function AdminNotificationManager() {
   };
 
   return (
-    <div className="card shadow-sm mb-4 h-100 d-flex flex-column w-100 rounded-4 overflow-hidden">
+    <div className="card shadow-sm mb-4 h-100 d-flex flex-column w-100">
       {" "}
       {/* h-100 and flex-column */}
       <div className="card-header bg-primary text-white py-2">
