@@ -107,7 +107,7 @@ export default async function DashboardPage() {
           Error loading election data: {apiError}
         </div>
       )}
-      <div className="row mb-0 mb-sm-4 g-4">
+      <div className="row mb-4 g-4">
         <div className="col-md-6 col-lg-4 d-flex flex-column">
           <div className="mb-4 flex-grow-1">
             <ElectionStatusWidget

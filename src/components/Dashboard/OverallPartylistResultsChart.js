@@ -2,10 +2,9 @@
 "use client";
 
 import Image from "next/image";
-import CountUp from "react-countup";
-import { useState, useEffect } from "react"; // <<< Make sure useState and useEffect are imported
 
 export default function OverallPartylistResultsChart({ partylistResults }) {
+  // Calculate total votes across all displayed partylists to get correct percentages
   const totalVotesAcrossPartylists = partylistResults.reduce(
     (sum, pl) => sum + pl.totalVotes,
     0
@@ -21,21 +20,20 @@ export default function OverallPartylistResultsChart({ partylistResults }) {
 
   return (
     <div style={{ maxHeight: "250px", overflowY: "auto" }}>
+      {" "}
+      {/* Fixed height and scrollable if many */}
       {partylistResults.map((partylist) => {
-        const targetPercentage =
+        const percentage =
           totalVotesAcrossPartylists > 0
-            ? parseFloat(((partylist.totalVotes / totalVotesAcrossPartylists) * 100).toFixed(1))
+            ? (
+                (partylist.totalVotes / totalVotesAcrossPartylists) *
+                100
+              ).toFixed(1)
             : 0;
-
-        const [currentValue, setCurrentValue] = useState(0);
-        useEffect(() => {
-          if (currentValue === 0) {
-             setCurrentValue(0);
-          }
-        }, [targetPercentage]);
 
         return (
           <div key={partylist.id} className="d-flex align-items-center mb-3">
+            {/* Partylist Logo */}
             <div className="flex-shrink-0 me-3">
               {partylist.logoUrl ? (
                 <Image
@@ -43,11 +41,11 @@ export default function OverallPartylistResultsChart({ partylistResults }) {
                   alt={`${partylist.name} Logo`}
                   width={40}
                   height={40}
-                  className="rounded-2"
+                  className="rounded-circle"
                   style={{ objectFit: "cover" }}
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
-                  }}
+                  }} // Hide broken image
                 />
               ) : (
                 <div
@@ -66,29 +64,18 @@ export default function OverallPartylistResultsChart({ partylistResults }) {
                   {partylist.name} {partylist.acronym}
                 </span>
                 <span className="fw-medium text-primary small">
-                  <CountUp
-                    key={partylist.id + targetPercentage} // Key to re-trigger CountUp animation
-                    start={0} // Start from 0 for animation
-                    end={targetPercentage}
-                    decimals={1}
-                    duration={1.5}
-                    suffix="%"
-                    // This is the crucial part: update `currentValue` as CountUp animates
-                    onUpdate={(val) => setCurrentValue(val)}
-                    onEnd={() => setCurrentValue(targetPercentage)}
-                  />
+                  {percentage}%
                 </span>
               </div>
               <div className="progress" style={{ height: "8px" }}>
                 <div
                   className="progress-bar bg-primary"
                   role="progressbar"
-                  // Drive width by `currentValue` which is updated by CountUp
                   style={{
-                    width: `${currentValue}%`, // Use the animated value
-                    transition: "width 3s ease", // CSS transition for the bar itself
+                    width: `${percentage}%`,
+                    transition: "width 0.5s ease-out",
                   }}
-                  aria-valuenow={currentValue}
+                  aria-valuenow={percentage}
                   aria-valuemin="0"
                   aria-valuemax="100"
                 ></div>
