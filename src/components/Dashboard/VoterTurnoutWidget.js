@@ -124,8 +124,8 @@ export default function VoterTurnoutWidget({ electionId }) {
     if (!turnoutData || !turnoutData.overallUscTurnout) {
       // Check for essential data
       return (
-        <p className="text-muted text-center small p-3">
-          Voter turnout data is currently unavailable.
+        <p className="text-secondary opacity-50 text-center small p-3 w-100">
+          Voter turnout data is currently unavailable
         </p>
       );
     }
@@ -221,7 +221,7 @@ export default function VoterTurnoutWidget({ electionId }) {
         </div>
         {lastRefreshed && turnoutData && (
           <div
-            className="card-footer border-top-0 text-end text-muted px-3 bg-white rounded-bottom-4"
+            className="card-footer border-top-0 text-end text-secondary opacity-75 px-3 bg-white rounded-bottom-4"
             style={{
               backgroundImage:
                 "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",

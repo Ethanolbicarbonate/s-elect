@@ -91,6 +91,15 @@ export default async function DashboardPage() {
     };
   }
 
+  console.log(
+    "DashboardPage (Frontend): activeElectionDetails:",
+    activeElectionDetails
+  );
+  console.log(
+    "DashboardPage (Frontend): effectiveStatusForStudent (from activeElectionDetails):",
+    activeElectionDetails?.effectiveStatusForStudent
+  );
+
   const showResults =
     activeElectionDetails &&
     activeElectionDetails.effectiveStatusForStudent === "ENDED";
@@ -120,9 +129,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="col-md-6 col-lg-4">
-          <ElectionCalendarWidget
-            electionPeriod={electionPeriodForCalendar}
-          />
+          <ElectionCalendarWidget electionPeriod={electionPeriodForCalendar} />
         </div>
 
         <div className="col-lg-4">
@@ -141,7 +148,7 @@ export default async function DashboardPage() {
             studentCollege={session?.user?.college} // Pass student's college for CSC filtering
           />
         ) : (
-          <div className="card shadow-sm p-4 text-center text-muted rounded-4">
+          <div className="card shadow-sm p-4 text-center text-secondary text-opacity-50 rounded-4">
             <i className="bi bi-bar-chart-fill display-4 mb-3"></i>
             <h5 className="mb-0">Election Results Coming Soon</h5>
             <p className="small mb-0">
