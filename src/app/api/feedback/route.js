@@ -2,10 +2,23 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { sendFeedbackEmail } from "@/lib/emailService"; // <<< Create this function
-import { writeAuditLog, getIpAddressFromRequest } from "@/lib/auditLogger"; // Assuming audit logging
-import { AUDIT_ACTION_TYPES } from "@/lib/auditActions"; // Assuming audit actions
-import { AuditActorType, AuditLogStatus } from "@prisma/client"; // Assuming enums
+// FIX: Import sendFeedbackEmail from your email library
+import { sendFeedbackEmail } from "@/lib/email"; // <<< Use your actual email library path
+import { writeAuditLog, getIpAddressFromRequest } from "@/lib/auditLogger";
+import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";
+import { AuditActorType, AuditLogStatus } from "@prisma/client";
+
+// FIX: Define the support email address from environment variables
+const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL;
+
+// Ensure SUPPORT_EMAIL is configured in production
+if (process.env.NODE_ENV === "production" && !SUPPORT_EMAIL) {
+  console.error(
+    "CRITICAL: SUPPORT_EMAIL environment variable is not set in production."
+  );
+  // In a real app, you might want to prevent the API from running if this is missing.
+  // throw new Error("Support email is not configured.");
+}
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);
@@ -19,16 +32,19 @@ export async function POST(request) {
     session.user.role !== "STUDENT" ||
     !session.user.email
   ) {
-    // Log attempt even if not logged in or not student
     await writeAuditLog({
       actorType:
         session?.user?.role === "STUDENT"
           ? AuditActorType.STUDENT
           : AuditActorType.UNKNOWN,
-      actionType: AUDIT_ACTION_TYPES.FEEDBACK_SUBMITTED, // Define this action type
+      actionType: AUDIT_ACTION_TYPES.FEEDBACK_SUBMITTED,
       status: AuditLogStatus.FAILURE,
+      // targetUserEmail: session?.user?.email || "unknown", // Use session email if available
       details: {
         error: "Forbidden: Authentication required or not a student.",
+        isAuthenticated: !!session,
+        userRole: session?.user?.role || "none",
+        hasEmailInSession: !!session?.user?.email,
       },
       ipAddress,
     });
@@ -39,11 +55,38 @@ export async function POST(request) {
   }
 
   const studentEmail = session.user.email;
-  const studentId = session.user.id; // Optional: log student ID
+  const studentId = session.user.id;
+
+  // Prevent sending in production if SUPPORT_EMAIL is not set
+  if (process.env.NODE_ENV === "production" && !SUPPORT_EMAIL) {
+    console.error(
+      "Cannot send feedback email: SUPPORT_EMAIL is not configured."
+    );
+    await writeAuditLog({
+      session,
+      actorType: AuditActorType.STUDENT,
+      actionType: AUDIT_ACTION_TYPES.FEEDBACK_SUBMITTED,
+      status: AuditLogStatus.FAILURE,
+      targetUserId: studentId,
+      targetUserEmail: studentEmail,
+      details: {
+        error: "Feedback email not configured in production.",
+        envVarMissing: "SUPPORT_EMAIL",
+      },
+      ipAddress,
+    });
+    return NextResponse.json(
+      {
+        error:
+          "Feedback functionality is not configured. Please try again later.",
+      },
+      { status: 500 }
+    );
+  }
 
   try {
     requestDataForLog = await request.json();
-    const { content, title } = requestDataForLog; // Allow optional title from form
+    const { content, title } = requestDataForLog;
 
     if (!content || content.trim() === "") {
       await writeAuditLog({
@@ -66,16 +109,20 @@ export async function POST(request) {
     }
 
     // --- Send Email ---
-    // You'll need to implement sendFeedbackEmail in your emailService
-    // It should send from studentEmail to your supportEmail
+    // Use the new sendFeedbackEmail function
     const emailResult = await sendFeedbackEmail({
-      from: studentEmail, // Sender is the student
-      to: supportEmail, // Your support email
-      subject: `sELECT Feedback${title ? `: ${title}` : ""}`, // Subject includes optional title
+      from: studentEmail, // Pass student email here to be used as Reply-To
+      to: SUPPORT_EMAIL, // Pass the support email (optional, sendFeedbackEmail uses the env var)
+      subject: `sELECT Feedback${title ? `: ${title}` : ""}`,
       text: `Feedback from ${studentEmail} (ID: ${
         studentId || "N/A"
-      }):\n\n${content.trim()}`, // Email body
-      // You might want an HTML body too
+      }):\n\n${content.trim()}`,
+      // You might want an HTML body too for better formatting
+      html: `<p><strong>Feedback from:</strong> ${studentEmail} (ID: ${
+        studentId || "N/A"
+      })</p><p><strong>Subject:</strong> ${
+        title || "No Subject"
+      }</p><p><strong>Content:</strong></p><div style="border: 1px solid #eee; padding: 10px; white-space: pre-wrap;">${content.trim()}</div>`,
     });
 
     if (!emailResult.success) {
@@ -99,7 +146,6 @@ export async function POST(request) {
       );
     }
 
-    // Audit Log for successful submission
     await writeAuditLog({
       session,
       actorType: AuditActorType.STUDENT,
@@ -109,7 +155,11 @@ export async function POST(request) {
       targetUserEmail: studentEmail,
       details: {
         message: "Feedback email sent.",
-        contentPreview: content.trim().substring(0, 100) + "...",
+        // Log a preview, but be cautious about sensitive info
+        contentPreview:
+          content.trim().substring(0, 100) +
+          (content.trim().length > 100 ? "..." : ""),
+        subject: title || "No Subject",
       },
       ipAddress,
     });
@@ -127,7 +177,10 @@ export async function POST(request) {
       status: AuditLogStatus.FAILURE,
       targetUserId: studentId,
       targetUserEmail: studentEmail,
-      details: { error: error.message || "An unexpected error occurred." },
+      details: {
+        error: error.message || "An unexpected error occurred.",
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      },
       ipAddress,
     });
     return NextResponse.json(
