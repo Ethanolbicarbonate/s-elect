@@ -1,10 +1,7 @@
-// src/components/Admin/Dashboard/AdminNotificationManager.js
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
-// Assume you have access to session for creating/deleting (e.g., useSession from next-auth/react)
-// import { useSession } from "next-auth/react"; // If you need client-side session info
 
 export default function AdminNotificationManager() {
   // const { data: session } = useSession(); // Uncomment if needed
@@ -25,9 +22,7 @@ export default function AdminNotificationManager() {
     setIsLoading(true);
     setError(null);
     try {
-      // Admins fetch from the same GET endpoint as students, but sorted/filtered as needed
-      // You could create a separate /api/admin/notifications GET if needed for admin-specific data (like who created it)
-      const res = await fetch("/api/notifications"); // Re-use the student-facing GET for listing
+      const res = await fetch("/api/notifications");
       if (!res.ok) {
         const errData = await res
           .json()
@@ -76,7 +71,6 @@ export default function AdminNotificationManager() {
       if (!res.ok) {
         throw new Error(result.error || "Failed to create notification.");
       }
-      // Assuming the API returns the newly created notification, add it to the list
       setNotifications((prev) =>
         [result, ...prev].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)

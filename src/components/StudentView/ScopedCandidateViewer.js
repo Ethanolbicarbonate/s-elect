@@ -1,13 +1,11 @@
-// src/components/StudentView/ScopedCandidateViewer.js
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import CandidateCard from "./CandidateCard"; // Will create next
-import PartylistInfoCard from "./PartylistInfoCard"; // Will create if needed for partylist filter view
-import CandidateDetailModal from "./CandidateDetailModal"; // Will create next
+import CandidateCard from "./CandidateCard";
+import PartylistInfoCard from "./PartylistInfoCard";
+import CandidateDetailModal from "./CandidateDetailModal";
 
-// Define standard positions for consistent ordering and filtering labels
-// These should ideally match the ones used in PositionForm.js
+
 const USC_STANDARD_POSITIONS_ORDER = [
   "CHAIRPERSON",
   "VICE CHAIRPERSON",
@@ -36,7 +34,6 @@ export default function ScopedCandidateViewer({
   partylists, // Array of partylist objects for this scope
   candidates, // Array of candidate objects for this scope
   electionStatus,
-  // studentCollege // Only needed if CSC and we need to pass it further, but data is already scoped
 }) {
   const [filterPositionId, setFilterPositionId] = useState(""); // ID of selected position to filter by
   const [filterPartylistId, setFilterPartylistId] = useState(""); // ID of selected partylist or 'INDEPENDENT'

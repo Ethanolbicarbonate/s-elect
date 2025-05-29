@@ -1,4 +1,3 @@
-// src/components/StudentView/PartylistInfoCard.js
 "use client";
 
 import Image from "next/image";
@@ -9,13 +8,10 @@ export default function PartylistInfoCard({ partylist }) {
   const { name, acronym, logoUrl, platform } = partylist; // Type and college omitted as requested
 
   return (
-    <div className="card shadow-sm mb-4 partylist-info-card overflow-hidden"> {/* Added overflow-hidden for rounded corners */}
-      <div className="card-body p-lg-4"> {/* More padding on larger screens */}
-        <div className="row g-3 g-lg-4 align-items-center"> {/* Different gutter for different screens */}
-          
-          {/* Logo Column - order-md-first makes it appear first on medium and up */}
-          {/* On smaller screens (default order), it will appear based on its position in JSX (which we'll make first) */}
-          <div className="col-12 col-lg-auto text-center text-lg-start mb-3 mb-lg-0"> {/* Centered on small, left on large */}
+    <div className="card shadow-sm mb-4 partylist-info-card overflow-hidden"> 
+      <div className="card-body p-lg-4">
+        <div className="row g-3 g-lg-4 align-items-center"> 
+          <div className="col-12 col-lg-auto text-center text-lg-start mb-3 mb-lg-0">
             {logoUrl ? (
               <Image
                 src={logoUrl}

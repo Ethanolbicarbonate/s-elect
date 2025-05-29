@@ -1,4 +1,3 @@
-// src/app/api/auth/password-reset/complete/route.js
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";

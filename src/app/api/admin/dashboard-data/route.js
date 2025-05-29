@@ -1,18 +1,16 @@
-// src/app/api/admin/dashboard-data/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { ElectionStatus, PositionType, College } from "@prisma/client";
-import { getEffectiveStatus, getEffectiveEndDate } from "@/lib/electionUtils"; // Re-use helpers
+import { getEffectiveStatus, getEffectiveEndDate } from "@/lib/electionUtils";
 
-// --- Helper Functions (More robust, copied from election-results.js) ---
 function calculatePercentage(voted, total) {
   if (total === 0) return 0;
   return (voted / total) * 100;
 }
 
-// Helper to determine winners for a position (Robust version)
+// Helper to determine winners for a position
 function determineWinners(candidates, maxVotesAllowed) {
   if (!candidates || candidates.length === 0) {
     return candidates.map((cand) => ({ ...cand, isWinner: false }));
@@ -57,7 +55,6 @@ function determineWinners(candidates, maxVotesAllowed) {
     isWinner: winnersSet.has(cand.id),
   }));
 }
-// --- End Helper Functions ---
 
 const ADMIN_RESULTS_GRACE_PERIOD_DAYS = 30;
 
@@ -88,30 +85,6 @@ export async function GET(request) {
       status: { not: ElectionStatus.ARCHIVED },
       endDate: { gte: gracePeriodCutoff },
     };
-
-    // If moderator, ensure we only fetch elections that contain positions relevant to their college.
-    // This requires a more complex query if Election model doesn't have direct scope.
-    // Assuming here that a moderator's college implies the scope for elections they manage.
-    // A more robust way would be to query for elections with at least one position matching their scope.
-    // For now, we'll fetch all and filter post-query for primary election logic,
-    // but the `fullElectionDetails` query will already filter its associated data.
-    // The most accurate way is to check `election.scopeType` and `election.college` directly on the election model.
-    // For this to work, your Election model needs `scopeType` and `college` fields.
-    // If Election model has `scopeType: PositionType?` and `college: College?`:
-    /*
-    if (userRole === "MODERATOR") {
-        if (userCollege) { // CSC Moderator
-            electionWhereClause.scopeType = PositionType.CSC;
-            electionWhereClause.college = userCollege;
-        } else { // USC Moderator
-            electionWhereClause.scopeType = PositionType.USC;
-            electionWhereClause.college = null;
-        }
-    }
-    */
-    // Since your existing fullElectionDetails query does filter positions/candidates/partylists,
-    // we'll rely on that for data scoping for the primary election.
-    // The `allElections` here is mostly to find the `primaryElection`.
 
     const allElections = await prisma.election.findMany({
       where: electionWhereClause, // Apply general filters
@@ -218,7 +191,7 @@ export async function GET(request) {
       ); // Return null for `activeElectionDetails`
     }
 
-    // 2. Fetch full details for the primary election (already determined to be relevant to scope)
+    // Fetch full details for the primary election (already determined to be relevant to scope)
     const fullElectionDetails = await prisma.election.findUnique({
       where: { id: primaryElection.id },
       include: {
@@ -266,7 +239,7 @@ export async function GET(request) {
               : {},
           orderBy: { name: "asc" },
         },
-        // Include StudentElectionVote for overall turnout calculation in scope
+        // StudentElectionVote for overall turnout calculation in scope
         StudentElectionVote: {
           where:
             userRole === "MODERATOR" && userCollege
@@ -292,11 +265,9 @@ export async function GET(request) {
       userCollege
     );
 
-    // FIX: Add a direct fallback here for the status and end date to ensure they are never undefined/null
     const finalEffectiveStatus =
       effectiveStatusForStudentView || ElectionStatus.UNKNOWN; // Use an actual enum value or a string 'UNKNOWN'
     const finalEffectiveEndDate = effectiveEndDateForStudentView || new Date();
-    // 3. Prepare data for response
     // Calculate eligibleVoters and votesCastInScope based on the admin's scope
     let eligibleVotersCount = 0;
     let votesCastInScopeCount = 0;
@@ -324,9 +295,6 @@ export async function GET(request) {
       } else {
         // USC Moderator: all eligible students
         eligibleVotersCount = await prisma.student.count(); // All university students
-        // USC Mod: all votes for USC positions in this election (assuming USC votes are global)
-        // Or simply all votes in this election if they manage everything USC.
-        // For simplicity, let's count all votes in the election for USC Mod too
         votesCastInScopeCount = await prisma.studentElectionVote.count({
           where: { electionId: fullElectionDetails.id },
         });
@@ -349,7 +317,6 @@ export async function GET(request) {
       effectiveStatusForStudentView === ElectionStatus.ENDED
     ) {
       for (const position of fullElectionDetails.positions) {
-        // Already scoped for moderator
         const candidatesForPosition = fullElectionDetails.candidates.filter(
           (c) => c.positionId === position.id
         );
@@ -359,7 +326,7 @@ export async function GET(request) {
         );
 
         const candidatesWithWinnerFlag = determineWinners(
-          candidatesForPosition, // Already sorted by votes in fullElectionDetails fetch
+          candidatesForPosition,
           position.maxVotesAllowed
         );
 
@@ -388,7 +355,7 @@ export async function GET(request) {
                     ).toFixed(2)
                   )
                 : 0,
-            isWinner: cand.isWinner, // Use the flag directly from determineWinners
+            isWinner: cand.isWinner,
           })
         );
 
@@ -397,18 +364,16 @@ export async function GET(request) {
           name: position.name,
           type: position.type,
           college: position.college,
-          order: position.order, // Ensure order is included for sorting in frontend
+          order: position.order,
           maxVotesAllowed: position.maxVotesAllowed,
           totalVotesCastForPosition: totalVotesCastForPosition,
           candidates: candidatesDataForWidget,
-          // Removed winnerCandidateIds from here as `isWinner` is on candidate object
         });
       }
       // Sort positions results by order for consistent display
       positionsResultsForWidgets.sort((a, b) => a.order - b.order);
     }
 
-    // --- Final Response Structure ---
     return NextResponse.json(
       {
         activeElectionDetails: {
@@ -418,7 +383,6 @@ export async function GET(request) {
           startDate: fullElectionDetails.startDate,
           endDate: fullElectionDetails.endDate,
           status: fullElectionDetails.status, // DB status
-          // FIX: Provide default empty string for scope.type/college if they are null
           scope: {
             type: fullElectionDetails.scopeType || "", // Ensure it's never undefined/null
             college: fullElectionDetails.college || "", // Ensure it's never undefined/null
@@ -435,7 +399,10 @@ export async function GET(request) {
             positionsResults: positionsResultsForWidgets,
             partylistResults: fullElectionDetails.partylists
               .map((pl) => {
-                /* ... */
+                const totalVotes = fullElectionDetails.candidates
+                  .filter((c) => c.partylistId === pl.id) // Filter candidates belonging to this partylist
+                  .reduce((sum, cand) => sum + cand.votesReceived, 0); // Sum their votes
+                return { ...pl, totalVotes }; // Return partylist with calculated totalVotes
               })
               .sort((a, b) => b.totalVotes - a.totalVotes),
           },

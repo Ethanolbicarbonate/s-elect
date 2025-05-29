@@ -1,9 +1,8 @@
-// src/app/api/student/election-turnout/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path
-import { College, ElectionStatus, AuditActorType, AuditLogStatus, } from "@prisma/client"; // Assuming College enum is available
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { College, ElectionStatus, AuditActorType, AuditLogStatus, } from "@prisma/client";
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);
@@ -22,14 +21,13 @@ export async function GET(request) {
   try {
     const election = await prisma.election.findUnique({
       where: { id: electionId },
-      // We don't need to include extensions here if we only care about DB status for relevance
     });
 
     if (!election) {
       return NextResponse.json({ error: "Election not found." }, { status: 404 });
     }
 
-    // For turnout, we typically consider elections that are ONGOING or recently ENDED.
+    // consider elections that are ONGOING or recently ENDED.
     // If it's UPCOMING, turnout will be 0.
     if (election.status === ElectionStatus.ARCHIVED || election.status === ElectionStatus.PAUSED) {
         return NextResponse.json({ message: `Turnout data is not available for elections with status: ${election.status}.` }, { status: 200 });

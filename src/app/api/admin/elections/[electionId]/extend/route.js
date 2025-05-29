@@ -136,8 +136,6 @@ export async function POST(request, { params }) {
       } else {
         invalidCollegesProvided.push(college);
         console.warn(`Invalid college value provided and skipped: ${college}`);
-        // Log this specific skipped college for auditing? Could be too noisy.
-        // For now, it's implicitly logged in the `invalidCollegesProvided` in success/failure log.
       }
     });
 
@@ -150,7 +148,7 @@ export async function POST(request, { params }) {
         entityId: electionId,
         details: {
           error: "No valid colleges provided for extension.",
-          providedColleges: colleges, // Log all originally provided colleges
+          providedColleges: colleges,
           providedData: requestDataForLog,
         },
         ipAddress,
@@ -185,7 +183,7 @@ export async function POST(request, { params }) {
     ) {
       await prisma.election.update({
         where: { id: electionId },
-        data: { status: ElectionStatus.ONGOING }, // Or a special status like "PARTIALLY_EXTENDED"
+        data: { status: ElectionStatus.ONGOING },
       });
       mainElectionStatusUpdated = true;
     }
@@ -213,9 +211,7 @@ export async function POST(request, { params }) {
           : undefined,
         newMainElectionStatus: mainElectionStatusUpdated
           ? ElectionStatus.ONGOING
-          : undefined, // Adjust if you use PARTIALLY_EXTENDED
-        // You could include the `results` array if it's not too large and provides value
-        // upsertResults: results.map(r => ({ college: r.college, id: r.id }))
+          : undefined,
       },
       ipAddress,
     });

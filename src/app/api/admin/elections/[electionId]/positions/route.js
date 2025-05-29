@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust this path if necessary
-import { PositionType, College } from "@prisma/client"; // Import enums for validation
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { PositionType, College } from "@prisma/client";
 import { logAdminActivity, getIpAddressFromRequest } from "@/lib/auditLogger";
 import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";
 import { AuditLogStatus } from "@prisma/client";

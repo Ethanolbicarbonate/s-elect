@@ -1,4 +1,3 @@
-// src/components/Admin/PositionManagement/AdminPositionList.js
 "use client";
 
 export default function AdminPositionList({
@@ -21,8 +20,6 @@ export default function AdminPositionList({
   }
 
   return (
-    // Ensure the parent component (<> in election-entities/page.js for this tab) has a card or similar wrapper
-    // For standalone use, you might wrap this in a card.
     <div className="table-responsive">
       <table className="table table-hover table-sm small align-middle">
         <thead>
@@ -30,12 +27,10 @@ export default function AdminPositionList({
             <th style={{ width: "5%" }} className="fw-normal fs-7 text-secondary text-truncate">Order</th>
             <th style={{ width: "25%" }} className="fw-normal fs-7 text-secondary text-truncate">Position</th>
             <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">Type</th>
-            {/* Hide College on xs, show sm and up */}
             <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
               College
             </th>
             <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary text-truncate">Max Votes</th>
-            {/* Hide Min Votes on xs, show sm and up */}
             <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
               Min Votes
             </th>

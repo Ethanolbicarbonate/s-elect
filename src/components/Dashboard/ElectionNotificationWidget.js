@@ -1,9 +1,8 @@
-// src/components/Dashboard/ElectionNotificationWidget.js
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
-import { useMediaQuery } from "react-responsive"; // Assuming you have react-responsive installed
+import { useMediaQuery } from "react-responsive";
 
 // Helper function to display notifications (can be reused in modal)
 const NotificationListDisplay = ({ notifications, title }) => {
@@ -58,7 +57,6 @@ export default function ElectionNotificationWidget() {
     setIsLoading(true);
     setError(null);
     try {
-      // Assuming API endpoint for fetching notifications
       const res = await fetch("/api/notifications"); // Create this API route
       if (!res.ok) {
         const errData = await res

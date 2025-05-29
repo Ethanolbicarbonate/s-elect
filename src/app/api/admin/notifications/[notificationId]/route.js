@@ -1,4 +1,3 @@
-// src/app/api/admin/notifications/[notificationId]/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";

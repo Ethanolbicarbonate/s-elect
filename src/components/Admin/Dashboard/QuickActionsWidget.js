@@ -1,8 +1,7 @@
-// src/components/Admin/Dashboard/QuickActionsWidget.js
 "use client";
 
 import Link from "next/link";
-import { PositionType } from "@prisma/client"; // Assuming PositionType is still used for scope types
+import { PositionType } from "@prisma/client";
 
 export default function QuickActionsWidget({
   userRole,
@@ -66,8 +65,6 @@ export default function QuickActionsWidget({
       </div>
       <div className="card-body d-flex flex-column p-3">
         <div className="list-group list-group-flush flex-grow-1">
-          {" "}
-          {/* Flex-grow-1 to push footer down */}
           {canCreateElection && (
             <Link
               href="/admin/election-settings"

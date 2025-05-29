@@ -1,7 +1,6 @@
-// src/components/StudentView/CandidateCard.js
 "use client";
 
-import Image from "next/image"; // Using Next.js Image for optimization
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { useFadeInOnScroll } from "@/components/UI/hooks/useFadeInOnScroll";
@@ -17,8 +16,8 @@ export default function CandidateCard({ candidate, onViewDetails }) {
     lastName,
     nickname,
     photoUrl,
-    position, // Expected to be an object: { name: 'Position Name' }
-    partylist, // Expected to be an object: { name: 'Partylist Name' } or null
+    position,
+    partylist,
     isIndependent,
     bio,
   } = candidate;

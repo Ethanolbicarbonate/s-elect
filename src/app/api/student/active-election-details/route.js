@@ -1,4 +1,3 @@
-// src/app/api/student/active-election-details/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
@@ -30,7 +29,7 @@ export async function GET(request) {
         status: { notIn: [ElectionStatus.ARCHIVED] }, // Don't consider archived elections
         endDate: {
           // Elections whose end date is after the grace period cutoff
-          // This ensures we only fetch recent enough ENDED elections.
+          // only fetch recent enough ENDED elections.
           gte: gracePeriodCutoff,
         },
       },

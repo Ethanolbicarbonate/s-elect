@@ -1,4 +1,3 @@
-// src/components/Dashboard/OverallPartylistResultsChart.js
 "use client";
 
 import Image from "next/image";

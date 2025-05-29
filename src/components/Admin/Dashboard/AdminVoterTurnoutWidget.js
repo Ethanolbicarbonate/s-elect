@@ -1,11 +1,9 @@
-// src/components/Admin/Dashboard/AdminVoterTurnoutWidget.js
 "use client";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import Link from "next/link"; // Assuming it might link to results page
+import Link from "next/link";
 
-// Register Chart.js components (ensure they are registered once in your app)
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function AdminVoterTurnoutWidget({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Image from "next/image"; // For image preview
+import Image from "next/image";
 
 const CollegeEnum = {
   CAS: "CAS",

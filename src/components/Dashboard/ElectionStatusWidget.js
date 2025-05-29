@@ -1,11 +1,10 @@
-// src/components/Dashboard/ElectionStatusWidget.js
 "use client";
 
 export default function ElectionStatusWidget({
   status = "N/A",
   message = "No election data currently available.",
-  electionStartDate, // Optional: Pass if status is UPCOMING
-  electionEndDate, // Optional: Pass if status is ONGOING (effective end date)
+  electionStartDate, // Pass if status is UPCOMING
+  electionEndDate, // Pass if status is ONGOING (effective end date)
 }) {
   let statusColor = "secondary"; // Default for N/A, PAUSED, ARCHIVED
   let iconName = "bi-info-circle";

@@ -1,8 +1,7 @@
-// src/components/Dashboard/VoterTurnoutWidget.js
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react"; // To get student's college for CSC display
+import { useSession } from "next-auth/react";
 import CountUp from "react-countup";
 
 // Helper for progress bar

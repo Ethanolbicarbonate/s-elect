@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import { useFadeInOnScroll } from "@/components/UI/hooks/useFadeInOnScroll";
 
 export default function ConfirmationModal({

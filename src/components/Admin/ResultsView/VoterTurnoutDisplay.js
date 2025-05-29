@@ -1,4 +1,3 @@
-// src/components/Admin/ResultsView/VoterTurnoutDisplay.js
 "use client";
 
 import CountUp from "react-countup"; // Optional: for animated numbers

@@ -1,13 +1,12 @@
-// src/app/api/admin/upload-image/route.js
 import { NextResponse } from "next/server";
-import cloudinary from "@/lib/cloudinary"; // Your Cloudinary config
+import cloudinary from "@/lib/cloudinary"; // Cloudinary config
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path as needed
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { logAdminActivity, getIpAddressFromRequest } from "@/lib/auditLogger";
 import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";
 import { AuditLogStatus, AuditActorType} from "@prisma/client";
 
-// --- POST - Upload Image (Existing Code) ---
+// --- POST - Upload Image ---
 export async function POST(request) {
   const session = await getServerSession(authOptions);
   const ipAddress = getIpAddressFromRequest(request); // Get IP for logging

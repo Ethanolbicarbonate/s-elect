@@ -1,4 +1,3 @@
-// src/components/Admin/Dashboard/LiveTallyWidget.js
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -14,9 +13,8 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import Image from "next/image";
-import { PositionType, College } from "@prisma/client"; // This import is fine for the fetchLiveTallyData logic
+import { PositionType, College } from "@prisma/client";
 
-// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const POLLING_INTERVAL_MS = 30000; // Poll every 30 seconds if election is ongoing
@@ -47,7 +45,6 @@ export default function LiveTallyWidget({
     let scopeTypeParam; // Declare without initial value
     let collegeParam = null; // Default to null
 
-    // --- FIX START ---
     // Determine query parameters based on admin's role and desired widget scope
     if (userRole === "SUPER_ADMIN" || userRole === "AUDITOR") {
       // For Super Admin and Auditor, explicitly set scope to USC for this widget
@@ -65,7 +62,6 @@ export default function LiveTallyWidget({
       scopeTypeParam = PositionType.USC;
       collegeParam = null;
     }
-    // --- FIX END ---
 
     const queryParams = new URLSearchParams({
       electionId: electionId,
@@ -140,8 +136,6 @@ export default function LiveTallyWidget({
 
   return (
     <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column rounded-4 overflow-hidden">
-      {" "}
-      {/* Added flex-column here */}
       <div className="card-header bg-primary text-white py-2 d-flex justify-content-between align-items-center "
           style={{
             backgroundImage:
@@ -169,13 +163,9 @@ export default function LiveTallyWidget({
         </button>
       </div>
       <div className="card-body p-3 d-flex flex-column">
-        {" "}
-        {/* Added flex-column here */}
         {error && <div className="alert alert-danger small py-2">{error}</div>}
         {!livePositionsResults || livePositionsResults.length === 0 ? (
           <div className="text-center p-4 text-muted flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-            {" "}
-            {/* Centered content */}
             <i className="bi bi-box-seam display-4 mb-3"></i>
             <p className="mb-0">
               No results data available for this election and scope.
@@ -183,13 +173,10 @@ export default function LiveTallyWidget({
           </div>
         ) : (
           <div className="flex-grow-1 d-flex flex-column">
-            {" "}
-            {/* This will take remaining space and be scrollable */}
             <p className="small text-muted mb-3 text-end flex-shrink-0">
               Last Updated:{" "}
               {lastRefreshed ? format(lastRefreshed, "hh:mm:ss a") : "N/A"}
             </p>
-            {/* Overall Votes Summary (Optional but good for quick overview) */}
             {totalVotesOverall > 0 && (
               <div className="mb-3 flex-shrink-0 border p-2 rounded-3">
                 <h6 className="fw-medium text-secondary-emphasis fs-7 mb-1">
@@ -200,20 +187,15 @@ export default function LiveTallyWidget({
                 </p>
               </div>
             )}
-            {/* Scrollable list of positions and top candidates */}
             <div
               className="flex-grow-1 overflow-auto pe-2"
               style={{ maxHeight: "calc(100vh - 400px)" }}
             >
-              {" "}
-              {/* Max-height just as a fallback if flex doesn't work perfectly */}
               {livePositionsResults.map((position) => (
                 <div
                   key={position.id}
                   className="position-summary mb-3 p-2 border rounded-3"
                 >
-                  {" "}
-                  {/* Smaller card for each position */}
                   <h6 className="fw-medium text-dark-emphasis mb-2 fs-7 d-flex justify-content-between align-items-center">
                     <span>{position.name}</span>
                     <span className="badge fw-medium bg-secondary-subtle text-secondary-emphasis rounded-pill">
@@ -275,7 +257,7 @@ export default function LiveTallyWidget({
                       );
                     })}
                   </ul>
-                  {position.candidates.length > 3 && ( // Indicate more candidates if applicable
+                  {position.candidates.length > 3 && (
                     <p className="text-end text-muted small mt-1 mb-0">
                       and {position.candidates.length - 3} more...
                     </p>
@@ -283,7 +265,6 @@ export default function LiveTallyWidget({
                 </div>
               ))}
             </div>
-            {/* Link to Full Results (at the bottom) */}
             <div className="text-center mt-3 flex-shrink-0">
               <Link
                 href={`/admin/results?electionId=${electionId}`}

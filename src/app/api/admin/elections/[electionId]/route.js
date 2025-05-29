@@ -1,15 +1,14 @@
-// src/app/api/admin/elections/[electionId]/route.js
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path
-import prisma from "@/lib/prisma"; // Using the singleton instance
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import prisma from "@/lib/prisma";
 import { ElectionStatus } from "@prisma/client";
 import { logAdminActivity, getIpAddressFromRequest } from "@/lib/auditLogger";
 import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";
 import { AuditLogStatus } from "@prisma/client";
 
-// GET a specific election (already good to have)
+// GET a specific election
 export async function GET(request, context) {
   const { params } = await context;
   const { electionId } = params;
@@ -31,10 +30,9 @@ export async function GET(request, context) {
             positions: true,
             partylists: true,
             candidates: true,
-            // Add other relations if they exist and matter for deletion, e.g., votes
           },
         },
-        extensions: true, // Keep existing includes like extensions
+        extensions: true,
       },
     });
     if (!election) {
@@ -401,7 +399,7 @@ export async function DELETE(request, { params }) {
         endDate: true,
         status: true,
         // Include any other relevant fields like scopeType, college if they exist on your model
-        scopeType: true, // Assuming these might exist based on other models
+        scopeType: true,
         college: true,
       },
     });

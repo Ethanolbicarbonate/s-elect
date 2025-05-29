@@ -1,4 +1,3 @@
-// src/lib/email.js
 import nodemailer from "nodemailer";
 
 // --- Ethereal Configuration ---
@@ -63,20 +62,11 @@ async function createTransporter() {
           user: process.env.EMAIL_SERVER_USER, // SMTP username (often account email or API key identifier)
           pass: process.env.EMAIL_SERVER_PASSWORD, // SMTP password (often an API key)
         },
-        // Optional: Allow self-signed certs in staging/testing if needed, NOT recommended for production
-        // tls: {
-        //     rejectUnauthorized: process.env.NODE_ENV === 'production' // Only reject in production
-        // }
       });
-
-      // Optional: Verify connection configuration (good for debugging deployment issues)
-      // await transporter.verify();
-      // console.log("Production transporter verified successfully.");
 
       return transporter;
     } catch (error) {
       console.error("Failed to create production email transporter:", error);
-      // Depending on how critical email is, you might rethrow or return null
       return null;
     }
   }
@@ -161,8 +151,6 @@ export async function sendVerificationEmail(to, token) {
       return { success: false, error: "Mail transporter setup failed." };
     }
 
-    // Use EMAIL_FROM env variable for the production 'From' address
-    // Keep a distinct 'From' for development via Ethereal if you want
     const fromAddress =
       process.env.NODE_ENV === "development"
         ? `"sELECT System (Dev Test)" <dev-noreply@example.com>` // Ethereal often ignores this 'From' but set it anyway

@@ -1,10 +1,9 @@
-// src/components/Voting/CandidateSelectionCard.js
 "use client";
 
-import Image from "next/image"; // Using Next/Image
-import { useState, useEffect, useRef } from "react"; // Needed for state-based error handling
+import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { useFadeInOnScroll } from "@/components/UI/hooks/useFadeInOnScroll"; // adjust path
+import { useFadeInOnScroll } from "@/components/UI/hooks/useFadeInOnScroll";
 
 export default function CandidateSelectionCard({
   candidate,

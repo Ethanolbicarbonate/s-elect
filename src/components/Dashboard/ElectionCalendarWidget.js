@@ -5,7 +5,6 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 export default function ElectionCalendarWidget({ electionPeriod = null }) {
-  // Renamed prop
   const [activeMonth, setActiveMonth] = useState(new Date());
 
   useEffect(() => {

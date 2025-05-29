@@ -1,9 +1,7 @@
-// src/components/Voting/ReviewBallotSection.js
 "use client";
 
 import React from "react";
 
-// Helper function to find entity names (can be moved to utils if used elsewhere)
 const findNameById = (id, list, nameKey = "name") => {
   if (!id || !list || list.length === 0) return "N/A";
   const item = list.find((i) => i.id === id);

@@ -36,16 +36,15 @@ export async function writeAuditLog(logData) {
       data: {
         actorId,
         actorEmail,
-        actorType,  // This should match your Prisma enum value, e.g., AuditActorType.ADMIN
-        actionType, // This is the string constant, e.g., AUDIT_ACTION_TYPES.ELECTION_CREATED
-        status,     // This should match your Prisma enum value, e.g., AuditLogStatus.SUCCESS
+        actorType, 
+        actionType,
+        status, 
         entityType,
         entityId,
         targetUserId,
         targetUserEmail,
         details: details || undefined, // Store as JSON if object, or string. Prisma handles Json? type.
         ipAddress,
-        // timestamp is handled by @default(now()) in Prisma schema
       },
     });
     // console.log("Audit log written:", actionType, actorEmail || actorId || actorType); // Optional: for dev logging
@@ -54,17 +53,10 @@ export async function writeAuditLog(logData) {
       actionType,
       actorId,
       error: error.message,
-      // Potentially log the full 'details' here if it's small, or a summary
     });
-    // IMPORTANT: Decide on error handling strategy.
-    // Generally, an audit log failure should NOT prevent the primary operation (e.g., creating an election) from succeeding.
-    // This console.error is a minimum. In production, you might send this to an external logging service.
   }
 }
 
-// Helper function to extract IP address from a Next.js API request object
-// Note: Accuracy of IP address can be affected by proxies, VPNs, etc.
-// `x-forwarded-for` is common but can be spoofed. Vercel provides `req.headers['x-real-ip']` or `req.headers['x-vercel-ip-country']` etc.
 export function getIpAddressFromRequest(request) {
     if (!request) return undefined;
 
@@ -79,32 +71,25 @@ export function getIpAddressFromRequest(request) {
     else if (request.socket && request.socket.remoteAddress) {
         ip = request.socket.remoteAddress;
     }
-    
-    // A common fallback if running behind Vercel
     if (!ip && process.env.VERCEL) {
-        // Vercel specific headers
-        // Check Vercel docs for the most reliable header for client IP
-        // For instance, Vercel might populate `request.headers.get('x-vercel-forwarded-for')`
     }
 
     return ip || undefined; // Return undefined if no IP found
 }
 
 
-// Admin specific logger
-// This is optional; you can just use writeAuditLog directly.
 export async function logAdminActivity({
-  session,      // The NextAuth session object for the admin
+  session,   
   actionType,
   status = AuditLogStatus.SUCCESS,
   entityType,
   entityId,
   details,
-  ipAddress,    // Pass this from the request object in your API route
+  ipAddress,  
   targetUserId,
   targetUserEmail
 }) {
-  if (!session || !session.user || session.user.role === 'STUDENT') { // Or broader check if admins can be non-ADMIN roles
+  if (!session || !session.user || session.user.role === 'STUDENT') { 
     console.warn("Attempted to log admin activity without a valid admin session.");
     return;
   }
@@ -112,7 +97,7 @@ export async function logAdminActivity({
   await writeAuditLog({
     actorId: session.user.id,
     actorEmail: session.user.email,
-    actorType: AuditActorType.ADMIN, // Assuming all admin actions logged here are by ADMIN role
+    actorType: AuditActorType.ADMIN,
     actionType,
     status,
     entityType,

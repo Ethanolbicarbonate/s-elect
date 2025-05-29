@@ -1,23 +1,14 @@
-// src/app/api/student/election-results/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { ElectionStatus, PositionType, College, AuditActorType, AuditLogStatus, } from "@prisma/client"; // Import enums
+import { ElectionStatus, PositionType, College, AuditActorType, AuditLogStatus, } from "@prisma/client";
 
-// --- Helper Functions (can be moved to a lib/utils file if reused) ---
-
-// Helper to calculate turnout percentage
 function calculatePercentage(voted, total) {
   if (total === 0) return 0;
   return (voted / total) * 100;
 }
 
-// Helper to determine winners for a position
-// This function assumes:
-// 1. Candidates array is passed in (from a Prisma query result).
-// 2. `maxVotesAllowed` is the number of candidates who can win for that position.
-// 3. Ties for the last winning spot are handled by including all tied candidates.
 function determineWinners(candidates, maxVotesAllowed) {
   if (!candidates || candidates.length === 0) {
     return candidates.map((cand) => ({ ...cand, isWinner: false })); // Return candidates with isWinner:false

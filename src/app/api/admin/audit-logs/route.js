@@ -58,7 +58,6 @@ export async function GET(request) {
     whereClause.actorType = actorTypeFilter;
   }
   if (actionTypeFilter) {
-    // Assuming actionType is string. If enum, validate against Object.values(AuditActionType)
     whereClause.actionType = actionTypeFilter;
   }
   if (entityTypeFilter) {
@@ -73,7 +72,6 @@ export async function GET(request) {
       mode: "insensitive",
     };
   }
-  // NEW: Add status filter
   if (statusFilter && Object.values(AuditLogStatus).includes(statusFilter)) {
     whereClause.status = statusFilter;
   }
@@ -111,7 +109,7 @@ export async function GET(request) {
       },
     });
 
-    const totalRecords = await prisma.auditLog.count({ where: whereClause }); // This was already correct
+    const totalRecords = await prisma.auditLog.count({ where: whereClause });
 
     const totalPages = Math.ceil(totalRecords / limit);
 

@@ -1,5 +1,4 @@
-// src/components/Admin/Dashboard/OverviewWidget.js
-"use client"; // This will be a client component as it might involve reactivity or links
+"use client";
 
 import Link from "next/link";
 import { format } from "date-fns";

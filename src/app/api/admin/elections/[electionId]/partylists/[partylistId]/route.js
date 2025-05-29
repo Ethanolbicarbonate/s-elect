@@ -1,4 +1,3 @@
-// src/app/api/admin/partylists/[partylistId]/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
@@ -33,7 +32,7 @@ export async function GET(request, context) {
       );
     }
 
-    // Optional: Further authorization for MODERATOR/AUDITOR to view only their scope
+    //Further authorization for MODERATOR/AUDITOR to view only their scope
     if (session.user.role === "MODERATOR" || session.user.role === "AUDITOR") {
       if (
         partylist.type === PositionType.USC &&
@@ -83,7 +82,7 @@ export async function GET(request, context) {
   }
 }
 
-async function authorizePartylistAccess(electionId, session) {
+async function authorizePartylistAccess(electionId, session) { //not used
   if (
     !session ||
     !session.user ||
@@ -351,8 +350,6 @@ export async function PUT(request, context) {
           { status: 403 }
         );
       }
-      // For simplicity, moderators cannot change the `type` or `college` of an existing partylist.
-      // If type/college are in dataToUpdate from a moderator, ignore them or error.
       if (
         (dataToUpdate.type && dataToUpdate.type !== existingPartylist.type) ||
         (dataToUpdate.college &&
@@ -785,7 +782,6 @@ export async function DELETE(request, context) {
       ipAddress: getIpAddressFromRequest(request),
     });
     if (error.code === "P2025") {
-      // This is caught by findUnique first, but as a fallback
       return NextResponse.json(
         { error: "Partylist not found." },
         { status: 404 }

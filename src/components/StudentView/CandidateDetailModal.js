@@ -1,7 +1,6 @@
-// src/components/StudentView/CandidateDetailModal.js
 "use client";
 
-import Image from "next/image"; // Using Next/Image for optimization
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useFadeInOnScroll } from "@/components/UI/hooks/useFadeInOnScroll";

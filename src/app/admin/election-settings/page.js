@@ -310,7 +310,6 @@ export default function ElectionSettingsPage() {
       // const result = res.status === 204 ? { message: "Election deleted successfully." } : await res.json();
       // displayPageMessage(result.message || "Election deleted successfully!");
 
-      // Assuming API returns JSON message on successful delete as per my example API
       const result = await res.json();
       displayPageMessage(
         result.message || "Election and related data deleted successfully!"

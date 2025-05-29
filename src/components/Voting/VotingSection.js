@@ -1,8 +1,6 @@
-// src/components/Voting/VotingSection.js
 "use client";
 
-import CandidateSelectionCard from "./CandidateSelectionCard"; // We'll create this next
-// CandidateDetailModal might be triggered from within CandidateSelectionCard or passed up
+import CandidateSelectionCard from "./CandidateSelectionCard";
 
 export default function VotingSection({
   scopeTitle, // e.g., "University Student Council (USC) Ballot"

@@ -1,4 +1,3 @@
-// src/app/api/admin/candidates/[candidateId]/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
@@ -122,7 +121,7 @@ export async function PUT(request, context) {
       bio,
       platformPoints,
       isIndependent,
-      electionId, // electionId might be provided, but typically candidates aren't moved between elections
+      electionId,
       positionId,
       partylistId,
     } = data;
@@ -473,7 +472,7 @@ export async function PUT(request, context) {
       const existingCandidateForPartyPosition =
         await prisma.candidate.findFirst({
           where: {
-            electionId: candidateToUpdate.electionId, // Assuming election doesn't change, or pass it in data
+            electionId: candidateToUpdate.electionId,
             positionId: finalPositionId,
             partylistId: finalPartylistId,
             id: { not: candidateId }, // Exclude the current candidate being updated
@@ -524,13 +523,10 @@ export async function PUT(request, context) {
         : [];
     if (isIndependent !== undefined) updateData.isIndependent = isIndependent;
 
-    // ElectionId usually shouldn't change
     if (
       electionId !== undefined &&
       electionId !== candidateToUpdate.electionId
     ) {
-      // Potentially add a more strict check/log here if election change is rare/disallowed.
-      // For now, it's allowed if provided.
       const newElection = await prisma.election.findUnique({
         where: { id: electionId },
       });
@@ -567,15 +563,13 @@ export async function PUT(request, context) {
       !candidateToUpdate.isIndependent &&
       !finalIsIndependent
     ) {
-      // If partylistId is undefined and not changing to independent, keep existing partylistId.
-      // This case is implicitly handled if not in updateData.
     }
 
     if (Object.keys(updateData).length === 0) {
       await logAdminActivity({
         session,
         actionType: AUDIT_ACTION_TYPES.CANDIDATE_UPDATED,
-        status: AuditLogStatus.SUCCESS, // Or INFO
+        status: AuditLogStatus.SUCCESS,
         entityType: "Candidate",
         entityId: candidateId,
         details: {
@@ -587,7 +581,7 @@ export async function PUT(request, context) {
       });
       return NextResponse.json(
         { message: "No data provided for update." },
-        { status: 200 } // Or 400 as in original, but 200 is fine if no change is a valid state
+        { status: 200 }
       );
     }
 
@@ -658,7 +652,6 @@ export async function PUT(request, context) {
       ipAddress: getIpAddressFromRequest(request),
     });
     if (error.code === "P2002") {
-      // Unique constraint violation (e.g., if there's a unique constraint on candidate name per position, or a more complex one)
       return NextResponse.json(
         {
           error:

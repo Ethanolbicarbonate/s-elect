@@ -1,4 +1,3 @@
-// src/components/Admin/ElectionManagement/ElectionListTable.js
 "use client";
 
 export default function ElectionListTable({
@@ -9,7 +8,6 @@ export default function ElectionListTable({
   onEndElectionNow,
   onDeleteElection,
 }) {
-  // --- Loading and Empty States (remain the same) ---
   if (isLoading && elections.length === 0) {
     return (
       <div

@@ -159,9 +159,6 @@ export async function GET(request) {
       // Consider extensions if any
       election.extensions.forEach((ext) => {
         if (new Date(ext.extendedEndDate) > effectiveEndDate) {
-          // This logic is a bit complex for a simple status here.
-          // Effective end date can vary per college.
-          // For a general status, we might stick to the main dates.
         }
       });
 

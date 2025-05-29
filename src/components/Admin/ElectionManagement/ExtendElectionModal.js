@@ -1,4 +1,3 @@
-// src/components/Admin/ElectionManagement/ExtendElectionModal.js
 "use client";
 
 import { useState, useEffect } from "react";

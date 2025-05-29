@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react"; // Import useState for modal
-import { format } from "date-fns"; // Make sure date-fns is installed or use another date formatter
+import { useState } from "react";
+import { format } from "date-fns";
 
-// Helper function to get appropriate badge color for Actor Type
 const getActorTypeBadgeColor = (actorType) => {
   switch (actorType) {
     case "ADMIN":
@@ -19,7 +18,6 @@ const getActorTypeBadgeColor = (actorType) => {
   }
 };
 
-// Helper function to get appropriate badge color for Status
 const getStatusBadgeColor = (status) => {
   switch (status) {
     case "SUCCESS":

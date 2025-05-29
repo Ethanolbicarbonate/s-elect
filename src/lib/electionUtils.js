@@ -1,4 +1,3 @@
-// src/lib/electionUtils.js
 import { ElectionStatus } from "@prisma/client";
 
 export function getEffectiveEndDate(election, studentCollege) {

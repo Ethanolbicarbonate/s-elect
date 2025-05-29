@@ -1,9 +1,7 @@
-// src/components/Admin/PositionManagement/PositionForm.js
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 
-// Enums (ideally from a shared constants file if not already available in context)
 const CollegeEnum = {
   CAS: "CAS",
   CBM: "CBM",
@@ -38,8 +36,7 @@ const CSC_STANDARD_POSITIONS = [
   { name: "ASST. BUSINESS MANAGER", order: 9 },
   { name: "PUBLIC INFORMATION OFFICER", order: 10 },
   { name: "ASST. PUBLIC INFORMATION OFFICER", order: 11 },
-  { name: "COLLEGE REPRESENTATIVES", order: 12 }, // Note: 'COLLEGE REPRESENTATIVES' is generic, name might need college prefix in practice (e.g., CICT Representative)
-  // For this form, we'll use the generic name.
+  { name: "COLLEGE REPRESENTATIVES", order: 12 },
 ];
 
 const CUSTOM_POSITION_VALUE = "CUSTOM_POSITION";

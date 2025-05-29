@@ -1,4 +1,3 @@
-// src/components/Dashboard/VoterStatusWidget.js
 "use client";
 
 import { useState, useEffect } from "react";

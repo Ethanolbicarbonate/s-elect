@@ -1,4 +1,3 @@
-// src/components/Admin/Dashboard/RecentActivityWidget.js
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -35,7 +34,6 @@ export default function RecentActivityWidget({ userRole }) {
 
   useEffect(() => {
     fetchRecentLogs();
-    // Optional: Set up polling for recent activity if truly 'live' updates are desired
     // const interval = setInterval(fetchRecentLogs, 60000); // Refresh every minute
     // return () => clearInterval(interval);
   }, [fetchRecentLogs]);
@@ -77,16 +75,11 @@ export default function RecentActivityWidget({ userRole }) {
             {recentLogs.map((log) => (
               <li
                 key={log.id}
-                // FIX: Use responsive gap - gap-1 on mobile, gap-2 on md+
-                // Keep flex-nowrap
                 className="list-group-item d-flex align-items-start px-0 py-2 gap-1 gap-md-2 flex-nowrap"
               >
                 <div
-                  // FIX: Add a very small min-width and flex-basis
-                  // Keep flex-shrink-0
-                  // Removed me-md-2, gap-md-2 handles spacing
                   className="text-primary flex-shrink-0"
-                  style={{ minWidth: "1.5em", flexBasis: "1.5em" }} // Roughly icon size + padding
+                  style={{ minWidth: "1.5em", flexBasis: "1.5em" }}
                 >
                   {log.status === "SUCCESS" ? (
                     <i className="bi bi-check-circle-fill fs-7"></i>
@@ -97,7 +90,6 @@ export default function RecentActivityWidget({ userRole }) {
                   )}
                 </div>
                 <div className="flex-grow-1 text-truncate pe-2 min-w-0">
-                  {/* ... Action Type and Actor Details paragraphs ... */}
                   <p
                     className="mb-0 fw-medium text-dark-emphasis fs-7 text-truncate"
                     title={log.actionType.replace(/_/g, " ")}
@@ -123,7 +115,6 @@ export default function RecentActivityWidget({ userRole }) {
                   </p>
                 </div>
                 <div
-                  // FIX: Keep flex-shrink-0
                   className="text-end flex-shrink-0"
                 >
                   <span className="badge fw-medium bg-light text-dark-emphasis smaller py-1 px-2">
@@ -135,7 +126,6 @@ export default function RecentActivityWidget({ userRole }) {
           </ul>
         )}
       </div>
-      {/* Footer */}
       <div className="card-footer bg-white border-0 text-center py-2">
         <Link
           href="/admin/audit-log"

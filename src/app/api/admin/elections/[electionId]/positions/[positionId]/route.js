@@ -1,12 +1,11 @@
-// src/app/api/admin/positions/[positionId]/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { PositionType, College } from "@prisma/client";
-import { logAdminActivity, getIpAddressFromRequest } from "@/lib/auditLogger"; // NEW IMPORTS
-import { AUDIT_ACTION_TYPES } from "@/lib/auditActions"; // NEW IMPORTS
-import { AuditLogStatus } from "@prisma/client"; // NEW IMPORTS
+import { logAdminActivity, getIpAddressFromRequest } from "@/lib/auditLogger";
+import { AUDIT_ACTION_TYPES } from "@/lib/auditActions";
+import { AuditLogStatus } from "@prisma/client";
 
 // GET - Fetch a specific position
 export async function GET(request, context) {

@@ -1,8 +1,7 @@
-// src/app/api/student/vote-status/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust path as needed      
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";     
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);
@@ -30,7 +29,6 @@ export async function GET(request) {
       },
     });
     
-    // Using Option A:
     return NextResponse.json({ hasVoted: !!voteRecord }, { status: 200 });
 
   } catch (error) {

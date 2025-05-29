@@ -1,4 +1,3 @@
-// src/components/Admin/PartylistManagement/AdminPartylistList.js
 "use client";
 import Image from 'next/image';
 
@@ -26,18 +25,15 @@ export default function AdminPartylistList({
       <table className="table table-hover table-sm small align-middle">
         <thead>
           <tr>
-            {/* Hide Logo on xs, show sm and up */}
             <th style={{ width: "5%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
               Logo
             </th>
             <th style={{ width: "25%" }} className="fw-normal fs-7 text-secondary text-truncate">Name</th>
-            {/* Hide Acronym on xs, show sm and up */}
             <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
               Acronym
             </th>
             <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary text-truncate">Type</th>
             <th style={{ width: "15%" }} className="fw-normal fs-7 text-secondary text-truncate">College</th>
-            {/* Hide Platform on screens smaller than md */}
             <th style={{ width: "25%" }} className="d-none d-md-table-cell fw-normal fs-7 text-secondary text-truncate">
               Platform Snippet
             </th>

@@ -34,11 +34,6 @@ export async function GET(request) {
   // Scoping for moderators
   if (session.user.role === "MODERATOR") {
     if (session.user.college) {
-      // College Moderator
-      // They can only see candidates for their college's CSC positions or USC positions
-      // This requires fetching positions first or a more complex query.
-      // For simplicity now, if 'collegeScope' is provided and matches, allow.
-      // Or, if 'scope=csc' and 'college=THEIR_COLLEGE'
       if (candidateScope === "csc" && collegeScope === session.user.college) {
         // Ensure we are fetching candidates whose position is of type CSC and matches the college
         whereClause.position = {
@@ -73,9 +68,8 @@ export async function GET(request) {
     const candidates = await prisma.candidate.findMany({
       where: whereClause,
       include: {
-        position: true, // Include position details
-        partylist: true, // Include partylist details
-        // student: true, // Include student details if linked
+        position: true, //  position details
+        partylist: true, //  partylist details
       },
       orderBy: [
         { position: { order: "asc" } }, // Order by position's order
@@ -395,7 +389,7 @@ export async function POST(request) {
           { status: 404 }
         );
       }
-      // Additionally, ensure partylist scope matches position scope
+      // ensure partylist scope matches position scope
       if (partylist.type !== position.type) {
         await logAdminActivity({
           session,

@@ -1,4 +1,3 @@
-// src/components/Admin/ResultsView/PositionResultsDisplay.js
 "use client";
 
 import CandidateResultRow from "./CandidateResultRow";
@@ -62,7 +61,6 @@ export default function PositionResultsDisplay({ positionResult }) {
                     key={candidate.id}
                     candidate={candidate}
                     totalVotesForPosition={totalVotesCastForPosition}
-                    isWinner={candidate.isWinner} // Assuming API provides this boolean per candidate
                   />
                 ))}
               </tbody>
@@ -74,10 +72,6 @@ export default function PositionResultsDisplay({ positionResult }) {
           </div>
         )}
       </div>
-      {/* Optional Footer for notes or legend */}
-      {/* <div className="card-footer bg-light text-muted small">
-        <i className="bi bi-trophy-fill text-warning me-1"></i> Indicates winner(s). Percentages are of total votes cast for this position.
-      </div> */}
     </div>
   );
 }

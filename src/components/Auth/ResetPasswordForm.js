@@ -1,4 +1,3 @@
-// src/components/Auth/ResetPasswordForm.js
 "use client";
 
 import { useState, useEffect, Suspense } from "react";

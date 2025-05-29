@@ -1,4 +1,3 @@
-// src/components/UI/Pagination.js
 "use client";
 
 import React from 'react';
@@ -9,8 +8,6 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
   }
 
   const pageNumbers = [];
-  // Logic to create page numbers (e.g., show first, last, current, and some around current)
-  // For simplicity, let's show a few pages around current and ellipsis if many pages
   const maxPagesToShow = 5; // Max page buttons to show (excluding prev/next)
   let startPage, endPage;
 

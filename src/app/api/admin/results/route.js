@@ -1,13 +1,10 @@
-// src/app/api/admin/results/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { PositionType, College, ElectionStatus } from "@prisma/client";
 
-// --- Helper Functions (More robust, copied from election-results.js) ---
-// This function needs to be externalized if used in multiple API routes
-// For now, including it here. If you have a central 'lib/helpers.js' or 'lib/utils.js', move it there.
+
 function determineWinners(candidates, maxVotesAllowed) {
   if (!candidates || candidates.length === 0) {
     // Ensure all candidates have an isWinner flag, default to false if no winners
@@ -57,7 +54,6 @@ function determineWinners(candidates, maxVotesAllowed) {
     isWinner: winnersSet.has(cand.id),
   }));
 }
-// --- End Helper Functions ---
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);

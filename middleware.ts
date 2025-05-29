@@ -10,8 +10,8 @@ export async function middleware(req: NextRequest) {
 
   const isStudentRoute = pathname.startsWith('/dashboard') ||
                          pathname.startsWith('/vote') ||
-                         pathname.startsWith('/candidates') || // Assuming student /candidates
-                         pathname.startsWith('/results'); // Assuming student /results
+                         pathname.startsWith('/candidates') ||
+                         pathname.startsWith('/results');
 
   const isAdminRoute = pathname.startsWith('/admin');
 
@@ -80,17 +80,7 @@ export async function middleware(req: NextRequest) {
         url.pathname = '/admin/dashboard'; // Redirect to their allowed dashboard
         return NextResponse.redirect(url);
      }
-
-     // **Crucial:** Add checks here for Moderator college access
-     // if (pathname.startsWith('/admin/candidates') || pathname.startsWith('/api/admin/candidates')) {
-     //    // Logic to check if the data being accessed/modified matches moderator's college (token.college)
-     //    // This might need to happen within the API route/page itself if based on dynamic params ([candidateId])
-     // }
   }
-
-  // Add similar checks for AUDITOR role (read-only access) if needed at middleware level,
-  // although fine-grained read/write checks are often better in API routes/pages.
-
   // If all checks pass, allow the request
   return NextResponse.next();
 }

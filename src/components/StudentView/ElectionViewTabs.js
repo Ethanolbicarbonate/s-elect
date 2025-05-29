@@ -1,8 +1,7 @@
-// src/components/StudentView/ElectionViewTabs.js
 "use client";
 
 import { useState } from "react";
-import ScopedCandidateViewer from "./ScopedCandidateViewer"; // We'll create this next
+import ScopedCandidateViewer from "./ScopedCandidateViewer";
 
 export default function ElectionViewTabs({
   uscData,

@@ -1,4 +1,3 @@
-// src/app/api/student/submit-vote/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";

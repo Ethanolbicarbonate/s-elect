@@ -1,4 +1,3 @@
-// src/components/Admin/ElectionManagement/CreateElectionForm.js
 "use client";
 
 import { useState } from "react";
