@@ -8,13 +8,12 @@ import Link from "next/link";
 
 export default function StudentLayout({ children }) {
   const { data: session, status } = useSession();
-  const pathname = usePathname(); // To get current path for breadcrumbs if needed
+  const pathname = usePathname();
 
-  const [showSidebar, setShowSidebar] = useState(false); // State for sidebar visibility on mobile
+  const [showSidebar, setShowSidebar] = useState(false);
 
-  // Effect to handle session loading and redirection
   useEffect(() => {
-    if (status === "loading") return; // Do nothing while loading
+    if (status === "loading") return;
     if (!session || session.user?.role !== "STUDENT") {
       console.log(
         "StudentLayout: No session or not a student, redirecting to /student-login"
@@ -23,7 +22,6 @@ export default function StudentLayout({ children }) {
     }
   }, [session, status]);
 
-  // Close sidebar when route changes (optional, good UX)
   useEffect(() => {
     setShowSidebar(false);
   }, [pathname]);
@@ -33,7 +31,6 @@ export default function StudentLayout({ children }) {
   };
 
   if (status === "loading" || !session) {
-    // You can return a loading spinner or a minimal layout here
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-primary" role="status">
@@ -72,14 +69,13 @@ export default function StudentLayout({ children }) {
     return `${colors.bg} ${colors.text}`;
   };
 
-  // Determine current page name for breadcrumb (simple example)
+  // Determine current page name for breadcrumb
   let currentPageName = "Dashboard";
   if (pathname.startsWith("/dashboard")) currentPageName = "Dashboard";
   else if (pathname.startsWith("/election-details"))
     currentPageName = "Election Details";
   else if (pathname.startsWith("/vote")) currentPageName = "Vote";
   else if (pathname.startsWith("/about-help")) currentPageName = "About/Help";
-  // Add more else if for other top-level student pages
 
   return (
     <div className="d-flex vh-100">
@@ -117,7 +113,7 @@ export default function StudentLayout({ children }) {
             {/* Breadcrumb or Page Title */}
             <nav aria-label="breadcrumb" className="d-none d-md-block">
               {" "}
-              {/* Hide breadcrumb on very small screens if needed */}
+              {/* Hide breadcrumb on very small screens */}
               <ol className="breadcrumb mb-0 d-flex align-items-center">
                 <li className="breadcrumb-item">
                   <Link href="/dashboard" className="text-decoration-none">
@@ -132,7 +128,7 @@ export default function StudentLayout({ children }) {
                 </li>
               </ol>
             </nav>
-            {/* Mobile Page Title (if breadcrumb is too much) */}
+            {/* Mobile Page Title*/}
             <div className="d-md-none text-dark fw-thin">{currentPageName}</div>
           </div>
 

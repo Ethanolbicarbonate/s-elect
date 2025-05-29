@@ -1,11 +1,10 @@
-// src/app/(student)/election-details/page.js
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { headers } from "next/headers";
 import ElectionViewTabs from "@/components/StudentView/ElectionViewTabs";
 import Link from "next/link";
 
-// Helper function to format dates (can be moved to a utils file)
+// Helper function to format dates
 function formatDateRange(startDateStr, endDateStr) {
   const options = {
     year: "numeric",
@@ -55,10 +54,10 @@ async function getActiveElectionDetails() {
     appUrl
   ).toString();
 
-  const headersList = await headers(); // ✅ Await headers
+  const headersList = await headers();
   const cookieHeader = headersList.get("cookie");
   const fetchOptions = {
-    cache: "no-store", // Ensure fresh data for election details
+    cache: "no-store",
     headers: {},
   };
   if (cookieHeader) {
@@ -81,7 +80,7 @@ async function getActiveElectionDetails() {
       };
     }
     const data = await res.json();
-    return { data }; // { data: electionObjectOrNull }
+    return { data };
   } catch (error) {
     console.error("Fetch Error getting active election:", error);
     return {
@@ -92,7 +91,6 @@ async function getActiveElectionDetails() {
 
 export default async function ElectionDetailsPage() {
   const session = await getServerSession(authOptions);
-  // Student's college is used by the API via the session, no need to explicitly pass from here
   const studentCollegeName = session?.user?.college || "N/A";
 
   const { data: electionDetails, error } = await getActiveElectionDetails();

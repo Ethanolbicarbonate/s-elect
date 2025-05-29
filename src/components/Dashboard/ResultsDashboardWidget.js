@@ -220,7 +220,7 @@ export default function ResultsDashboardWidget({
     electionDetails.effectiveStatusForStudent !== "ENDED"
   ) {
     return (
-      <div className="card shadow-sm p-4 text-center text-muted">
+      <div className="card shadow-sm p-4 text-center text-muted rounded-4">
         <i className="bi bi-bar-chart-fill display-4 mb-3"></i>
         <h5 className="mb-0">Election Results Coming Soon</h5>
         <p className="small mb-0">

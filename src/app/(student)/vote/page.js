@@ -1,19 +1,15 @@
-// src/app/(student)/vote/page.js
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation"; // For redirecting after vote
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-// Import child components (we will create these placeholders/skeletons next)
 import VotingSection from "@/components/Voting/VotingSection";
 import ReviewBallotSection from "@/components/Voting/ReviewBallotSection";
-// Re-use CandidateDetailModal from StudentView or create a new one if styling needs to differ significantly
 import CandidateDetailModal from "@/components/StudentView/CandidateDetailModal";
-import ConfirmationModal from "@/components/UI/ConfirmationModal"; // Assuming a generic confirmation modal
+import ConfirmationModal from "@/components/UI/ConfirmationModal";
 
-// Stepper component (simple version)
+// Stepper component
 const Stepper = ({ currentStep, steps }) => {
   return (
     <nav aria-label="Voting Steps" className="mb-4">
@@ -50,7 +46,7 @@ export default function VotePage() {
   const [electionData, setElectionData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [hasVotedInThisElection, setHasVotedInThisElection] = useState(null); // null = unknown, true, false
+  const [hasVotedInThisElection, setHasVotedInThisElection] = useState(null);
 
   const votingSteps = [
     { id: "WELCOME", name: "Welcome" },
@@ -58,7 +54,7 @@ export default function VotePage() {
     { id: "CSC", name: "CSC Ballot" },
     { id: "REVIEW", name: "Review & Confirm" },
   ];
-  const [currentStep, setCurrentStep] = useState(votingSteps[0].id); // Start at 'WELCOME'
+  const [currentStep, setCurrentStep] = useState(votingSteps[0].id);
 
   const [uscSelections, setUscSelections] = useState({}); // { positionId: Set<candidateId> }
   const [cscSelections, setCscSelections] = useState({}); // { positionId: Set<candidateId> }
@@ -79,7 +75,7 @@ export default function VotePage() {
     setError("");
     try {
       // 1. Fetch active election details
-      const electionRes = await fetch("/api/student/active-election-details"); // Using relative path
+      const electionRes = await fetch("/api/student/active-election-details");
       if (!electionRes.ok) {
         const errData = await electionRes
           .json()
@@ -91,21 +87,19 @@ export default function VotePage() {
       const data = await electionRes.json();
 
       if (!data || data.effectiveStatusForStudent !== "ONGOING") {
-        setElectionData(data); // Still set data for potential messages
+        setElectionData(data);
         setError(
           data
             ? "Voting for this election is not currently open."
             : "No active election found."
         );
-        setCurrentStep("NO_ELECTION"); // Special step
+        setCurrentStep("NO_ELECTION");
         setIsLoading(false);
         return;
       }
       setElectionData(data);
 
-      // 2. Fetch if student has voted in THIS specific election
-      //    This requires a new API endpoint or enhancing the current one
-      //    For now, we'll simulate or use a placeholder
+      //Fetch if student has voted in this specific election
       const voteStatusRes = await fetch(
         `/api/student/vote-status?electionId=${data.id}`
       );
@@ -120,8 +114,6 @@ export default function VotePage() {
       if (hasVotedInThisElection) {
         setCurrentStep("ALREADY_VOTED");
       } else if (data.effectiveStatusForStudent === "ONGOING") {
-        // Initialize selections if not already done (e.g. page refresh during voting)
-        // This part can be enhanced with localStorage for persistence during session
         if (Object.keys(uscSelections).length === 0 && data.uscPositions) {
           const initialUsc = {};
           data.uscPositions.forEach((p) => (initialUsc[p.id] = new Set()));
@@ -132,7 +124,7 @@ export default function VotePage() {
           data.cscPositions.forEach((p) => (initialCsc[p.id] = new Set()));
           setCscSelections(initialCsc);
         }
-        setCurrentStep("WELCOME"); // Or directly to USC if welcome step is minimal
+        setCurrentStep("WELCOME");
       }
     } catch (err) {
       console.error("Error fetching election/vote status:", err);
@@ -140,7 +132,7 @@ export default function VotePage() {
     } finally {
       setIsLoading(false);
     }
-  }, [sessionStatus, session?.user?.id, session?.user?.hasVoted]); // Dependencies for re-fetch on session change
+  }, [sessionStatus, session?.user?.id, session?.user?.hasVoted]);
 
   useEffect(() => {
     fetchElectionAndVoteStatus();
@@ -168,7 +160,6 @@ export default function VotePage() {
         } else if (newSelectionsForPosition.size < position.maxVotesAllowed) {
           newSelectionsForPosition.add(candidateId);
         } else {
-          // Optionally provide feedback: "Max selections reached for this position"
           alert(
             `You can only select up to ${position.maxVotesAllowed} candidate(s) for ${position.name}.`
           );
@@ -209,7 +200,7 @@ export default function VotePage() {
 
     try {
       const res = await fetch("/api/student/submit-vote", {
-        // NEW API endpoint for submitting votes
+        //API endpoint for submitting votes
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(ballotPayload),
@@ -221,18 +212,16 @@ export default function VotePage() {
           .catch(() => ({ error: "Vote submission failed." }));
         throw new Error(errData.error || `API Error: ${res.status}`);
       }
-      // On successful submission
+      //On successful submission
       router.push("/vote/submitted"); // Redirect to acknowledgement page
     } catch (err) {
       console.error("Error submitting ballot:", err);
       setError(err.message || "Failed to submit your vote. Please try again.");
-      // Potentially allow user to retry or contact support
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // --- RENDER LOGIC ---
   if (sessionStatus === "loading" || isLoading) {
     return (
       <div className="container py-5 text-center">
@@ -362,7 +351,7 @@ export default function VotePage() {
           {(currentStep === "USC" || currentStep === "CSC") &&
             currentScopeData && (
               <VotingSection
-                key={currentStep} // Ensures re-mount if scope changes, though props should handle updates
+                key={currentStep}
                 scopeTitle={currentScopeData.title}
                 positions={currentScopeData.positions}
                 candidates={currentScopeData.candidates} // Pass all candidates for this scope

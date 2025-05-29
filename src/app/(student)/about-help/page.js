@@ -34,7 +34,7 @@ export default function AboutPage() {
   const votingSteps = [
     {
       step: 1,
-      text: "Secure Login: Access the sELECT platform using your provided student credentials to ensure secure authentication.",
+      text: "Login: Access the sELECT platform using your provided student credentials to ensure authentication.",
     },
     {
       step: 2,

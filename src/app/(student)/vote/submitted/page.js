@@ -1,16 +1,6 @@
-// src/app/(student)/vote/submitted/page.js
 import Link from 'next/link';
-import { getServerSession } from 'next-auth'; // Optional: if you want to personalize
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // Optional
-
-// This page could also receive some query parameters from the submission redirect
-// if you want to display, for example, a non-sensitive transaction ID, but
-// for simplicity, we'll keep it straightforward.
 
 export default async function VoteSubmittedPage() {
-  // Optionally fetch session if you want to display user's name, etc.
-  // const session = await getServerSession(authOptions);
-  // const userName = session?.user?.firstName || "Voter";
 
   return (
     <div className="container py-5 text-center">
@@ -27,11 +17,6 @@ export default async function VoteSubmittedPage() {
           <p className="text-muted small">
             Your ballot has been securely recorded. Results will be announced after the election period concludes and votes are tallied. Please refer to official announcements for details.
           </p>
-          
-          {/* You could add a unique (but anonymous if needed) vote confirmation code here if your API provides one */}
-          {/* <p className="mt-3">
-            <span className="badge bg-light text-dark p-2">Confirmation Code: XYZ123ABC</span>
-          </p> */}
 
           <div className="mt-4 pt-2">
             <Link href="/dashboard" className="btn btn-primary btn-lg px-4 me-2 mb-2">

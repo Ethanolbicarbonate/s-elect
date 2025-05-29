@@ -16,11 +16,11 @@ export default function AuditLogPage() {
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
-    limit: 20, // Should match DEFAULT_PAGE_LIMIT in API
+    limit: 20, // matches DEFAULT_PAGE_LIMIT in API
     totalRecords: 0,
   });
 
-  // Define initialFilters once and use it consistently
+  // initialFilters+
   const initialFiltersState = {
     actorType: "",
     actionType: "",
@@ -45,7 +45,7 @@ export default function AuditLogPage() {
           limit: pagination.limit.toString(),
         });
 
-        // Add active filters to queryParams
+        // active filters to queryParams
         for (const key in currentFilters) {
           // Check if value is not empty string, null, or undefined
           if (
@@ -85,7 +85,7 @@ export default function AuditLogPage() {
       }
     },
     [pagination.limit]
-  ); // fetchLogs dependency: only re-creates if limit changes. This is fine.
+  ); // fetchLogs dependency: only re-creates if limit changes
 
   useEffect(() => {
     if (
@@ -106,8 +106,8 @@ export default function AuditLogPage() {
     sessionStatus,
     session,
     pagination.currentPage,
-    appliedFilters, // This is the key dependency for filters
-    fetchLogs, // fetchLogs itself is a dependency of useEffect, as per ESLint recommendation for useCallback
+    appliedFilters,
+    fetchLogs,
   ]);
 
   const handlePageChange = (newPage) => {
@@ -127,13 +127,13 @@ export default function AuditLogPage() {
 
   const handleApplyFilters = () => {
     setPagination((prev) => ({ ...prev, currentPage: 1 })); // Reset to page 1 when filters change
-    setAppliedFilters(filters); // This will trigger the useEffect to fetch with new filters
+    setAppliedFilters(filters);
   };
 
   const handleResetFilters = () => {
-    setFilters(initialFiltersState); // Use the consistent initial state
+    setFilters(initialFiltersState);
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
-    setAppliedFilters(initialFiltersState); // Use the consistent initial state
+    setAppliedFilters(initialFiltersState);
   };
 
   if (sessionStatus === "loading") {
@@ -304,8 +304,6 @@ export default function AuditLogPage() {
               </div>
               {/* --- Column 3: Date Range --- */}
               <div className="col-lg-4 col-md-12 col-sm-12">
-                {" "}
-                {/* Takes full width on medium if only two main groups */}
                 <h6 className="mb-3 fw-medium text-secondary">Date Range</h6>
                 <div className="mb-2">
                   <label
@@ -341,7 +339,6 @@ export default function AuditLogPage() {
                 </div>
               </div>
             </div>
-            {/* Buttons are moved to card-footer */}
           </form>
         </div>
         <div
@@ -353,10 +350,8 @@ export default function AuditLogPage() {
           }}
         >
           <div className="d-flex justify-content-end gap-2">
-            {" "}
-            {/* Align left with gap */}
             <button
-              type="button" // Changed to type="button" as it's not submitting the form directly here
+              type="button"
               className="btn btn-primary btn-sm rounded-3"
               onClick={handleApplyFilters} // Trigger apply on click
               disabled={isLoading}

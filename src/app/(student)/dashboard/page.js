@@ -1,4 +1,3 @@
-// src/app/(student)/dashboard/page.js
 import ElectionStatusWidget from "@/components/Dashboard/ElectionStatusWidget";
 import VoterStatusWidget from "@/components/Dashboard/VoterStatusWidget";
 import ElectionCalendarWidget from "@/components/Dashboard/ElectionCalendarWidget";
@@ -7,11 +6,10 @@ import ElectionNotificationWidget from "@/components/Dashboard/ElectionNotificat
 import ResultsDashboardWidget from "@/components/Dashboard/ResultsDashboardWidget";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { headers } from "next/headers"; // <--- IMPORT THIS
-// No longer need College enum or helper functions here as backend handles it
+import { headers } from "next/headers";
 
 export default async function DashboardPage() {
-  const session = await getServerSession(authOptions); // This gets session for the page render
+  const session = await getServerSession(authOptions); //gets session for the page render
 
   let activeElectionDetails = null;
   let apiError = null;
@@ -75,7 +73,7 @@ export default async function DashboardPage() {
   // Prepare data for widgets based on the fetched activeElectionDetails
   let electionStatusForWidget = "N/A";
   let electionMessageForWidget = "No active or upcoming election.";
-  let electionPeriodForCalendar = null; // Singular event for calendar
+  let electionPeriodForCalendar = null;
   let hasVoted = false;
 
   if (apiError) {
@@ -96,9 +94,6 @@ export default async function DashboardPage() {
   const showResults =
     activeElectionDetails &&
     activeElectionDetails.effectiveStatusForStudent === "ENDED";
-  // additional check here if results are to be published explicitly by admin: not implemented
-  // && activeElectionDetails.resultsPublished === true
-  // (requires: resultsPublished field to Election model and admin UI)
 
   return (
     <div>
@@ -117,16 +112,16 @@ export default async function DashboardPage() {
           </div>
           <div className="flex-grow-1">
             <VoterStatusWidget
-              hasVoted={hasVoted} // This needs to be specific to the activeElectionDetails.id
+              hasVoted={hasVoted}
               electionOngoing={electionStatusForWidget === "ONGOING"}
-              electionId={activeElectionDetails?.id} // Pass electionId for more specific vote check
+              electionId={activeElectionDetails?.id}
             />
           </div>
         </div>
 
         <div className="col-md-6 col-lg-4">
           <ElectionCalendarWidget
-            electionPeriod={electionPeriodForCalendar} // Pass the single election period object
+            electionPeriod={electionPeriodForCalendar}
           />
         </div>
 
@@ -146,7 +141,7 @@ export default async function DashboardPage() {
             studentCollege={session?.user?.college} // Pass student's college for CSC filtering
           />
         ) : (
-          <div className="card shadow-sm p-4 text-center text-muted">
+          <div className="card shadow-sm p-4 text-center text-muted rounded-4">
             <i className="bi bi-bar-chart-fill display-4 mb-3"></i>
             <h5 className="mb-0">Election Results Coming Soon</h5>
             <p className="small mb-0">
