@@ -52,7 +52,7 @@ export default function VoterStatusWidget({
   let voteStatusText = "N/A";
   let voteMessage = "No ongoing election to vote in.";
   let statusColor = "secondary";
-  let iconName = "bi-info-circle";
+  let iconName = "bi-info-circle-fill";
 
   if (
     isLoading ||

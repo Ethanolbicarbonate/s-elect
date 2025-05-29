@@ -181,14 +181,19 @@ export default function ElectionNotificationWidget() {
   return (
     <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column rounded-4 overflow-hidden">
       <div
-        className="card-header rounded-top-4 bg-white border-bottom-0 text-secondary"
+        className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white"
         style={{
           backgroundImage:
             "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
           backgroundSize: "6px 6px",
         }}
       >
-        <h5 className="mb-0 small">Election Notifications</h5>
+        <h6 className="card-title text-secondary mb-0">Notifications</h6>
+        <span
+          className={`badge bg-warning bg-opacity-25 rounded-circle p-1 d-flex align-items-center justify-content-center`}
+        >
+          <i className={`bi bi-bell-fill text-warning`}></i>{" "}
+        </span>
       </div>
       <div className="card-body p-3 d-flex flex-column overflow-auto">
         {" "}

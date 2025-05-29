@@ -2,15 +2,12 @@
 
 import { useState, useCallback } from "react";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 
 const logoPublicPath = "/assets/sELECTLogo.svg";
 const placeholderLogo =
   'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext x="50" y="50" font-size="40" text-anchor="middle" dy=".3em"%3EELECT%3C/text%3E%3C/svg%3E';
 
 export default function AboutPage() {
-  const { data: session, status: sessionStatus } = useSession(); // Get session
-  const studentEmail = session?.user?.email; // Get student email
   const projectTeam = [
     {
       name: "Carbonell, Ethan Jed",
@@ -85,7 +82,7 @@ export default function AboutPage() {
     {
       question: "What should I do if I encounter a technical issue?",
       answer:
-        "If you experience any technical problems while using the platform, please report the issue via the 'Contact & Support' section below or email support@s-elect.app directly, providing as much detail as possible.",
+        "If you experience any technical problems while using the platform, please report the issue via the 'Contact & Support' section below and email support@s-elect.app directly, providing as much detail as possible.",
     },
     {
       question: "How are winners determined?",
@@ -106,131 +103,16 @@ export default function AboutPage() {
 
   const supportEmail = "support@s-elect.app";
 
-  // --- Feedback Form State ---
-  const [feedbackContent, setFeedbackContent] = useState("");
-  // Optional: Add state for feedback title if needed (and its input field below)
-  // const [feedbackTitle, setFeedbackTitle] = useState("");
-  const [isSendingFeedback, setIsSendingFeedback] = useState(false);
-  const [feedbackStatus, setFeedbackStatus] = useState(null); // 'success' or 'danger'
-  const [feedbackMessage, setFeedbackMessage] = useState("");
-
-  // --- Handle Text Area Change ---
-  const handleFeedbackChange = (e) => {
-    setFeedbackContent(e.target.value);
-    // Clear status/message when user starts typing again
-    if (feedbackStatus) {
-      setFeedbackStatus(null);
-      setFeedbackMessage("");
-    }
-  };
-
-  // Optional: Handle title change if you add a title input
-  // const handleTitleChange = (e) => {
-  //   setFeedbackTitle(e.target.value);
-  //   setFeedbackStatus(null);
-  //   setFeedbackMessage("");
-  // };
-
-  // --- Handle Form Submission ---
-  // Use useCallback as it's an event handler passed to the form
-  const handleSendFeedback = useCallback(
-    async (e) => {
-      e.preventDefault(); // Prevent default form submission
-      setFeedbackStatus(null);
-      setFeedbackMessage("");
-
-      const trimmedContent = feedbackContent.trim();
-      // Optional: const trimmedTitle = feedbackTitle.trim();
-
-      if (!trimmedContent) {
-        setFeedbackStatus("danger");
-        setFeedbackMessage("Feedback content cannot be empty.");
-        return;
-      }
-
-      // Check if user is logged in (required by your backend API)
-      // useSession status check is more reliable than just checking session object
-      if (
-        sessionStatus !== "authenticated" ||
-        session?.user?.role !== "STUDENT"
-      ) {
-        // This condition should ideally align with the button/textarea disabled state logic
-        setFeedbackStatus("danger");
-        setFeedbackMessage(
-          "You must be logged in as a student to submit feedback."
-        );
-        return;
-      }
-      // Optional: Check if session.user.email is also available if your backend requires it
-      if (!session.user.email) {
-        setFeedbackStatus("danger");
-        setFeedbackMessage("Your session does not include an email address.");
-        console.error("Session exists but email is missing.", session);
-        return;
-      }
-
-      setIsSendingFeedback(true);
-
-      try {
-        const res = await fetch("/api/feedback", {
-          // Call your backend API route
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            content: trimmedContent,
-            // title: trimmedTitle || undefined, // Include optional title if implemented
-          }),
-        });
-
-        const result = await res.json(); // API should return { message: '...' } or { error: '...' }
-
-        if (!res.ok) {
-          // API returned an error status (4xx or 5xx)
-          setFeedbackStatus("danger");
-          setFeedbackMessage(
-            result.error || "Failed to send feedback due to an API error."
-          );
-          console.error("Feedback API Error Response:", result);
-        } else {
-          // API returned success status (200)
-          setFeedbackStatus("success");
-          setFeedbackMessage(result.message || "Feedback sent successfully!");
-          setFeedbackContent(""); // Clear the textarea on success
-          // setFeedbackTitle(""); // Clear title on success
-        }
-      } catch (error) {
-        // Handle network errors or errors during response parsing
-        setFeedbackStatus("danger");
-        setFeedbackMessage("An unexpected error occurred. Please try again.");
-        console.error("Network or unexpected error sending feedback:", error);
-      } finally {
-        setIsSendingFeedback(false);
-      }
-    },
-    [feedbackContent, sessionStatus, session] // Dependencies for useCallback (add feedbackTitle if implemented)
-  );
-
-  // Determine if the submit button should be disabled
-  const isSubmitDisabled =
-    isSendingFeedback ||
-    sessionStatus === "loading" ||
-    sessionStatus !== "authenticated" ||
-    !feedbackContent.trim();
-
-  // Show login required message only if unauthenticated
-  const showLoginRequiredMessage = sessionStatus === "unauthenticated";
-
   return (
-    <div className="container py-4">
+    <div className="container p-0">
       <div className="row mb-4 align-items-center">
         <div className="col-md-auto text-center text-md-start mb-3 mb-md-0">
           <Image
             src={logoPublicPath}
             alt="sELECT Logo"
-            width={150}
-            height={50}
+            width={70}
+            height={70}
+            className="logo-color"
             style={{ objectFit: "contain" }}
             priority
             onError={(e) => {
@@ -347,7 +229,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Contact & Support Section (Now includes the functional form) */}
+      {/* Contact & Support Section*/}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
         <div className="card-header bg-light py-3">
           <h6 className="h6 mb-0 fw-medium text-secondary">
@@ -369,86 +251,6 @@ export default function AboutPage() {
               {supportEmail}
             </a>
           </p>
-
-          {/* --- Feedback Form --- */}
-          <form
-            onSubmit={handleSendFeedback}
-            className="d-flex flex-column h-100"
-          >
-            {" "}
-            {/* Added flex column */}
-            {/* Label and Textarea */}
-            <div className="mb-3 flex-grow-1">
-              {" "}
-              {/* Make textarea container grow */}
-              <label
-                htmlFor="feedbackTextarea"
-                className="form-label small text-secondary mb-2 ms-2"
-              >
-                Leave Feedback or Report an Issue
-              </label>
-              <textarea
-                className="form-control form-control-sm h-100" // h-100 to fill container height
-                id="feedbackTextarea"
-                placeholder="Write your feedback or details about the issue here. Please include relevant details like your student ID and steps to reproduce issues if reporting a technical problem."
-                value={feedbackContent}
-                onChange={handleFeedbackChange}
-                // FIX: Disable textarea while session is loading or sending
-                disabled={isSendingFeedback || sessionStatus === "loading"}
-                style={{ resize: "vertical", minHeight: "180px" }} // Allow only vertical resize
-              ></textarea>
-            </div>
-            {/* Status/Message Area */}
-            {/* Status message positioning might depend on the parent container */}
-            {feedbackStatus && (
-              <div
-                className={`alert ${
-                  feedbackStatus === "success"
-                    ? "alert-success border-success"
-                    : "alert-danger border-danger"
-                } small py-2 mb-3 flex-shrink-0`}
-                role="alert"
-              >
-                {feedbackMessage}
-              </div>
-            )}
-            {/* Button and Login Required message */}
-            <div className="d-flex justify-content-end align-items-center flex-shrink-0">
-              {" "}
-              {/* Flex to align items, prevent shrinking */}
-              {sessionStatus === "unauthenticated" && ( // Use sessionStatus directly
-                <p className="text-danger small mb-0 me-3">
-                  {" "}
-                  {/* me-3 for space before button */}
-                  You must be logged in to send feedback.
-                </p>
-              )}
-              <button
-                type="submit"
-                className="btn btn-primary btn-sm"
-                // FIX: Disable button while session is loading, or not authenticated, or content is empty
-                disabled={
-                  isSendingFeedback ||
-                  sessionStatus === "loading" ||
-                  sessionStatus !== "authenticated" ||
-                  !feedbackContent.trim()
-                }
-              >
-                {isSendingFeedback ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-1"
-                      aria-hidden="true"
-                    ></span>
-                    Sending...
-                  </>
-                ) : (
-                  <>Send Feedback</>
-                )}
-              </button>
-            </div>
-          </form>
-
           <p className="card-text text-muted small mt-3 mb-0">
             When reporting technical issues, including details like your student
             ID, the browser and device you are using, and specific steps to
@@ -456,7 +258,7 @@ export default function AboutPage() {
           </p>
         </div>
       </div>
-      <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
+      <div className="card shadow-sm m-0 p-0 rounded-4 overflow-hidden">
         <div className="card-header bg-light py-3">
           <h6 className="h6 mb-0 fw-medium text-secondary">Project Team</h6>
         </div>
@@ -506,8 +308,6 @@ export default function AboutPage() {
           </ul>
         </div>
       </div>
-
-      <div className="py-3"></div>
     </div>
   );
 }

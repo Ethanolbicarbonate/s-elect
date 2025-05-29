@@ -150,8 +150,8 @@ export default function AdminLayout({ children }) {
           className="flex-grow-1 p-4 bg-light"
           style={{
             backgroundImage:
-              "radial-gradient(circle,rgba(116, 204, 248, 0.35) 1px, transparent 1px)",
-            backgroundSize: "10px 10px",
+              "radial-gradient(circle,rgba(116, 204, 248, 0.2) 1px, transparent 1px)",
+            backgroundSize: "6px 6px",
             overflowY: "auto",
           }}
         >
