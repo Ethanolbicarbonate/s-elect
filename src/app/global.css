@@ -265,3 +265,26 @@ button,
   background-color: #0b5ed7 !important;
   border-color: #0a58ca !important;
 }
+
+.skeleton-rect,
+.skeleton-circle {
+  background-color: #e2e5ea;
+  animation: pulse 1.5s infinite ease-in-out;
+  border-radius: 4px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #e2e5ea;
+  }
+  50% {
+    background-color: #f2f4f8;
+  }
+  100% {
+    background-color: #e2e5ea;
+  }
+}
