@@ -1,8 +1,10 @@
+import FadeInSection from '@/components/UI/FadeInSection';
 import Link from 'next/link';
 
 export default async function VoteSubmittedPage() {
 
   return (
+    <FadeInSection>
     <div className="container py-5 text-center">
       <div className="card shadow-lg border-0 mx-auto rounded-4" style={{ maxWidth: '600px' }}>
         <div className="card-body p-4 p-md-5">
@@ -32,5 +34,6 @@ export default async function VoteSubmittedPage() {
         </div>
       </div>
     </div>
+    </FadeInSection>
   );
 }

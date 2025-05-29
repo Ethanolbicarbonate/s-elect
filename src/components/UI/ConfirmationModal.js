@@ -1,7 +1,8 @@
-// src/components/UI/ConfirmationModal.js
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { useFadeInOnScroll } from "@/components/UI/hooks/useFadeInOnScroll";
 
 export default function ConfirmationModal({
   show,
@@ -14,21 +15,23 @@ export default function ConfirmationModal({
   confirmButtonVariant = "primary", // e.g., "danger", "success", "warning"
   isConfirming = false, // To show a loading state on the confirm button
 }) {
+  const ref = useRef();
+  const controls = useFadeInOnScroll(ref);
 
   // Effect to handle Escape key for closing the modal
   useEffect(() => {
     if (!show) return;
     const handleEscape = (event) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
     return () => {
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [show, onClose]);
-  
+
   // Effect to add/remove class from body to prevent scrolling
   useEffect(() => {
     if (show) {
@@ -39,7 +42,6 @@ export default function ConfirmationModal({
     return () => document.body.classList.remove("modal-open-custom");
   }, [show]);
 
-
   if (!show) {
     return null;
   }
@@ -47,13 +49,14 @@ export default function ConfirmationModal({
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className="modal-backdrop-blur fade show" // Use your existing backdrop class
         style={{ zIndex: 1060 }} // Ensure backdrop is high enough but below modal
         onClick={!isConfirming ? onClose : undefined} // Close on backdrop click if not confirming
       ></div>
 
       {/* Modal Dialog */}
+      
       <div
         className="modal fade show d-block"
         tabIndex="-1"
@@ -63,19 +66,20 @@ export default function ConfirmationModal({
         style={{ zIndex: 1065 }} // Ensure modal is above its backdrop and other modals if any
         onClick={!isConfirming ? onClose : undefined} // Close on outer modal area click
       >
-        <div 
+        <div
           className="modal-dialog modal-dialog-centered" // Vertically centered
           role="document"
           onClick={(e) => e.stopPropagation()} // Prevent close when clicking inside modal content
         >
           <div className="modal-content shadow-lg rounded-3 border-0">
-            <div className="modal-header rounded-top-3 bg-white border-bottom-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+            <div
+              className="modal-header rounded-top-3 bg-white border-bottom-0"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundSize: "6px 6px",
+              }}
+            >
               <h5 className="modal-title" id="confirmationModalTitle">
                 {title}
               </h5>
@@ -90,13 +94,14 @@ export default function ConfirmationModal({
             <div className="modal-body py-4 px-4">
               <p className="mb-0">{bodyText}</p>
             </div>
-            <div className="modal-footer rounded-bottom-3 bg-white border-top-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+            <div
+              className="modal-footer rounded-bottom-3 bg-white border-top-0"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundSize: "6px 6px",
+              }}
+            >
               <button
                 type="button"
                 className="btn custom-btn btn-md text-secondary border"
@@ -113,7 +118,11 @@ export default function ConfirmationModal({
               >
                 {isConfirming ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
                     Processing...
                   </>
                 ) : (

@@ -2,9 +2,14 @@
 "use client";
 
 import Image from "next/image"; // Using Next/Image for optimization
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { useFadeInOnScroll } from "@/components/UI/hooks/useFadeInOnScroll";
 
 export default function CandidateDetailModal({ show, onClose, candidate }) {
+  const ref = useRef();
+  const controls = useFadeInOnScroll(ref);
+
   useEffect(() => {
     if (show) {
       document.body.classList.add("modal-open-custom");
@@ -43,8 +48,12 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
         onClick={onClose}
       ></div>
 
-      <div
-        className="modal fade show d-block" // d-block makes it visible
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 20 }}
+        animate={controls}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="modal show d-block" // d-block makes it visible
         tabIndex="-1"
         role="dialog"
         aria-modal="true"
@@ -60,13 +69,14 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
           <div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             {" "}
             {/* Added overflow-hidden for better rounded corners with image */}
-            <div className="modal-header py-3 px-4 bg-white border-bottom-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+            <div
+              className="modal-header py-3 px-4 bg-white border-bottom-0"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundSize: "6px 6px",
+              }}
+            >
               {" "}
               {/* Softer header, no bottom border for seamless look */}
               <h4
@@ -196,13 +206,14 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
                 </div>
               </div>
             </div>
-            <div className="modal-footer rounded-bottom-4 py-3 px-4 bg-white border-top-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+            <div
+              className="modal-footer rounded-bottom-4 py-3 px-4 bg-white border-top-0"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundSize: "6px 6px",
+              }}
+            >
               {" "}
               {/* Softer footer */}
               <button
@@ -215,7 +226,7 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
       <style jsx global>{`
         /* Custom class to prevent body scrolling when any modal is open */
         body.modal-open-custom {

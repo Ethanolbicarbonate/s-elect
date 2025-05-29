@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import VotingSection from "@/components/Voting/VotingSection";
 import ReviewBallotSection from "@/components/Voting/ReviewBallotSection";
 import CandidateDetailModal from "@/components/StudentView/CandidateDetailModal";
 import ConfirmationModal from "@/components/UI/ConfirmationModal";
+import FadeInSection from "@/components/UI/FadeInSection";
 
 // Stepper component
 const Stepper = ({ currentStep, steps }) => {
@@ -43,6 +44,8 @@ export default function VotePage() {
   const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
 
+  const ballotContentRef = useRef(null);
+
   const [electionData, setElectionData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -56,8 +59,8 @@ export default function VotePage() {
   ];
   const [currentStep, setCurrentStep] = useState(votingSteps[0].id);
 
-  const [uscSelections, setUscSelections] = useState({}); // { positionId: Set<candidateId> }
-  const [cscSelections, setCscSelections] = useState({}); // { positionId: Set<candidateId> }
+  const [uscSelections, setUscSelections] = useState({});
+  const [cscSelections, setCscSelections] = useState({});
 
   const [showCandidateDetailModal, setShowCandidateDetailModal] =
     useState(false);
@@ -74,7 +77,6 @@ export default function VotePage() {
     setIsLoading(true);
     setError("");
     try {
-      // 1. Fetch active election details
       const electionRes = await fetch("/api/student/active-election-details");
       if (!electionRes.ok) {
         const errData = await electionRes
@@ -99,7 +101,6 @@ export default function VotePage() {
       }
       setElectionData(data);
 
-      //Fetch if student has voted in this specific election
       const voteStatusRes = await fetch(
         `/api/student/vote-status?electionId=${data.id}`
       );
@@ -155,7 +156,7 @@ export default function VotePage() {
         newSelectionsForPosition.delete(candidateId);
       } else {
         if (position.maxVotesAllowed === 1) {
-          newSelectionsForPosition.clear(); // Clear previous if only 1 allowed
+          newSelectionsForPosition.clear();
           newSelectionsForPosition.add(candidateId);
         } else if (newSelectionsForPosition.size < position.maxVotesAllowed) {
           newSelectionsForPosition.add(candidateId);
@@ -163,7 +164,7 @@ export default function VotePage() {
           alert(
             `You can only select up to ${position.maxVotesAllowed} candidate(s) for ${position.name}.`
           );
-          return prevSelections; // Do not update if max reached and trying to add new
+          return prevSelections;
         }
       }
       return { ...prevSelections, [positionId]: newSelectionsForPosition };
@@ -177,7 +178,20 @@ export default function VotePage() {
 
   const proceedToStep = (stepId) => {
     setCurrentStep(stepId);
-    window.scrollTo(0, 0); // Scroll to top on step change
+    // FIX: Scroll the specific ballot content ref to top
+    if (ballotContentRef.current) {
+      requestAnimationFrame(() => {
+        // Using requestAnimationFrame for smoother scroll
+        ballotContentRef.current.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      });
+    } else {
+      console.warn("Ballot content ref not found for scrolling.");
+      // Fallback to window scroll if ref is somehow not attached, but this should be rare.
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const handleSubmitBallot = async () => {
@@ -307,123 +321,126 @@ export default function VotePage() {
       : null;
 
   return (
-    <div className="container m-0 p-0">
-      <div className="card shadow-lg border rounded-4">
-        <div className="card-header bg-primary text-white text-center py-3 rounded-top-4 border-bottom-0">
-          <h2 className="h4 mb-0">
-            {electionData?.name || "Student Election"}
-          </h2>
-        </div>
-        <div className="card-body p-md-4 p-lg-5">
-          <Stepper currentStep={currentStep} steps={votingSteps} />
-          <hr className="mb-4" />
-
-          {error && <div className="alert alert-danger">{error}</div>}
-
-          {currentStep === "WELCOME" && (
-            <div className="text-center p-lg-5">
-              <h3 className="mb-3">Welcome, {session.user.firstName}!</h3>
-              <p className="lead">
-                You are about to cast your vote for the{" "}
-                <strong>{electionData.name}</strong>.
-              </p>
-              <p>
-                Please review candidates carefully. You will be able to review
-                all your selections before final submission.
-              </p>
-              <p className="small text-muted">
-                Election Period:{" "}
-                {new Date(electionData.startDate).toLocaleDateString()} -{" "}
-                {new Date(
-                  electionData.effectiveEndDateForStudent
-                ).toLocaleDateString()}
-              </p>
-              <button
-                className="btn btn-lg btn-success mt-4"
-                onClick={() => proceedToStep("USC")}
-              >
-                Start Voting{" "}
-                <i className="bi bi-arrow-right-circle-fill ms-2"></i>
-              </button>
-            </div>
-          )}
-
-          {(currentStep === "USC" || currentStep === "CSC") &&
-            currentScopeData && (
-              <VotingSection
-                key={currentStep}
-                scopeTitle={currentScopeData.title}
-                positions={currentScopeData.positions}
-                candidates={currentScopeData.candidates} // Pass all candidates for this scope
-                currentSelections={currentScopeData.selections}
-                onUpdateSelection={(posId, candId) =>
-                  handleUpdateSelection(currentStep, posId, candId)
-                }
-                onViewCandidateDetails={handleShowCandidateDetails}
+    <FadeInSection>
+      <div className="container m-0 p-0">
+        <div className="card shadow-lg border rounded-4">
+          <div className="card-header bg-primary text-white text-center py-3 rounded-top-4 border-bottom-0">
+            <h2 className="h4 mb-0">
+              {electionData?.name || "Student Election"}
+            </h2>
+          </div>
+          <div
+            className="card-body p-md-4 p-lg-5"
+            ref={ballotContentRef}
+            style={{
+              maxHeight: "calc(100vh - 170px)",
+              overflowY: "auto",
+            }}
+          >
+            <Stepper currentStep={currentStep} steps={votingSteps} />
+            <hr className="mb-4" />
+            {error && <div className="alert alert-danger">{error}</div>}
+            {currentStep === "WELCOME" && (
+              <div className="text-center p-lg-5">
+                <h3 className="mb-3">Welcome, {session.user.firstName}!</h3>
+                <p className="lead">
+                  You are about to cast your vote for the{" "}
+                  <strong>{electionData.name}</strong>.
+                </p>
+                <p>
+                  Please review candidates carefully. You will be able to review
+                  all your selections before final submission.
+                </p>
+                <p className="small text-muted">
+                  Election Period:{" "}
+                  {new Date(electionData.startDate).toLocaleDateString()} -{" "}
+                  {new Date(
+                    electionData.effectiveEndDateForStudent
+                  ).toLocaleDateString()}
+                </p>
+                <button
+                  className="btn btn-lg btn-success mt-4"
+                  onClick={() => proceedToStep("USC")}
+                >
+                  Start Voting{" "}
+                  <i className="bi bi-arrow-right-circle-fill ms-2"></i>
+                </button>
+              </div>
+            )}
+            {(currentStep === "USC" || currentStep === "CSC") &&
+              currentScopeData && (
+                <VotingSection
+                  key={currentStep}
+                  scopeTitle={currentScopeData.title}
+                  positions={currentScopeData.positions}
+                  candidates={currentScopeData.candidates} // Pass all candidates for this scope
+                  currentSelections={currentScopeData.selections}
+                  onUpdateSelection={(posId, candId) =>
+                    handleUpdateSelection(currentStep, posId, candId)
+                  }
+                  onViewCandidateDetails={handleShowCandidateDetails}
+                />
+              )}
+            {currentStep === "USC" && (
+              <div className="text-end mt-4">
+                <button
+                  className="btn btn-primary btn-lg"
+                  onClick={() => proceedToStep("CSC")}
+                >
+                  Next: {session.user.college} CSC Ballot{" "}
+                  <i className="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            )}
+            {currentStep === "CSC" && (
+              <div className="d-flex flex-column flex-md-row justify-content-between mt-4 gap-2">
+                <button
+                  className="btn custom-btn fs-5 btn-lg text-secondary border"
+                  onClick={() => proceedToStep("USC")}
+                >
+                  <i className="bi bi-arrow-left"></i> Back to USC Ballot
+                </button>
+                <button
+                  className="btn btn-primary btn-lg fs-5"
+                  onClick={() => proceedToStep("REVIEW")}
+                >
+                  Review My Ballot <i className="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            )}
+            {currentStep === "REVIEW" && electionData && (
+              <ReviewBallotSection
+                uscSelections={uscSelections}
+                cscSelections={cscSelections}
+                electionData={electionData} // Pass full electionData for names, etc.
+                studentCollegeName={session.user.college}
+                onEditUSC={() => proceedToStep("USC")}
+                onEditCSC={() => proceedToStep("CSC")}
+                onSubmit={() => setShowConfirmSubmitModal(true)}
               />
             )}
-
-          {currentStep === "USC" && (
-            <div className="text-end mt-4">
-              <button
-                className="btn btn-primary btn-lg"
-                onClick={() => proceedToStep("CSC")}
-              >
-                Next: {session.user.college} CSC Ballot{" "}
-                <i className="bi bi-arrow-right"></i>
-              </button>
-            </div>
-          )}
-
-          {currentStep === "CSC" && (
-            <div className="d-flex flex-column flex-md-row justify-content-between mt-4 gap-2">
-              <button
-                className="btn custom-btn fs-5 btn-lg text-secondary border"
-                onClick={() => proceedToStep("USC")}
-              >
-                <i className="bi bi-arrow-left"></i> Back to USC Ballot
-              </button>
-              <button
-                className="btn btn-primary btn-lg fs-5"
-                onClick={() => proceedToStep("REVIEW")}
-              >
-                Review My Ballot <i className="bi bi-arrow-right"></i>
-              </button>
-            </div>
-          )}
-
-          {currentStep === "REVIEW" && electionData && (
-            <ReviewBallotSection
-              uscSelections={uscSelections}
-              cscSelections={cscSelections}
-              electionData={electionData} // Pass full electionData for names, etc.
-              studentCollegeName={session.user.college}
-              onEditUSC={() => proceedToStep("USC")}
-              onEditCSC={() => proceedToStep("CSC")}
-              onSubmit={() => setShowConfirmSubmitModal(true)}
-            />
-          )}
+          </div>
         </div>
-      </div>
 
-      {selectedCandidateForDetail && (
-        <CandidateDetailModal
-          show={showCandidateDetailModal}
-          onClose={() => setShowCandidateDetailModal(false)}
-          candidate={selectedCandidateForDetail}
+        {selectedCandidateForDetail && (
+          <CandidateDetailModal
+            show={showCandidateDetailModal}
+            onClose={() => setShowCandidateDetailModal(false)}
+            candidate={selectedCandidateForDetail}
+          />
+        )}
+
+        <ConfirmationModal
+          show={showConfirmSubmitModal}
+          onClose={() => setShowConfirmSubmitModal(false)}
+          onConfirm={handleSubmitBallot}
+          title="Confirm Your Vote Submission"
+          bodyText="Are you sure you want to cast your vote? Once submitted, your choices cannot be changed."
+          confirmButtonText="Yes, Cast My Vote"
+          cancelButtonText="Cancel"
+          isConfirming={isSubmitting}
         />
-      )}
-
-      <ConfirmationModal
-        show={showConfirmSubmitModal}
-        onClose={() => setShowConfirmSubmitModal(false)}
-        onConfirm={handleSubmitBallot}
-        title="Confirm Your Vote Submission"
-        bodyText="Are you sure you want to cast your vote? Once submitted, your choices cannot be changed."
-        confirmButtonText="Yes, Cast My Vote"
-        cancelButtonText="Cancel"
-        isConfirming={isSubmitting}
-      />
-    </div>
+      </div>
+    </FadeInSection>
   );
 }

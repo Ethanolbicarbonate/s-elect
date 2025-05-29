@@ -4,6 +4,7 @@ import ElectionCalendarWidget from "@/components/Dashboard/ElectionCalendarWidge
 import VoterTurnoutWidget from "@/components/Dashboard/VoterTurnoutWidget";
 import ElectionNotificationWidget from "@/components/Dashboard/ElectionNotificationWidget";
 import ResultsDashboardWidget from "@/components/Dashboard/ResultsDashboardWidget";
+import FadeInSection from "@/components/UI/FadeInSection";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { headers } from "next/headers";
@@ -105,59 +106,63 @@ export default async function DashboardPage() {
     activeElectionDetails.effectiveStatusForStudent === "ENDED";
 
   return (
-    <div>
-      {apiError && (
-        <div className="alert alert-danger">
-          Error loading election data: {apiError}
-        </div>
-      )}
-      <div className="row mb-0 mb-sm-4 g-4">
-        <div className="col-md-6 col-lg-4 d-flex flex-column">
-          <div className="mb-4 flex-grow-1">
-            <ElectionStatusWidget
-              status={electionStatusForWidget}
-              message={electionMessageForWidget}
-            />
-          </div>
-          <div className="flex-grow-1">
-            <VoterStatusWidget
-              hasVoted={hasVoted}
-              electionOngoing={electionStatusForWidget === "ONGOING"}
-              electionId={activeElectionDetails?.id}
-            />
-          </div>
-        </div>
-
-        <div className="col-md-6 col-lg-4">
-          <ElectionCalendarWidget electionPeriod={electionPeriodForCalendar} />
-        </div>
-
-        <div className="col-lg-4">
-          <ElectionNotificationWidget />
-        </div>
-      </div>
-
-      <div className="col-lg-12 mb-4">
-        <VoterTurnoutWidget electionId={activeElectionDetails?.id} />
-      </div>
-
-      <div className="col-lg-12 d-flex flex-column">
-        {showResults ? (
-          <ResultsDashboardWidget
-            electionDetails={activeElectionDetails}
-            studentCollege={session?.user?.college} // Pass student's college for CSC filtering
-          />
-        ) : (
-          <div className="card shadow-sm p-4 text-center text-secondary text-opacity-50 rounded-4">
-            <i className="bi bi-bar-chart-fill display-4 mb-3"></i>
-            <h5 className="mb-0">Election Results Coming Soon</h5>
-            <p className="small mb-0">
-              Results will be displayed here once the election concludes and
-              final tallies are complete.
-            </p>
+    <FadeInSection>
+      <div>
+        {apiError && (
+          <div className="alert alert-danger">
+            Error loading election data: {apiError}
           </div>
         )}
+        <div className="row mb-0 mb-sm-4 g-4">
+          <div className="col-md-6 col-lg-4 d-flex flex-column">
+            <div className="mb-4 flex-grow-1">
+              <ElectionStatusWidget
+                status={electionStatusForWidget}
+                message={electionMessageForWidget}
+              />
+            </div>
+            <div className="flex-grow-1">
+              <VoterStatusWidget
+                hasVoted={hasVoted}
+                electionOngoing={electionStatusForWidget === "ONGOING"}
+                electionId={activeElectionDetails?.id}
+              />
+            </div>
+          </div>
+
+          <div className="col-md-6 col-lg-4">
+            <ElectionCalendarWidget
+              electionPeriod={electionPeriodForCalendar}
+            />
+          </div>
+
+          <div className="col-lg-4">
+            <ElectionNotificationWidget />
+          </div>
+        </div>
+
+        <div className="col-lg-12 mb-4">
+          <VoterTurnoutWidget electionId={activeElectionDetails?.id} />
+        </div>
+
+        <div className="col-lg-12 d-flex flex-column">
+          {showResults ? (
+            <ResultsDashboardWidget
+              electionDetails={activeElectionDetails}
+              studentCollege={session?.user?.college} // Pass student's college for CSC filtering
+            />
+          ) : (
+            <div className="card shadow-sm p-4 text-center text-secondary text-opacity-50 rounded-4">
+              <i className="bi bi-bar-chart-fill display-4 mb-3"></i>
+              <h5 className="mb-0">Election Results Coming Soon</h5>
+              <p className="small mb-0">
+                Results will be displayed here once the election concludes and
+                final tallies are complete.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </FadeInSection>
   );
 }

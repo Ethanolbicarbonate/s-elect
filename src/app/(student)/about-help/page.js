@@ -1,5 +1,6 @@
 "use client";
 
+import FadeInSection from "@/components/UI/FadeInSection";
 import Image from "next/image";
 
 const logoPublicPath = "/assets/sELECTLogo.svg";
@@ -103,6 +104,7 @@ export default function AboutPage() {
   const supportEmail = "support@s-elect.app";
 
   return (
+    <FadeInSection>
     <div className="container p-0">
       <div className="row mb-4 align-items-center">
         <div className="col-md-auto text-center text-md-start mb-3 mb-md-0">
@@ -298,5 +300,6 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
+    </FadeInSection>
   );
 }

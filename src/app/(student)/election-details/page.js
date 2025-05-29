@@ -3,6 +3,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { headers } from "next/headers";
 import ElectionViewTabs from "@/components/StudentView/ElectionViewTabs";
 import Link from "next/link";
+import FadeInSection from "@/components/UI/FadeInSection";
 
 // Helper function to format dates
 function formatDateRange(startDateStr, endDateStr) {
@@ -147,6 +148,7 @@ export default async function ElectionDetailsPage() {
   };
 
   return (
+    <FadeInSection>
     <div className="container-fluid m-0 p-0">
       <div className="card shadow-sm mb-4 rounded-4">
         <div className="card-header bg-primary text-white rounded-top-4 border-bottom-0">
@@ -195,5 +197,6 @@ export default async function ElectionDetailsPage() {
         electionStatus={electionDetails.effectiveStatusForStudent}
       />
     </div>
+    </FadeInSection>
   );
 }

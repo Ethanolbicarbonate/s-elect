@@ -2,8 +2,14 @@
 "use client";
 
 import Image from "next/image"; // Using Next.js Image for optimization
+import { motion } from "framer-motion";
+import { useRef } from "react";
+import { useFadeInOnScroll } from "@/components/UI/hooks/useFadeInOnScroll";
 
 export default function CandidateCard({ candidate, onViewDetails }) {
+  const ref = useRef();
+  const controls = useFadeInOnScroll(ref);
+
   if (!candidate) return null;
 
   const {
@@ -32,12 +38,16 @@ export default function CandidateCard({ candidate, onViewDetails }) {
   const truncatedBio = truncateText(bio, 80); // Show about 80 characters
 
   return (
-    <div className="card h-100 shadow-sm candidate-card w-100 rounded-3">
-      {" "}
-      {/* h-100 for equal height in flex rows */}
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={controls}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="card h-100 shadow-sm candidate-card w-100 rounded-3"
+    >
       <div
         className="card-img-top-wrapper bg-light text-center rounded-3"
-        style={{height: "180px", overflow: "hidden" }}
+        style={{ height: "180px", overflow: "hidden" }}
       >
         {photoUrl ? (
           <Image
@@ -101,6 +111,6 @@ export default function CandidateCard({ candidate, onViewDetails }) {
           border-top-right-radius: calc(0.375rem - 1px);
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 }
