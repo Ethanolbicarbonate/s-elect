@@ -43,7 +43,6 @@ export default function StudentLayout({ children }) {
     );
   }
 
-  let userName = session.user.email; // Default to email
   if (session.user.firstName) {
     if (session.user.lastName) {
       userName = `${session.user.firstName} ${session.user.lastName}`;
@@ -54,10 +53,29 @@ export default function StudentLayout({ children }) {
 
   const userCollege = session.user.college || "N/A";
 
+  const collegeColorMap = {
+    CAS: { bg: "bg-cas", text: "text-cas" },
+    CBM: { bg: "bg-cbm", text: "text-cbm" },
+    COC: { bg: "bg-coc", text: "text-coc" },
+    COD: { bg: "bg-cod", text: "text-cod" },
+    COE: { bg: "bg-coe", text: "text-coe" },
+    CICT: { bg: "bg-cict", text: "text-cict" },
+    COL: { bg: "bg-col", text: "text-col" },
+    COM: { bg: "bg-com", text: "text-com" },
+    CON: { bg: "bg-con", text: "text-con" },
+    PESCAR: { bg: "bg-pescar", text: "text-pescar" },
+    "N/A": { bg: "bg-na", text: "text-na" },
+  };
+  const getCollegeBadgeClasses = (college) => {
+    const colors = collegeColorMap[college] || collegeColorMap["N/A"];
+    return `${colors.bg} ${colors.text}`;
+  };
+
   // Determine current page name for breadcrumb (simple example)
   let currentPageName = "Dashboard";
   if (pathname.startsWith("/dashboard")) currentPageName = "Dashboard";
-  else if (pathname.startsWith("/election-details")) currentPageName = "Election Details";
+  else if (pathname.startsWith("/election-details"))
+    currentPageName = "Election Details";
   else if (pathname.startsWith("/vote")) currentPageName = "Vote";
   else if (pathname.startsWith("/about-help")) currentPageName = "About/Help";
   // Add more else if for other top-level student pages
@@ -121,8 +139,11 @@ export default function StudentLayout({ children }) {
             <span className="me-2 text-dark d-none d-sm-inline">
               {userName}
             </span>{" "}
-            {/* Hide username on xs screens if too crowded */}
-            <span className="badge bg-warning text-dark p-2 fs-6 fw-medium">
+            <span
+              className={`badge p-2 fs-6 fw-medium ${getCollegeBadgeClasses(
+                userCollege
+              )}`}
+            >
               {userCollege}
             </span>
           </div>
@@ -148,6 +169,82 @@ export default function StudentLayout({ children }) {
             margin-left: 260px !important; /* Sidebar width */
             padding-left: 0 !important;
           }
+        }
+        .bg-cas {
+          background-color: #ffe8a3;
+        }
+        .text-cas {
+          color: #7c6b26;
+        }
+
+        .bg-cbm {
+          background-color: #49796b;
+        }
+        .text-cbm {
+          color: #d9f1ea;
+        }
+
+        .bg-coc {
+          background-color: #7e4c4c;
+        }
+        .text-coc {
+          color: #f5eded;
+        }
+
+        .bg-cod {
+          background-color: #8675a9;
+        }
+        .text-cod {
+          color: #ece6f4;
+        }
+
+        .bg-coe {
+          background-color: #5c8db3;
+        }
+        .text-coe {
+          color: #e6eff6;
+        }
+
+        .bg-cict {
+          background-color: #e9a06f;
+        }
+        .text-cict {
+          color: #4a3725;
+        }
+
+        .bg-col {
+          background-color: #4a4a4a;
+        }
+        .text-col {
+          color: #d6d6d6;
+        }
+
+        .bg-com {
+          background-color: #f5c8d8;
+        }
+        .text-com {
+          color: #6a3e4f;
+        }
+
+        .bg-con {
+          background-color: #a689c0;
+        }
+        .text-con {
+          color: #f2ecf8;
+        }
+
+        .bg-pescar {
+          background-color: #7a86b6;
+        }
+        .text-pescar {
+          color: #ebeef7;
+        }
+
+        .bg-na {
+          background-color: #b0bec5;
+        }
+        .text-na {
+          color: #263238;
         }
       `}</style>
     </div>
