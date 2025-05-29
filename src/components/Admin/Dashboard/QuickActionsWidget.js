@@ -122,12 +122,10 @@ export default function QuickActionsWidget({
               </div>
             </Link>
           )}
-          {/* Add more quick actions as needed, e.g., "Manage Students", "User Feedback" */}
         </div>
 
         <div className="mt-auto pt-3 text-center">
           {" "}
-          {/* Push to bottom */}
           <p className="small text-secondary opacity-75 mb-0">
             For full control, use the navigation panel on the left.
           </p>

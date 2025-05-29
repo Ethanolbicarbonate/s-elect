@@ -74,8 +74,6 @@ export default function AdminLayout({ children }) {
     else currentPageName = "Candidate Management"; // Generic if no scope or general page
   } else if (pathname.startsWith("/admin/audit-log"))
     currentPageName = "Audit Log";
-  else if (pathname.startsWith("/admin/feedback"))
-    currentPageName = "User Feedback";
   else if (pathname.startsWith("/admin/results"))
     currentPageName = "Election Results";
   return (

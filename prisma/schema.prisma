@@ -353,3 +353,14 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verificationtokens")
 }
+
+//notif
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String? // Optional title
+  content   String
+  createdAt DateTime @default(now())
+
+  // Optional: `createdByAdminId String? @relation(...)`, `expiresAt DateTime?` not needed for now
+}

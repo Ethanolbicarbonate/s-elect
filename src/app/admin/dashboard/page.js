@@ -3,14 +3,12 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { headers } from "next/headers"; // For forwarding cookies in server-side fetch
 import Link from "next/link"; // For navigation links
-
-// Import the dashboard widgets (we will create/update these next)
 import OverviewWidget from "@/components/Admin/Dashboard/OverviewWidget";
 import AdminVoterTurnoutWidget from "@/components/Admin/Dashboard/AdminVoterTurnoutWidget"; // New for admin-specific turnout
 import QuickActionsWidget from "@/components/Admin/Dashboard/QuickActionsWidget";
 import LiveTallyWidget from "@/components/Admin/Dashboard/LiveTallyWidget";
-import RecentActivityWidget from "@/components/Admin/Dashboard/RecentActivityWidget"; // Optional, can be placeholder
-// import SystemStatusWidget from "@/components/Admin/Dashboard/SystemStatusWidget"; // Optional, can be placeholder
+import RecentActivityWidget from "@/components/Admin/Dashboard/RecentActivityWidget";
+import AdminNotificationManager from "@/components/Admin/Dashboard/AdminNotificationManager";
 
 async function getAdminDashboardData() {
   const appUrl =
@@ -141,7 +139,7 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
 
-          <div className="row g-4">
+          <div className="row g-4 mb-4">
             {/* Live Tally Widget (Conditional) */}
             <div className="col-12 col-xl-8 d-flex">
               {" "}
@@ -178,6 +176,9 @@ export default async function AdminDashboardPage() {
               {/* col-12 on mobile, then 1/3 width on xl */}
               <RecentActivityWidget userRole={userRole} />
             </div>
+          </div>
+          <div className="col-12 w-100">
+            <AdminNotificationManager/>
           </div>
         </>
       ) : (

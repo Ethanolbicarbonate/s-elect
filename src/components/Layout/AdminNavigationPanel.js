@@ -67,11 +67,6 @@ export default function AdminNavigationPanel({
           label: "Audit Log",
           icon: "bi-pencil-square",
         },
-        {
-          href: "/admin/feedback",
-          label: "User Feedback",
-          icon: "bi-chat-left-dots-fill",
-        }
       );
     } else if (role === "MODERATOR") {
       if (adminCollegeContext === null || adminCollegeContext === undefined) {
