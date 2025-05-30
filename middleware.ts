@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
 
   const isAdminRoute = pathname.startsWith('/admin');
 
-  const isPublicApiRoute = pathname.startsWith('/api/public'); // Example public API
+  const isPublicApiRoute = pathname.startsWith('/api/public');
   const isAuthApiRoute = pathname.startsWith('/api/auth'); // next-auth routes
 
   // Allow requests to auth API routes and static files/public API
