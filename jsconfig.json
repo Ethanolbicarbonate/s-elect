@@ -3,11 +3,11 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/components/*": ["./src/components/*"],
-      "@/lib/*": ["./src/lib/*"], // Make sure this matches your structure
-      "@/utils/*": ["./src/utils/*"], // If you use utils
+      "@/lib/*": ["./src/lib/*"],
+      "@/utils/*": ["./src/utils/*"],
       "@/app/*": ["./src/app/*"],
     },
-    "jsx": "preserve" // Important for Next.js
+    "jsx": "preserve"
   },
   "exclude": ["node_modules", ".next"]
 }
