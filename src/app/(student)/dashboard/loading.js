@@ -1,6 +1,6 @@
 export default function LoadingDashboardSkeleton() {
   return (
-    <div className="container p-0 m-0 placeholder-glow">
+    <div className="container-fluid p-0 m-0 placeholder-glow">
       <div className="row mb-0 mb-sm-4 g-4">
         <div className="col-md-6 col-lg-4 d-flex flex-column">
           <div className="mb-4 flex-grow-1">

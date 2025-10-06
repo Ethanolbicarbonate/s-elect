@@ -322,7 +322,7 @@ export default function VotePage() {
 
   return (
     <FadeInSection>
-      <div className="container m-0 p-0">
+      <div className="container-fluid m-0 p-0">
         <div className="card shadow-lg border rounded-4">
           <div className="card-header bg-primary text-white text-center py-3 rounded-top-4 border-bottom-0">
             <h2 className="h4 mb-0">
