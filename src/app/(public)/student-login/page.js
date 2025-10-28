@@ -1,5 +1,21 @@
+// src/app/(public)/student-login/page.js
 import Image from "next/image";
 import StudentLoginForm from "@/components/Auth/StudentLoginForm";
+import { Suspense } from 'react'; // <--- 1. Import Suspense
+
+// A simple loading component to show while the dynamic part is rendering
+const LoginFormLoading = () => {
+    return (
+        <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
+            <div className="my-4 text-secondary fs-6">Loading login form...</div>
+            <div className="w-100" style={{ maxWidth: "400px" }}>
+                 <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function StudentLoginPage() {
   return (
@@ -30,7 +46,11 @@ export default function StudentLoginPage() {
                 />
               </div>
             </div>
-            <StudentLoginForm />
+            {/* --- 2. Wrap the dynamic component in Suspense --- */}
+            <Suspense fallback={<LoginFormLoading />}>
+              <StudentLoginForm />
+            </Suspense>
+            {/* --- END WRAP --- */}
           </div>
         </div>
       </div>
