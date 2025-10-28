@@ -7,6 +7,7 @@ import {
   useSearchParams,
   useRouter, // Using useRouter to potentially update URL for better state sharing/bookmarking if desired
 } from "next/navigation";
+import Link from 'next/link';
 
 // Import Child Components (will be created later)
 import AdminPositionList from "@/components/Admin/PositionManagement/AdminPositionList";
@@ -42,6 +43,8 @@ export default function ElectionEntitiesPage() {
   const [isLoadingElections, setIsLoadingElections] = useState(false);
   const [pageError, setPageError] = useState("");
   const [pageSuccessMessage, setPageSuccessMessage] = useState("");
+
+  const [selectedElectionStatus, setSelectedElectionStatus] = useState(null);
 
   // Scope Management State (Primarily for SuperAdmin)
   // For Moderators, this is derived from their session and nav link params
@@ -121,6 +124,19 @@ export default function ElectionEntitiesPage() {
       setIsLoadingElections(false);
     }
   }, [displayPageMessage, selectedElectionId, clearPageMessages]);
+
+  useEffect(() => {
+    if (selectedElectionId && elections.length > 0) {
+      const election = elections.find(e => e.id === selectedElectionId);
+      // We use the `status` from the fetched election list.
+      // This list's status is dynamically calculated in the `/api/admin/elections` route.
+      if (election) {
+        setSelectedElectionStatus(election.status);
+      }
+    } else {
+      setSelectedElectionStatus(null);
+    }
+  }, [selectedElectionId, elections]);
 
   // Determine management scope from session and URL params (from NavLink)
   useEffect(() => {
@@ -448,6 +464,9 @@ export default function ElectionEntitiesPage() {
   }
 
   const selectedElection = elections.find((e) => e.id === selectedElectionId);
+
+  const isEditingDisabled = selectedElectionStatus === "ONGOING";
+
   const canManageCurrentScope = () => {
     if (!session?.user) return false;
     if (session.user.role === "SUPER_ADMIN") return true;
@@ -601,6 +620,15 @@ export default function ElectionEntitiesPage() {
             </p>
           </div>
 
+          {isEditingDisabled && (
+            <div className="alert alert-warning rounded-0 border-start-0 border-end-0 mb-0 d-flex align-items-center">
+                <i className="bi bi-lock-fill me-2"></i>
+                <div>
+                    <strong>Editing is locked.</strong> This election is currently ONGOING. To make changes, an admin must first change the election status to UPCOMING or PAUSED in <Link href="/admin/election-settings">Election Settings</Link>.
+                </div>
+            </div>
+          )}
+
           {/* Tabs */}
           <ul
             className="nav nav-tabs px-3  bg-white"
@@ -653,6 +681,7 @@ export default function ElectionEntitiesPage() {
                     setShowPositionModal(true);
                   }}
                   disabled={
+                    isEditingDisabled ||
                     !canManageCurrentScope() ||
                     !selectedElectionId ||
                     (managementScope.type === PositionTypeEnum.CSC &&
@@ -669,7 +698,7 @@ export default function ElectionEntitiesPage() {
                     setShowPositionModal(true);
                   }}
                   onDelete={handleDeletePosition}
-                  canManage={canManageCurrentScope()}
+                  canManage={canManageCurrentScope() && !isEditingDisabled} 
                 />
               </>
             )}
@@ -683,6 +712,7 @@ export default function ElectionEntitiesPage() {
                     setShowPartylistModal(true);
                   }}
                   disabled={
+                    isEditingDisabled ||
                     !canManageCurrentScope() ||
                     !selectedElectionId ||
                     (managementScope.type === PositionTypeEnum.CSC &&
@@ -699,7 +729,7 @@ export default function ElectionEntitiesPage() {
                     setShowPartylistModal(true);
                   }}
                   onDelete={handleDeletePartylist}
-                  canManage={canManageCurrentScope()}
+                  canManage={canManageCurrentScope() && !isEditingDisabled}
                 />
               </>
             )}
@@ -713,6 +743,7 @@ export default function ElectionEntitiesPage() {
                     setShowCandidateModal(true);
                   }}
                   disabled={
+                    isEditingDisabled ||
                     !canManageCurrentScope() ||
                     !selectedElectionId ||
                     (managementScope.type === PositionTypeEnum.CSC &&
@@ -740,7 +771,7 @@ export default function ElectionEntitiesPage() {
                     setShowCandidateModal(true);
                   }}
                   onDelete={handleDeleteCandidate}
-                  canManage={canManageCurrentScope()}
+                  canManage={canManageCurrentScope() && !isEditingDisabled}
                   managementScope={managementScope} // Pass scope for potential grouping/display logic in list
                   partylists={partylists}
                 />
@@ -770,7 +801,7 @@ export default function ElectionEntitiesPage() {
           onSubmit={handleSubmitPosition}
           initialData={editingPosition}
           electionId={selectedElectionId}
-          isLoading={isLoadingPositions} // Or a more specific form loading state
+          isLoading={isLoadingPositions || isEditingDisabled} // Or a more specific form loading state
           managementScope={managementScope}
           userRole={session?.user?.role}
         />
@@ -782,7 +813,7 @@ export default function ElectionEntitiesPage() {
           onSubmit={handleSubmitPartylist}
           initialData={editingPartylist}
           electionId={selectedElectionId}
-          isLoading={isLoadingPartylists}
+          isLoading={isLoadingPartylists || isEditingDisabled}
           managementScope={managementScope}
           userRole={session?.user?.role}
         />
@@ -797,7 +828,7 @@ export default function ElectionEntitiesPage() {
           // Pass only positions and partylists that match the current managementScope
           positions={filteredPositions}
           partylists={filteredPartylists}
-          isLoading={isLoadingCandidates}
+          isLoading={isLoadingPartylists || isEditingDisabled}
           managementScope={managementScope}
           userRole={session?.user?.role}
         />

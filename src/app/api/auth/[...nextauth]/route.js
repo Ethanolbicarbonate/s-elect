@@ -52,7 +52,7 @@ export const authOptions = {
 
         if (!passwordMatch) {
           console.log("Student password mismatch for:", normalizedEmail);
-          return null; // Incorrect password
+          throw new Error("Incorrect password provided for this account.");
         }
 
         console.log("Student authorized:", student.email);

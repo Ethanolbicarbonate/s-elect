@@ -25,7 +25,7 @@ export default async function VoteSubmittedPage() {
               <i className="bi bi-house-door-fill me-2"></i>Go to Dashboard
             </Link>
             <Link href="/" className="btn custom-btn border text-secondary btn-lg px-4 mb-2">
-              <i className="bi bi-arrow-left-circle me-2"></i>Back to Home
+              <i className="bi bi-arrow-left-circle me-2"></i>Logout
             </Link>
           </div>
         </div>

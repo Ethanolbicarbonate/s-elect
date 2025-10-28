@@ -53,8 +53,8 @@ export default function VotePage() {
 
   const votingSteps = [
     { id: "WELCOME", name: "Welcome" },
-    { id: "USC", name: "USC Ballot" },
     { id: "CSC", name: "CSC Ballot" },
+    { id: "USC", name: "USC Ballot" },
     { id: "REVIEW", name: "Review & Confirm" },
   ];
   const [currentStep, setCurrentStep] = useState(votingSteps[0].id);
@@ -360,7 +360,7 @@ export default function VotePage() {
                 </p>
                 <button
                   className="btn btn-lg btn-success mt-4"
-                  onClick={() => proceedToStep("USC")}
+                  onClick={() => proceedToStep("CSC")}
                 >
                   Start Voting{" "}
                   <i className="bi bi-arrow-right-circle-fill ms-2"></i>
@@ -381,28 +381,28 @@ export default function VotePage() {
                   onViewCandidateDetails={handleShowCandidateDetails}
                 />
               )}
-            {currentStep === "USC" && (
+            {currentStep === "CSC" && (
               <div className="text-end mt-4">
                 <button
                   className="btn btn-primary btn-lg"
-                  onClick={() => proceedToStep("CSC")}
+                  onClick={() => proceedToStep("USC")} // Now goes to USC
                 >
-                  Next: {session.user.college} CSC Ballot{" "}
-                  <i className="bi bi-arrow-right"></i>
+                  Next: USC Ballot <i className="bi bi-arrow-right"></i>
                 </button>
               </div>
             )}
-            {currentStep === "CSC" && (
+
+            {currentStep === "USC" && (
               <div className="d-flex flex-column flex-md-row justify-content-between mt-4 gap-2">
                 <button
                   className="btn custom-btn fs-5 btn-lg text-secondary border"
-                  onClick={() => proceedToStep("USC")}
+                  onClick={() => proceedToStep("CSC")} // "Back" now goes to CSC
                 >
-                  <i className="bi bi-arrow-left"></i> Back to USC Ballot
+                  <i className="bi bi-arrow-left"></i> Back to CSC Ballot
                 </button>
                 <button
                   className="btn btn-primary btn-lg fs-5"
-                  onClick={() => proceedToStep("REVIEW")}
+                  onClick={() => proceedToStep("REVIEW")} // This button now lives in the USC step
                 >
                   Review My Ballot <i className="bi bi-arrow-right"></i>
                 </button>

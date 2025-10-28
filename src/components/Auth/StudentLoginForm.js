@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation"; //App Router
+import { useRouter, useSearchParams } from "next/navigation"; 
 import Link from "next/link";
 
 export default function StudentLoginForm() {
@@ -12,60 +12,91 @@ export default function StudentLoginForm() {
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams(); 
 
-  // Effect to handle fade-out animation when error is set
+  
   useEffect(() => {
-    if (error) {
-      setShowError(true);
+    const errorFromUrl = searchParams.get('error');
+    if (errorFromUrl) {
+      if (errorFromUrl === "CredentialsSignin") {
+        displayError("Login failed. Please check your email and password.");
+      } else {
+        
+        displayError(errorFromUrl); 
+      }
+      
+      
     }
-  }, [error]);
+  }, [searchParams]);
+
 
   const displayError = (message) => {
     setError(message);
-    // The useEffect will handle showing the error
-
-    setTimeout(() => {
-      // Start the fade out
+    setShowError(true);
+    const timer = setTimeout(() => {
       setShowError(false);
-
-      // Clear the error message after fade animation completes
       setTimeout(() => {
         setError("");
-      }, 500); // Match with Bootstrap's transition duration
-    }, 3000);
+      }, 500); 
+    }, 4000); 
+    return () => clearTimeout(timer); 
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError("");
+    setError(""); 
+    
+    
+    if (!email.toLowerCase().endsWith("@wvsu.edu.ph")) {
+      displayError("Please use your official WVSU email address (@wvsu.edu.ph).");
+      return; 
+    }
+    
+
     setIsLoading(true);
 
     try {
+      
+      
       const result = await signIn("student-credentials", {
-        // Use the correct provider ID
-        redirect: false, // Don't automatically redirect, handle it manually
+        redirect: false, 
         email: email,
         password: password,
       });
 
       if (result?.error) {
-        // Handle specific errors if needed, otherwise show generic message
-        console.error("Sign-in error:", result.error);
-        displayError("Login failed. Please check your email and password."); // STD-LOG-FR-005, STD-LOG-FR-008
-        setIsLoading(false);
-      } else if (result?.ok) {
+        console.error("Sign-in error from NextAuth:", result.error);
+        
+        
+        switch (result.error) {
+          case "CredentialsSignin":
+            
+            displayError("The email address provided is not registered.");
+            break;
+          case "Incorrect password provided for this account.":
+            
+            displayError("Login failed. Please check your password.");
+            break;
+          
+          case "Account not fully set up. Please complete the sign-up process or check your email for verification.":
+          case "Email not verified. Please check your email for a verification link/code or restart sign-up.":
+            displayError(result.error); 
+            break;
+          default:
+            
+            displayError("An unexpected login error occurred.");
+            break;
+        }      } else if (result?.ok) {
         console.log("Student sign-in successful");
-        // Redirect to student dashboard (STD-LOG-FR-004)
-        router.push("/dashboard"); // Make sure this matches your student dashboard route
-        // No need to setIsLoading(false) as we are navigating away
+        router.push("/dashboard");
       } else {
         displayError("An unexpected error occurred during login.");
-        setIsLoading(false);
       }
+
     } catch (err) {
-      // Catch network errors or other exceptions during the signIn process
       console.error("Login submission error:", err);
-      displayError("An error occurred. Please try again.");
+      displayError("A network error occurred. Please try again.");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -77,6 +108,7 @@ export default function StudentLoginForm() {
         onSubmit={handleSubmit}
         className="w-100"
         style={{ maxWidth: "400px" }}
+        noValidate 
       >
         {error && (
           <div
