@@ -95,7 +95,7 @@ export default function ElectionNotificationWidget() {
           className="btn btn-primary btn-sm rounded-circle shadow-lg"
           style={{
             position: "fixed",
-            bottom: "20px", // Adjust position as needed
+            bottom: "90px", // Adjust position as needed
             right: "20px",
             zIndex: 1050, // Above most other content, below modal
             width: "40px", // Make it a circle

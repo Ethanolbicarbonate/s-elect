@@ -80,27 +80,11 @@ export default function FloatingVoteButton({ electionStatus, hasVoted, electionE
           bottom: 180px;
           left: 50%;
           transform: translateX(-50%);
-          z-index: 1040;
+          z-index: 1020;
           /* Ensure the container is a positioning context for the pseudo-element */
           display: flex; 
           justify-content: center;
           align-items: center;
-        }
-
-        /* NEW: Fading gradient background */
-        .floating-vote-container::before {
-          content: '';
-          position: absolute;
-          width: 1000px; /* Size of the glow effect */
-          height: 500px;
-          /* A circular gradient fading from semi-transparent white to fully transparent */
-          background: radial-gradient(
-            circle,
-            rgba(255, 255, 255, 1) 0%, /* Center is nearly opaque white */
-            rgba(255, 255, 255, 0) 70%   /* Fades to transparent at 70% of the radius */
-          );
-          /* Place it behind the button */
-          z-index: -1;
         }
 
         .enhanced-vote-btn {
@@ -173,10 +157,6 @@ export default function FloatingVoteButton({ electionStatus, hasVoted, electionE
 
         /* Responsive adjustments for smaller screens */
         @media (max-width: 576px) {
-                  .floating-vote-container::before {
-            width: 1000px;
-            height: 1000px;
-          }
           .floating-vote-container {
           position: fixed;
           bottom: 150px; /* Moved up slightly */

@@ -1,46 +1,44 @@
+// File: .\app\admin\layout.js
+
 "use client";
 
+// --- MODIFIED: Added signOut ---
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { redirect, usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
+import { redirect, usePathname, useRouter } from "next/navigation"; // Added useRouter
+
+// --- MODIFIED: Import ConfirmationModal ---
 import AdminNavigationPanel from "@/components/Layout/AdminNavigationPanel";
 import Link from "next/link";
 import Image from "next/image";
+import AdminBottomNavBar from "@/components/Layout/AdminBottomNavBar";
+import ConfirmationModal from "@/components/UI/ConfirmationModal"; // <-- NEW IMPORT
 
 export default function AdminLayout({ children }) {
-  const { data: session, status } = useSession(); // Get session data
+  const { data: session, status } = useSession();
   const pathname = usePathname();
-  const [showSidebar, setShowSidebar] = useState(false);
+  const router = useRouter(); // <-- NEW: Initialize router for logout
+
+  // --- NEW: State to manage the logout confirmation modal ---
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const allowedAdminRoles = ["SUPER_ADMIN", "AUDITOR", "MODERATOR"];
 
   useEffect(() => {
-    if (status === "loading") return; // Do nothing while session is loading
-
-    // If session is null/undefined or user is missing, or role is not allowed, redirect
-    if (
-      !session ||
-      !session.user ||
-      !allowedAdminRoles.includes(session.user.role)
-    ) {
-      console.log(
-        "AdminLayout: No session or not an authorized admin, redirecting to /admin-login"
-      );
-      redirect("/admin-login"); // Use Next.js redirect
+    if (status === "loading") return;
+    if (!session || !session.user || !allowedAdminRoles.includes(session.user.role)) {
+      redirect("/admin-login");
     }
-  }, [session, status, allowedAdminRoles]); // Depend on session and status
+  }, [session, status, allowedAdminRoles]);
 
-  // Effect to close sidebar when route changes on mobile
-  useEffect(() => {
-    setShowSidebar(false);
-  }, [pathname]);
-
-  const toggleSidebar = () => {
-    setShowSidebar(!showSidebar);
+  // --- NEW: Function to handle the logout action ---
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    setShowLogoutModal(false); // Close the modal
+    router.push("/"); // Redirect to home page
   };
 
   if (status === "loading" || !session || !session.user) {
-    // Added !session || !session.user check
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-primary" role="status">
@@ -49,7 +47,6 @@ export default function AdminLayout({ children }) {
       </div>
     );
   }
-  // --- END IMPORTANT FIX ---
 
   // At this point, we can safely assume session and session.user exist and are authorized.
   const adminName = session.user.firstName
@@ -78,79 +75,49 @@ export default function AdminLayout({ children }) {
     currentPageName = "Election Results";
   return (
     <div className="d-flex vh-100">
-      <AdminNavigationPanel
-        showSidebar={showSidebar}
-        toggleSidebar={toggleSidebar}
-        userRole={adminRole}
-        userCollege={adminCollege}
-      />
+      <AdminNavigationPanel userRole={adminRole} userCollege={adminCollege} />
 
-      <div
-        className="flex-grow-1 d-flex flex-column transition-margin-lg"
-        style={{ marginLeft: "0px" }} // Default no margin, style below applies for lg
-      >
-        {/* Top Bar */}
+      <div className="flex-grow-1 d-flex flex-column transition-margin-lg" style={{ marginLeft: "0px" }}>
         <header
           className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top shadow-sm"
-          style={{
-            height: "60px",
-            borderBottom: "1px solid #dee2e6",
-            zIndex: "100",
-          }}
+          style={{ height: "60px", borderBottom: "1px solid #dee2e6", zIndex: "100" }}
         >
           <div className="d-flex align-items-center">
-            <button
-              className="btn btn-icon d-lg-none me-2"
-              onClick={toggleSidebar}
-              aria-label="Toggle navigation"
-            >
-              <i className="bi bi-list fs-4"></i>
-            </button>
             <nav aria-label="breadcrumb" className="d-none d-md-block">
               <ol className="breadcrumb mb-0 d-flex align-items-center">
-                <li className="breadcrumb-item">
-                  <Link
-                    href="/admin/dashboard"
-                    className="text-decoration-none"
-                  >
-                    <i className="bi bi-house-door-fill text-secondary"></i>
-                  </Link>
-                </li>
-                <li
-                  className="breadcrumb-item active text-dark text-secondary opacity-75"
-                  aria-current="page"
-                >
-                  {currentPageName}
-                </li>
+                <li className="breadcrumb-item"><Link href="/admin/dashboard" className="text-decoration-none"><i className="bi bi-house-door-fill text-secondary"></i></Link></li>
+                <li className="breadcrumb-item active text-dark text-secondary opacity-75" aria-current="page">{currentPageName}</li>
               </ol>
             </nav>
-            <div className="d-md-none text-dark fw-normal">
-              {currentPageName}
-            </div>
+            <div className="d-md-none text-dark fw-normal">{currentPageName}</div>
           </div>
-
           <div className="d-flex align-items-center">
             <div className="px-3 d-none d-md-block">{adminName}</div>
             <span
               className={`fw-medium fs-6 badge p-2 ${
-                adminRole === "SUPER_ADMIN"
-                  ? "bg-danger text-white"
-                  : adminRole === "MODERATOR"
-                  ? "bg-info text-white"
-                  : "bg-secondary text-white"
+                adminRole === "SUPER_ADMIN" ? "bg-danger text-white" : adminRole === "MODERATOR" ? "bg-info text-white" : "bg-secondary text-white"
               }`}
             >
               {adminRole} {adminCollege ? `(${adminCollege})` : ""}
             </span>
+
+            {/* --- NEW: Mobile-only Logout Button with your specified style --- */}
+            <button
+              className="btn btn-icon d-lg-none m-2 px-2 py-0 bg-danger"
+              onClick={() => setShowLogoutModal(true)}
+              aria-label="Logout"
+            >
+              <i className="bi bi-box-arrow-right fs-5 text-white"></i>
+            </button>
+            {/* --- END: Mobile-only Logout Button --- */}
+
           </div>
         </header>
 
-        {/* Main Content Area */}
         <main
-          className="flex-grow-1 p-4 bg-light"
+          className="flex-grow-1 p-4 bg-light main-content-mobile-padding"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgba(116, 204, 248, 0.2) 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(circle,rgba(116, 204, 248, 0.2) 1px, transparent 1px)",
             backgroundSize: "6px 6px",
             overflowY: "auto",
           }}
@@ -158,11 +125,75 @@ export default function AdminLayout({ children }) {
           {children}
         </main>
       </div>
+
+      <AdminBottomNavBar userRole={adminRole} userCollege={adminCollege} />
+      
+      {/* --- NEW: Render the Confirmation Modal --- */}
+      <ConfirmationModal
+        show={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        bodyText="Are you sure you want to log out from the admin panel?"
+        confirmButtonText="Logout"
+        confirmButtonVariant="danger"
+      />
+      {/* --- END: Confirmation Modal --- */}
+
       <style jsx global>{`
+        // --- DESKTOP SIDEBAR LOGIC (UNCHANGED) ---
         @media (min-width: 992px) {
-          /* lg breakpoint */
           .transition-margin-lg {
-            margin-left: 260px !important; /* Admin Sidebar width */
+            margin-left: 260px !important;
+          }
+        }
+        
+        // --- NEW: BOTTOM NAVIGATION BAR STYLES ---
+        .bottom-nav-mobile {
+          display: none;
+        }
+
+        @media (max-width: 991.98px) {
+          .main-content-mobile-padding {
+            padding-bottom: 85px !important;
+          }
+
+          .bottom-nav-mobile {
+            display: block;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: #ffffff;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1030;
+          }
+          .nav-list {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+          }
+          .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #6c757d;
+            font-size: 0.7rem; // Slightly smaller text for more items
+            padding: 8px 4px; // Adjust padding
+            flex-grow: 1;
+            text-align: center;
+          }
+          .nav-item .bi {
+            font-size: 1.4rem;
+            margin-bottom: 2px;
+          }
+          .nav-item.active {
+            color: var(--bs-primary);
+            font-weight: 500;
           }
         }
       `}</style>
