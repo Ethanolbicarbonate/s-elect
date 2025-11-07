@@ -190,76 +190,80 @@ export default function AuditLogTable({ logs, isLoading }) {
           <div className="modal-backdrop-blur" onClick={handleCloseModal}></div>
 
           {/* Modal */}
-          <div
-            className="modal fade show d-block"
+        <div
+            className="modal fade show"
             tabIndex="-1"
+            style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.4)' }}
             onClick={handleCloseModal}
-          >
-            <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        >
+          <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content rounded-4 overflow-hidden border-0" onClick={(e) => e.stopPropagation()}>
               <div
-                className="modal-content rounded-4 overflow-hidden border-0"
-                onClick={(e) => e.stopPropagation()}
+                className="modal-header bg-white border-bottom-0"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundSize: "6px 6px",
+                }}
               >
-                <div
-                  className="modal-header bg-white border-bottom-0"
+                <h5 className="modal-title fw-normal text-secondary">
+                  Log Details
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={handleCloseModal}
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                {selectedLogTimestamp && (
+                  <p className="mb-2 text-muted small">
+                    <span className="fw-medium">Timestamp:</span>{" "}
+                    {format(
+                      new Date(selectedLogTimestamp),
+                      "MMM d, yyyy, HH:mm:ss.SSS"
+                    )}
+                  </p>
+                )}
+                {/* --- NEW ADDITION: Disclaimer Note --- */}
+                <div className="alert alert-info py-2 px-3 mb-3 small text-start">
+                  <i className="bi bi-info-circle me-2"></i>
+                  This detailed log information is primarily for <strong>developer debugging and auditing purposes</strong>. It may contain raw data and technical details.
+                </div>
+                {/* --- END NEW ADDITION --- */}
+                <pre
+                  className="bg-light p-3 rounded-3"
                   style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-all",
+                    fontSize: "0.875rem",
+                    maxHeight: "60vh",
+                    overflowY: "auto",
                   }}
                 >
-                  <h5 className="modal-title fw-normal text-secondary">
-                    Log Details
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={handleCloseModal}
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  {selectedLogTimestamp && (
-                    <p className="mb-2 text-muted small">
-                      <span className="fw-medium">Timestamp:</span>{" "}
-                      {format(
-                        new Date(selectedLogTimestamp),
-                        "MMM d, yyyy, HH:mm:ss.SSS"
-                      )}
-                    </p>
-                  )}
-                  <pre
-                    className="bg-light p-3 rounded-3"
-                    style={{
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-all",
-                      fontSize: "0.875rem",
-                      maxHeight: "60vh",
-                      overflowY: "auto",
-                    }}
-                  >
-                    {selectedLogDetails}
-                  </pre>
-                </div>
-                <div
-                  className="modal-footer bg-white border-top-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
+                  {selectedLogDetails}
+                </pre>
+              </div>
+              <div
+                className="modal-footer bg-white border-top-0"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundSize: "6px 6px",
+                }}
+              >
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm rounded-3"
+                  onClick={handleCloseModal}
                 >
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-sm rounded-3"
-                    onClick={handleCloseModal}
-                  >
-                    Close
-                  </button>
-                </div>
+                  Close
+                </button>
               </div>
             </div>
           </div>
+        </div>
         </>
       )}
     </>

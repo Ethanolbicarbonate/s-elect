@@ -6,7 +6,7 @@ const electionStatusEnum = [
   "UPCOMING",
   "ONGOING",
   "PAUSED",
-  "ENDED",
+  // "ENDED",
   "ARCHIVED",
 ];
 
