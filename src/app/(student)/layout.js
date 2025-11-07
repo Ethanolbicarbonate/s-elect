@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, usePathname } from "next/navigation";
+import FloatingVoteButton from "@/components/UI/FloatingVoteButton";
 import NavigationPanel from "@/components/Layout/NavigationPanel";
 import Link from "next/link";
 
@@ -10,6 +11,7 @@ export default function StudentLayout({ children }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
+  const [electionDetails, setElectionDetails] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
@@ -21,6 +23,25 @@ export default function StudentLayout({ children }) {
       redirect("/student-login"); // redirect is from next/navigation, works in client components
     }
   }, [session, status]);
+
+    // NEW useEffect to fetch election data for the button
+  useEffect(() => {
+    // Only fetch if the user is an authenticated student
+    if (status === "authenticated" && session.user?.role === "STUDENT") {
+      fetch('/api/student/active-election-details')
+        .then(res => {
+          if (res.ok) return res.json();
+          return null; // Handle non-ok responses gracefully
+        })
+        .then(data => {
+          setElectionDetails(data);
+        })
+        .catch(err => {
+          console.error("Failed to fetch election details for layout:", err);
+          setElectionDetails(null); // Ensure state is null on error
+        });
+    }
+  }, [status, session]); // Rerun when session status changes
 
   useEffect(() => {
     setShowSidebar(false);
@@ -159,6 +180,14 @@ export default function StudentLayout({ children }) {
           {children}
         </main>
       </div>
+      {electionDetails && (
+          <FloatingVoteButton
+            electionStatus={electionDetails.effectiveStatusForStudent}
+            hasVoted={electionDetails.hasVoted}
+            electionEndDate={electionDetails.effectiveEndDateForStudent}
+            currentPath={pathname}
+          />
+      )}
       <style jsx global>{`
         @media (min-width: 992px) {
           /* lg breakpoint */

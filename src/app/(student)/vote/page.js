@@ -41,7 +41,7 @@ const Stepper = ({ currentStep, steps }) => {
 };
 
 export default function VotePage() {
-  const { data: session, status: sessionStatus } = useSession();
+  const { data: session, status: sessionStatus, update } = useSession();
   const router = useRouter();
 
   const ballotContentRef = useRef(null);
@@ -226,6 +226,7 @@ export default function VotePage() {
           .catch(() => ({ error: "Vote submission failed." }));
         throw new Error(errData.error || `API Error: ${res.status}`);
       }
+      await update();
       //On successful submission
       router.push("/vote/submitted"); // Redirect to acknowledgement page
     } catch (err) {
