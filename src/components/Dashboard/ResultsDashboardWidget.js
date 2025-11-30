@@ -399,9 +399,28 @@ export default function ResultsDashboardWidget({
 
             {/* Navigable Position Detailed Results */}
             <div className="flex-grow-1 d-flex flex-column border rounded-3 p-3">
-              <h4 className="fs-7 text-secondary mb-3 text-secondary border-bottom pb-1">
-                Candidate Standing
-              </h4>
+              {/* --- UPDATED HEADER WITH DROPDOWN --- */}
+              <div className="d-flex justify-content-between align-items-center border-bottom mb-3 pb-1">
+                <h4 className="fs-7 text-secondary mb-0">Candidate Standing</h4>
+                {currentPositions.length > 0 && (
+                  <select
+                    className="form-select form-select-sm w-auto fs-7 py-0 border-0 text-secondary"
+                    value={currentPositionIndex}
+                    onChange={(e) =>
+                      setCurrentPositionIndex(Number(e.target.value))
+                    }
+                    aria-label="Select position to view"
+                  >
+                    {currentPositions.map((p, idx) => (
+                      <option key={p.id || idx} value={idx}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+              {/* --- END UPDATED HEADER --- */}
+
               {currentPositions.length > 0 ? (
                 <>
                   <div className="flex-grow-1">
