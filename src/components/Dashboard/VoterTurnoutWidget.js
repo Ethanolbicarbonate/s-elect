@@ -132,7 +132,7 @@ export default function VoterTurnoutWidget({ electionId }) {
     return (
       <>
         <div className="border p-3 rounded-3 w-100">
-          <h6 className="text-body-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+          <h6 className="text-body fw-medium fs-7 border-bottom pb-1 mb-2">
             USC Turnout by College
           </h6>
           <div
@@ -159,7 +159,7 @@ export default function VoterTurnoutWidget({ electionId }) {
         <div className="d-flex flex-column w-100 gap-4">
           {/* USC Turnout */}
           <div className="border p-3 rounded-3 w-100">
-            <h6 className="text-body-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+            <h6 className="text-body fw-medium fs-7 border-bottom pb-1 mb-2">
               USC Overall Turnout
             </h6>
             <ProgressBar
@@ -171,7 +171,7 @@ export default function VoterTurnoutWidget({ electionId }) {
           {turnoutData.specificCscTurnout &&
             turnoutData.specificCscTurnout.college === studentCollege && (
               <div className="p-3 border rounded-2 w-100">
-                <h6 className="text-body-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+                <h6 className="text-body fw-medium fs-7 border-bottom pb-1 mb-2">
                   {studentCollege} CSC Turnout
                 </h6>
                 <ProgressBar

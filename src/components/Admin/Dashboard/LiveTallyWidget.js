@@ -179,7 +179,7 @@ export default function LiveTallyWidget({
             </p>
             {totalVotesOverall > 0 && (
               <div className="mb-3 flex-shrink-0 border p-2 rounded-3">
-                <h6 className="fw-medium text-body-secondary-emphasis fs-7 mb-1">
+                <h6 className="fw-medium text-body-secondary fs-7 mb-1">
                   Total Votes Counted
                 </h6>
                 <p className="fs-4 fw-medium text-primary mb-0">
@@ -196,9 +196,9 @@ export default function LiveTallyWidget({
                   key={position.id}
                   className="position-summary mb-3 p-2 border rounded-3"
                 >
-                  <h6 className="fw-medium text-body-emphasis mb-2 fs-7 d-flex justify-content-between align-items-center">
+                  <h6 className="fw-medium text-body mb-2 fs-7 d-flex justify-content-between align-items-center">
                     <span>{position.name}</span>
-                    <span className="badge fw-medium bg-secondary-subtle text-body-secondary-emphasis rounded-pill">
+                    <span className="badge fw-medium bg-secondary-subtle text-body-secondary rounded-pill">
                       {position.totalVotesCastForPosition} votes
                     </span>
                   </h6>
@@ -240,7 +240,7 @@ export default function LiveTallyWidget({
                             )}
                           </div>
                           <div className="flex-grow-1 text-truncate">
-                            <span className="fw-medium text-body-emphasis">
+                            <span className="fw-medium text-body">
                               {candidate.firstName} {candidate.lastName}
                             </span>
                             {isWinner && (

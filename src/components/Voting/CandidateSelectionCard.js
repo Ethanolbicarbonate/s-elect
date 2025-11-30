@@ -115,7 +115,7 @@ export default function CandidateSelectionCard({
               </div>
             )}
           </div>
-          <h6 className="card-title h6 mb-1 fw-medium text-body-emphasis">
+          <h6 className="card-title h6 mb-1 fw-medium text-body">
             {displayName}
           </h6>
           <p className={`card-text small mb-2 text-primary`}>{affiliation}</p>

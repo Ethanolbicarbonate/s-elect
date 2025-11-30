@@ -81,7 +81,6 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
                 <i className={`bi ${item.icon} me-2 fs-5`}></i>
                 {item.label}
               </Link>
-              <hr className="border-1 border-secondary-subtle my-1 mx-3 p-0 opacity-100" />
             </li>
           ))}
         </ul>

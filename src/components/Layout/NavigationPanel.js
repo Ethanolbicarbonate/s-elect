@@ -77,7 +77,6 @@ export default function NavigationPanel() {
               {item.label}
             </Link>
             {/* CHANGED: border-secondary-subtle -> border-secondary-subtle */}
-            <hr className="border-1 border-secondary-subtle my-2 mx-3 p-0 opacity-100" />
           </li>
         ))}
       </ul>

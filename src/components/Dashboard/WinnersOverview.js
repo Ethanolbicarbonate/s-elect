@@ -67,7 +67,7 @@ export default function WinnersOverview({ positionsResults }) {
           </div>
           {/* Winner Name and Position */}
           <div className="flex-grow-1">
-            <h6 className="mb-0 fw-medium small text-body-emphasis">
+            <h6 className="mb-0 fw-medium small text-body">
               {winner.firstName} {winner.lastName}
               {winner.nickname && ` (${winner.nickname})`}
             </h6>

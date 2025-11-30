@@ -207,7 +207,7 @@ export default function AboutPage() {
                     aria-expanded={index === 0}
                     aria-controls={`collapse${index}`}
                   >
-                    <span className="small fw-medium text-body-emphasis">
+                    <span className="small fw-medium text-body">
                       {faq.question}
                     </span>
                   </button>
@@ -274,7 +274,7 @@ export default function AboutPage() {
                 key={index}
                 className="list-group-item px-0 py-2 border-bottom d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center" // Flex column on mobile, row on md+
               >
-                <span className="text-body-emphasis fw-medium flex-grow-1 me-md-3 mb-1 mb-md-0">
+                <span className="text-body fw-medium flex-grow-1 me-md-3 mb-1 mb-md-0">
                   {member.name}
                 </span>
 
@@ -288,7 +288,7 @@ export default function AboutPage() {
                     .map((role, roleIndex) => (
                       <span
                         key={roleIndex}
-                        className="badge fw-medium bg-secondary-subtle text-body-secondary-emphasis me-1"
+                        className="badge fw-medium bg-secondary-subtle text-body-secondary me-1"
                       >
                         {role}
                       </span>

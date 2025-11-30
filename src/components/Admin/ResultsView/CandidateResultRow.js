@@ -73,7 +73,7 @@ export default function CandidateResultRow({
         </div>
       </td>
       <td>
-        <div className="fw-medium text-body-emphasis">
+        <div className="fw-medium text-body">
           {candidate.firstName} {candidate.lastName}
           {candidate.nickname ? (
             <span className="text-body-secondary small"> ({candidate.nickname})</span>
