@@ -9,6 +9,16 @@
   --input-bg: #fff;
   --input-border: #dee2e6;
   --input-text: #212529;
+  --bg-grid-pattern: radial-gradient(
+    circle,
+    rgba(116, 204, 248, 0.2) 1px,
+    transparent 1px
+  );
+  --bg-grid-subtle: radial-gradient(
+    circle,
+    rgb(241, 241, 241) 1px,
+    transparent 1px
+  );
 }
 
 [data-bs-theme="dark"] {
@@ -17,6 +27,16 @@
   --input-bg: #2b3035;
   --input-border: #495057;
   --input-text: #dee2e6;
+  --bg-grid-pattern: radial-gradient(
+    circle,
+    rgba(116, 204, 248, 0.05) 1px,
+    transparent 1px
+  );
+  --bg-grid-subtle: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px
+  );
 }
 
 [data-bs-theme="dark"] .logo-color {
@@ -209,7 +229,7 @@ button,
   background-color: rgba(13, 202, 240, var(--soft-bg-opacity));
 }
 
-.text-secondary {
+.text-body-secondary {
   color: var(--bs-secondary-color) !important;
 }
 
@@ -218,7 +238,7 @@ button,
 }
 
 .inner-shadow {
-  box-shadow: inset 0rem 0rem 0.25rem rgba(0, 0, 0, 0.15);
+  box-shadow: inset var(--nav-shadow);
 }
 
 .mobile-overlay {

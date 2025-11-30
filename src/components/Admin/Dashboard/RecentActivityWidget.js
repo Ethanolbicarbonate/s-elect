@@ -59,14 +59,14 @@ export default function RecentActivityWidget({ userRole }) {
               className="spinner-border spinner-border-sm text-primary"
               role="status"
             ></div>
-            <p className="small text-muted mt-2 mb-0">
+            <p className="small text-body-secondary mt-2 mb-0">
               Loading recent activities...
             </p>
           </div>
         ) : error ? (
           <div className="alert alert-danger small py-2 my-auto">{error}</div>
         ) : recentLogs.length === 0 ? (
-          <div className="text-center text-muted my-auto d-flex flex-column justify-content-center align-items-center">
+          <div className="text-center text-body-secondary my-auto d-flex flex-column justify-content-center align-items-center">
             <i className="bi bi-box-seam fs-4 mb-2"></i>
             <p className="small mb-0">No recent activities found.</p>
           </div>
@@ -91,13 +91,13 @@ export default function RecentActivityWidget({ userRole }) {
                 </div>
                 <div className="flex-grow-1 text-truncate pe-2 min-w-0">
                   <p
-                    className="mb-0 fw-medium text-dark-emphasis fs-7 text-truncate"
+                    className="mb-0 fw-medium text-body-emphasis fs-7 text-truncate"
                     title={log.actionType.replace(/_/g, " ")}
                   >
                     {log.actionType.replace(/_/g, " ")}
                   </p>
                   <p
-                    className="d-none d-md-block mb-0 text-secondary opacity-75 fs-8 text-truncate"
+                    className="d-none d-md-block mb-0 text-body-secondary opacity-75 fs-8 text-truncate"
                     title={`${log.actorEmail || log.actorId} ${
                       log.entityType
                         ? `on ${log.entityType} (ID: ${log.entityId || "N/A"})`
@@ -117,7 +117,7 @@ export default function RecentActivityWidget({ userRole }) {
                 <div
                   className="text-end flex-shrink-0"
                 >
-                  <span className="badge fw-medium bg-light text-dark-emphasis smaller py-1 px-2">
+                  <span className="badge fw-medium bg-body-tertiary text-body-emphasis smaller py-1 px-2">
                     {format(new Date(log.timestamp), "MMM d, hh:mm a")}
                   </span>
                 </div>
@@ -126,7 +126,7 @@ export default function RecentActivityWidget({ userRole }) {
           </ul>
         )}
       </div>
-      <div className="card-footer bg-white border-0 text-center py-2">
+      <div className="card-footer bg-body border-0 text-center py-2">
         <Link
           href="/admin/audit-log"
           className="btn btn-sm btn-outline-secondary w-100"

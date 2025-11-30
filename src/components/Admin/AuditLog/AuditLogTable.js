@@ -6,15 +6,15 @@ import { format } from "date-fns";
 const getActorTypeBadgeColor = (actorType) => {
   switch (actorType) {
     case "ADMIN":
-      return "bg-warning text-dark";
+      return "bg-warning text-body";
     case "SYSTEM":
-      return "bg-info text-dark";
+      return "bg-info text-body";
     case "STUDENT":
       return "bg-success";
     case "UNKNOWN":
       return "bg-secondary";
     default:
-      return "bg-light text-dark border";
+      return "bg-body-tertiary text-body border";
   }
 };
 
@@ -25,7 +25,7 @@ const getStatusBadgeColor = (status) => {
     case "FAILURE":
       return "bg-danger";
     default:
-      return "bg-light text-dark border";
+      return "bg-body-tertiary text-body border";
   }
 };
 
@@ -87,22 +87,22 @@ export default function AuditLogTable({ logs, isLoading }) {
         <table className="table table-sm table-hover small align-middle">
           <thead className="table-white">
             <tr>
-              <th className="fw-normal text-secondary">Timestamp</th>
-              <th className="fw-normal text-secondary">Action</th>
-              <th className="fw-normal text-secondary">Actor</th>
-              <th className="d-none d-sm-table-cell fw-normal text-secondary">
+              <th className="fw-normal text-body-secondary">Timestamp</th>
+              <th className="fw-normal text-body-secondary">Action</th>
+              <th className="fw-normal text-body-secondary">Actor</th>
+              <th className="d-none d-sm-table-cell fw-normal text-body-secondary">
                 Type
               </th>
-              <th className="d-none d-md-table-cell fw-normal text-secondary">
+              <th className="d-none d-md-table-cell fw-normal text-body-secondary">
                 Status
               </th>
-              <th className="d-none d-md-table-cell fw-normal text-secondary">
+              <th className="d-none d-md-table-cell fw-normal text-body-secondary">
                 Entity
               </th>
-              <th className="d-none d-lg-table-cell fw-normal text-secondary">
+              <th className="d-none d-lg-table-cell fw-normal text-body-secondary">
                 IP
               </th>
-              <th className="fw-normal text-secondary">Details</th>
+              <th className="fw-normal text-body-secondary">Details</th>
             </tr>
           </thead>
           <tbody>
@@ -175,7 +175,7 @@ export default function AuditLogTable({ logs, isLoading }) {
                       View
                     </button>
                   ) : (
-                    <span className="text-muted">N/A</span>
+                    <span className="text-body-secondary">N/A</span>
                   )}
                 </td>
               </tr>
@@ -190,80 +190,83 @@ export default function AuditLogTable({ logs, isLoading }) {
           <div className="modal-backdrop-blur" onClick={handleCloseModal}></div>
 
           {/* Modal */}
-        <div
+          <div
             className="modal fade show"
             tabIndex="-1"
-            style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.4)' }}
+            style={{ display: "block", backgroundColor: "rgba(0,0,0,0.4)" }}
             onClick={handleCloseModal}
-        >
-          <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content rounded-4 overflow-hidden border-0" onClick={(e) => e.stopPropagation()}>
+          >
+            <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
               <div
-                className="modal-header bg-white border-bottom-0"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                  backgroundSize: "6px 6px",
-                }}
+                className="modal-content rounded-4 overflow-hidden border-0"
+                onClick={(e) => e.stopPropagation()}
               >
-                <h5 className="modal-title fw-normal text-secondary">
-                  Log Details
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={handleCloseModal}
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body">
-                {selectedLogTimestamp && (
-                  <p className="mb-2 text-muted small">
-                    <span className="fw-medium">Timestamp:</span>{" "}
-                    {format(
-                      new Date(selectedLogTimestamp),
-                      "MMM d, yyyy, HH:mm:ss.SSS"
-                    )}
-                  </p>
-                )}
-                {/* --- NEW ADDITION: Disclaimer Note --- */}
-                <div className="alert alert-info py-2 px-3 mb-3 small text-start">
-                  <i className="bi bi-info-circle me-2"></i>
-                  This detailed log information is primarily for <strong>developer debugging and auditing purposes</strong>. It may contain raw data and technical details.
-                </div>
-                {/* --- END NEW ADDITION --- */}
-                <pre
-                  className="bg-light p-3 rounded-3"
+                <div
+                  className="modal-header bg-body border-bottom-0"
                   style={{
-                    whiteSpace: "pre-wrap",
-                    wordBreak: "break-all",
-                    fontSize: "0.875rem",
-                    maxHeight: "60vh",
-                    overflowY: "auto",
+                    backgroundImage: "var(--bg-grid-subtle)",
+                    backgroundSize: "6px 6px",
                   }}
                 >
-                  {selectedLogDetails}
-                </pre>
-              </div>
-              <div
-                className="modal-footer bg-white border-top-0"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                  backgroundSize: "6px 6px",
-                }}
-              >
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-sm rounded-3"
-                  onClick={handleCloseModal}
+                  <h5 className="modal-title fw-normal text-body-secondary">
+                    Log Details
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={handleCloseModal}
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  {selectedLogTimestamp && (
+                    <p className="mb-2 text-body-secondary small">
+                      <span className="fw-medium">Timestamp:</span>{" "}
+                      {format(
+                        new Date(selectedLogTimestamp),
+                        "MMM d, yyyy, HH:mm:ss.SSS"
+                      )}
+                    </p>
+                  )}
+                  {/* --- NEW ADDITION: Disclaimer Note --- */}
+                  <div className="alert alert-info py-2 px-3 mb-3 small text-start">
+                    <i className="bi bi-info-circle me-2"></i>
+                    This detailed log information is primarily for{" "}
+                    <strong>developer debugging and auditing purposes</strong>.
+                    It may contain raw data and technical details.
+                  </div>
+                  {/* --- END NEW ADDITION --- */}
+                  <pre
+                    className="bg-body-tertiary p-3 rounded-3"
+                    style={{
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-all",
+                      fontSize: "0.875rem",
+                      maxHeight: "60vh",
+                      overflowY: "auto",
+                    }}
+                  >
+                    {selectedLogDetails}
+                  </pre>
+                </div>
+                <div
+                  className="modal-footer bg-body border-top-0"
+                  style={{
+                    backgroundImage: "var(--bg-grid-subtle)",
+                    backgroundSize: "6px 6px",
+                  }}
                 >
-                  Close
-                </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm rounded-3"
+                    onClick={handleCloseModal}
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </>
       )}
     </>

@@ -149,12 +149,12 @@ export default function ScopedCandidateViewer({
 
       {/* Filter Controls */}
       <div className="card mb-4 rounded-2">
-        <div className="card-body bg-light-subtle rounded-2">
+        <div className="card-body bg-body-tertiary-subtle rounded-2">
           <div className="row g-2 align-items-end">
             <div className="col-md-4">
               <label
                 htmlFor={`${scopeType}-filterPosition`}
-                className="form-label form-label-sm fs-7 ms-2 text-secondary"
+                className="form-label form-label-sm fs-7 ms-2 text-body-secondary"
               >
                 Filter by Position
               </label>
@@ -186,7 +186,7 @@ export default function ScopedCandidateViewer({
             <div className="col-md-4">
               <label
                 htmlFor={`${scopeType}-filterPartylist`}
-                className="form-label form-label-sm fs-7 ms-2 text-secondary"
+                className="form-label form-label-sm fs-7 ms-2 text-body-secondary"
               >
                 Filter by Partylist
               </label>
@@ -213,7 +213,7 @@ export default function ScopedCandidateViewer({
             <div className="col-md-3">
               <label
                 htmlFor={`${scopeType}-searchCandidate`}
-                className="form-label form-label-sm fs-7 ms-2 text-secondary"
+                className="form-label form-label-sm fs-7 ms-2 text-body-secondary"
               >
                 Search Candidates
               </label>
@@ -261,7 +261,7 @@ export default function ScopedCandidateViewer({
         </div>
       )}
       {filterPartylistId === "INDEPENDENT" && (
-        <h4 className="mb-3 text-muted border-bottom pb-2 pt-3 text-center">
+        <h4 className="mb-3 text-body-secondary border-bottom pb-2 pt-3 text-center">
           Independent Candidates
         </h4>
       )}
@@ -291,7 +291,7 @@ export default function ScopedCandidateViewer({
                 <h4 className="position-title text-center lh-1 mb-0">
                   {position.name}
                   <br></br>
-                  <small className="text-secondary fs-7 ms-2">
+                  <small className="text-body-secondary fs-7 ms-2">
                     (Maximum Votes: {position.maxVotesAllowed})
                   </small>
                 </h4>
@@ -318,7 +318,7 @@ export default function ScopedCandidateViewer({
                   !selectedPartylistForInfoCard &&
                   filterPositionId === position.id && ( // Show only if this position specifically is filtered and has no candidates
                     <div className="col-12">
-                      <p className="text-muted fst-italic">
+                      <p className="text-body-secondary fst-italic">
                         No candidates currently listed for this position under
                         the active filters.
                       </p>

@@ -81,7 +81,7 @@ export default function AdminLoginForm() {
   };
   return (
     <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
-      <p className="my-4 text-secondary fs-6">Admin Login</p>
+      <p className="my-4 text-body-secondary fs-6">Admin Login</p>
       <form
         onSubmit={handleSubmit}
         className="w-100"
@@ -126,7 +126,7 @@ export default function AdminLoginForm() {
         <p className="text-end fs-7">
           <Link
             href="/forgot-password?type=admin"
-            className="text-secondary text-decoration-none opacity-75"
+            className="text-body-secondary text-decoration-none opacity-75"
           >
             Forgot Password?
           </Link>
@@ -153,7 +153,7 @@ export default function AdminLoginForm() {
           </button>
           <Link
             href="/"
-            className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm"
+            className="btn custom-btn fs-6 btn-lg text-body-secondary border shadow-sm"
           >
             Back to Role Selection
           </Link>

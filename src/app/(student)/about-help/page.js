@@ -126,7 +126,7 @@ export default function AboutPage() {
         </div>
         <div className="col-md text-center text-md-start">
           <h1 className="h3 mb-1 text-primary">About sELECT</h1>
-          <p className="lead text-muted small">
+          <p className="lead text-body-secondary small">
             Your modern online evaluation and election platform.
           </p>
         </div>
@@ -134,17 +134,17 @@ export default function AboutPage() {
 
       {/* About the Project Section */}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
-        <div className="card-header bg-light py-3">
-          <h6 className="h6 mb-0 fw-medium text-secondary">Project Overview</h6>
+        <div className="card-header bg-body-tertiary py-3">
+          <h6 className="h6 mb-0 fw-medium text-body-secondary">Project Overview</h6>
         </div>
         <div className="card-body">
-          <p className="card-text text-muted small">
+          <p className="card-text text-body-secondary small">
             sELECT (Software for Evaluation and Election) is a web-based
             platform developed for West Visayas State University students. It
             aims to provide a modern, intuitive, and mobile-responsive online
             voting experience, addressing the limitations of previous systems.
           </p>
-          <p className="card-text text-muted small mb-0">
+          <p className="card-text text-body-secondary small mb-0">
             Key features include secure user authentication, step-by-step
             voting, real-time vote tallying, dashboard access, and clear result
             visualization. The project emphasizes functionality, security, and
@@ -155,11 +155,11 @@ export default function AboutPage() {
 
       {/* How to Vote Section */}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
-        <div className="card-header bg-light py-3">
-          <h6 className="h6 mb-0 fw-medium text-secondary">How to Vote</h6>
+        <div className="card-header bg-body-tertiary py-3">
+          <h6 className="h6 mb-0 fw-medium text-body-secondary">How to Vote</h6>
         </div>
         <div className="card-body">
-          <p className="card-text text-muted small mb-3">
+          <p className="card-text text-body-secondary small mb-3">
             Follow these simple steps to cast your vote on sELECT:
           </p>
           <ul className="list-group list-group-flush">
@@ -180,7 +180,7 @@ export default function AboutPage() {
                 >
                   {step.step}
                 </span>
-                <p className="mb-0 text-muted small flex-grow-1">{step.text}</p>
+                <p className="mb-0 text-body-secondary small flex-grow-1">{step.text}</p>
               </li>
             ))}
           </ul>
@@ -189,8 +189,8 @@ export default function AboutPage() {
 
       {/* Frequently Asked Questions Section */}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
-        <div className="card-header bg-light py-3">
-          <h6 className="h6 mb-0 fw-medium text-secondary">FAQs</h6>
+        <div className="card-header bg-body-tertiary py-3">
+          <h6 className="h6 mb-0 fw-medium text-body-secondary">FAQs</h6>
         </div>
         <div className="card-body">
           <div className="accordion accordion-flush" id="faqAccordion">
@@ -207,7 +207,7 @@ export default function AboutPage() {
                     aria-expanded={index === 0}
                     aria-controls={`collapse${index}`}
                   >
-                    <span className="small fw-medium text-dark-emphasis">
+                    <span className="small fw-medium text-body-emphasis">
                       {faq.question}
                     </span>
                   </button>
@@ -220,7 +220,7 @@ export default function AboutPage() {
                   aria-labelledby={`heading${index}`}
                   data-bs-parent="#faqAccordion"
                 >
-                  <div className="accordion-body small text-muted">
+                  <div className="accordion-body small text-body-secondary">
                     {faq.answer}
                   </div>
                 </div>
@@ -232,18 +232,18 @@ export default function AboutPage() {
 
       {/* Contact & Support Section*/}
       <div className="card shadow-sm mb-4 rounded-4 overflow-hidden">
-        <div className="card-header bg-light py-3">
-          <h6 className="h6 mb-0 fw-medium text-secondary">
+        <div className="card-header bg-body-tertiary py-3">
+          <h6 className="h6 mb-0 fw-medium text-body-secondary">
             Contact & Support
           </h6>
         </div>
         <div className="card-body">
-          <p className="card-text text-muted small">
+          <p className="card-text text-body-secondary small">
             If you have questions, feedback, or need to report a technical
             issue, please contact the sELECT support team. Your feedback helps
             us improve the platform.
           </p>
-          <p className="card-text text-muted small mb-3">
+          <p className="card-text text-body-secondary small mb-3">
             For direct email support:{" "}
             <a
               href={`mailto:${supportEmail}`}
@@ -252,7 +252,7 @@ export default function AboutPage() {
               {supportEmail}
             </a>
           </p>
-          <p className="card-text text-muted small mt-3 mb-0">
+          <p className="card-text text-body-secondary small mt-3 mb-0">
             When reporting technical issues, including details like your student
             ID, the browser and device you are using, and specific steps to
             reproduce the problem are very helpful.
@@ -260,11 +260,11 @@ export default function AboutPage() {
         </div>
       </div>
       <div className="card shadow-sm m-0 p-0 rounded-4 overflow-hidden">
-        <div className="card-header bg-light py-3">
-          <h6 className="h6 mb-0 fw-medium text-secondary">Project Team</h6>
+        <div className="card-header bg-body-tertiary py-3">
+          <h6 className="h6 mb-0 fw-medium text-body-secondary">Project Team</h6>
         </div>
         <div className="card-body">
-          <p className="card-text text-muted small mb-3">
+          <p className="card-text text-body-secondary small mb-3">
             The sELECT platform was developed by a dedicated student team at
             West Visayas State University as a project.
           </p>
@@ -274,12 +274,12 @@ export default function AboutPage() {
                 key={index}
                 className="list-group-item px-0 py-2 border-bottom d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center" // Flex column on mobile, row on md+
               >
-                <span className="text-dark-emphasis fw-medium flex-grow-1 me-md-3 mb-1 mb-md-0">
+                <span className="text-body-emphasis fw-medium flex-grow-1 me-md-3 mb-1 mb-md-0">
                   {member.name}
                 </span>
 
                 {/* Member Role - Break role string, display roles */}
-                <div className="text-muted small flex-shrink-0">
+                <div className="text-body-secondary small flex-shrink-0">
                   {member.role
                     .replace(/, QA, Tester/g, "")
                     .split(",")
@@ -288,7 +288,7 @@ export default function AboutPage() {
                     .map((role, roleIndex) => (
                       <span
                         key={roleIndex}
-                        className="badge fw-medium bg-secondary-subtle text-secondary-emphasis me-1"
+                        className="badge fw-medium bg-secondary-subtle text-body-secondary-emphasis me-1"
                       >
                         {role}
                       </span>

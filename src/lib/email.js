@@ -89,7 +89,7 @@ export async function sendVerificationEmail(to, token) {
         <title>Verify Your sELECT Account</title>
       </head>
       <body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color:rgba(255, 255, 255, 0);">
-        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 20px; overflow: hidden;  border: 1px solid #dddddd">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 50px auto; background-color: var(--bs-body-bg); border-radius: 20px; overflow: hidden;  border: 1px solid #dddddd">
           <!-- Header -->
           <tr>
             <td style="padding: 0;">
@@ -125,7 +125,7 @@ export async function sendVerificationEmail(to, token) {
           
           <!-- Copyright -->
           <tr>
-            <td style="padding: 20px; text-align: center; font-size: 12px; color: #666666; background-color: #ffffff;">
+            <td style="padding: 20px; text-align: center; font-size: 12px; color: #666666; background-color: var(--bs-body-bg);">
               © ${year} sELECT. All rights reserved.<br>
               <span style="color: #999999; font-size: 11px;">This is an automated message, please do not reply to this email.</span>
             </td>
@@ -224,7 +224,7 @@ export async function sendPasswordResetEmail(to, token, userType = "User") {
         <title>Reset Your sELECT Password</title>
       </head>
       <body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color:rgba(255, 255, 255, 0);">
-        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 20px; overflow: hidden;  border: 1px solid #dddddd">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 50px auto; background-color: var(--bs-body-bg); border-radius: 20px; overflow: hidden;  border: 1px solid #dddddd">
           <!-- Header -->
           <tr>
             <td style="padding: 0;">
@@ -261,7 +261,7 @@ export async function sendPasswordResetEmail(to, token, userType = "User") {
           
           <!-- Copyright -->
           <tr>
-            <td style="padding: 20px; text-align: center; font-size: 12px; color: #666666; background-color: #ffffff;">
+            <td style="padding: 20px; text-align: center; font-size: 12px; color: #666666; background-color: var(--bs-body-bg);">
               © ${year} sELECT. All rights reserved.<br>
               <span style="color: #999999; font-size: 11px;">This is an automated message, please do not reply to this email.</span>
             </td>

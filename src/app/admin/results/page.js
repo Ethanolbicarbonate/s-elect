@@ -206,7 +206,7 @@ export default function AdminResultsPage() {
             <div className="col-md-4">
               <label
                 htmlFor="electionSelect"
-                className="form-label fw-normal text-secondary fs-7 ms-2"
+                className="form-label fw-normal text-body-secondary fs-7 ms-2"
               >
                 Election Period:
               </label>
@@ -238,7 +238,7 @@ export default function AdminResultsPage() {
                 <div className="col-md-3">
                   <label
                     htmlFor="scopeTypeSelect"
-                    className="form-label fw-normal text-secondary fs-7 ms-2"
+                    className="form-label fw-normal text-body-secondary fs-7 ms-2"
                   >
                     Scope:
                   </label>
@@ -307,10 +307,9 @@ export default function AdminResultsPage() {
 
         {resultsData && lastRefreshed && (
           <small
-            className="text-secondary opacity-75 text-end card-footer border-top-0 rounded-bottom-4 bg-white"
+            className="text-body-secondary opacity-75 text-end card-footer border-top-0 rounded-bottom-4 bg-body"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >
@@ -353,10 +352,9 @@ export default function AdminResultsPage() {
       {resultsData && (
         <div className="card rounded-4 shadow-sm">
           <h3
-            className="mb-3 h5 text-secondary fw-normal card-header rounded-top-4 bg-white border-bottom-0"
+            className="mb-3 h5 text-body-secondary fw-normal card-header rounded-top-4 bg-body border-bottom-0"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >

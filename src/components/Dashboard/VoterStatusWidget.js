@@ -83,21 +83,17 @@ export default function VoterStatusWidget({
 
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm overflow-hidden d-flex flex-column flex-md-row">
-      <div
-        className={`bg-${statusColor}`}
-        style={{ padding: "0.1rem" }}
-      ></div>
+      <div className={`bg-${statusColor}`} style={{ padding: "0.1rem" }}></div>
 
       <div className="p-0 card-body d-flex flex-column justify-content-between p-0 justify-content-evenly">
         <div
-          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white"
+          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-body"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundImage: "var(--bg-grid-subtle)",
             backgroundSize: "6px 6px",
           }}
         >
-          <h6 className="card-title text-secondary mb-0">Vote Status</h6>
+          <h6 className="card-title text-body-secondary mb-0">Vote Status</h6>
           <span
             className={`badge bg-${statusColor}-soft rounded-circle p-1 d-flex align-items-center justify-content-center`}
           >
@@ -112,10 +108,9 @@ export default function VoterStatusWidget({
             {voteStatusText}
           </h3>
           <p
-            className="card-footer border-top-0 text-muted small opacity-75 text-center text-md-start m-0 py-2 px-3 bg-white"
+            className="card-footer border-top-0 text-body-secondary small opacity-75 text-center text-md-start m-0 py-2 px-3 bg-body"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >

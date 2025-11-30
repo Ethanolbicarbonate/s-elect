@@ -18,27 +18,27 @@ export default function PartylistInfoCard({ partylist }) {
                 alt={`${name} Logo`}
                 width={100} // Slightly larger logo
                 height={100}
-                className="img-fluid rounded-3 border bg-white p-1" // Added padding and bg for images with transparency
+                className="img-fluid rounded-3 border bg-body p-1" // Added padding and bg for images with transparency
                 style={{ objectFit: "contain" }}
                 onError={(e) => {
                   // A simple way to hide broken images if next/image error handling is complex
                   const parent = e.currentTarget.parentNode;
                   if (parent) {
                     const placeholder = document.createElement('div');
-                    placeholder.className = "d-flex align-items-center justify-content-center bg-light rounded-3 border";
+                    placeholder.className = "d-flex align-items-center justify-content-center bg-body-tertiary rounded-3 border";
                     placeholder.style.width = "100px";
                     placeholder.style.height = "100px";
-                    placeholder.innerHTML = '<i class="bi bi-shield-check display-4 text-secondary opacity-25"></i>';
+                    placeholder.innerHTML = '<i class="bi bi-shield-check display-4 text-body-secondary opacity-25"></i>';
                     parent.replaceChild(placeholder, e.currentTarget);
                   }
                 }}
               />
             ) : (
               <div
-                className="d-flex align-items-center justify-content-center bg-light rounded-3 border mx-auto mx-lg-0" // mx-auto for small screen centering
+                className="d-flex align-items-center justify-content-center bg-body-tertiary rounded-3 border mx-auto mx-lg-0" // mx-auto for small screen centering
                 style={{ width: "100px", height: "100px" }}
               >
-                <i className="bi bi-shield-check display-4 text-secondary opacity-25"></i> {/* Changed icon */}
+                <i className="bi bi-shield-check display-4 text-body-secondary opacity-25"></i> {/* Changed icon */}
               </div>
             )}
           </div>
@@ -50,13 +50,13 @@ export default function PartylistInfoCard({ partylist }) {
                 {name}
               </h3>
               {acronym && (
-                <p className="text-muted mb-2">({acronym})</p>
+                <p className="text-body-secondary mb-2">({acronym})</p>
               )}
             </div>
 
             {platform && (
               <p
-                className="card-text text-secondary mt-2 pe-2" // Removed small and italic for better readability
+                className="card-text text-body-secondary mt-2 pe-2" // Removed small and italic for better readability
                 style={{ 
                   whiteSpace: "pre-wrap", 
                   maxHeight: "100px", // Limit height for long platforms initially
@@ -69,7 +69,7 @@ export default function PartylistInfoCard({ partylist }) {
               </p>
             )}
             {!platform && (
-              <p className="card-text text-muted fst-italic mt-2">
+              <p className="card-text text-body-secondary fst-italic mt-2">
                 No specific platform or tagline provided.
               </p>
             )}

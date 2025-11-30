@@ -33,7 +33,7 @@ export default function NavigationPanel() {
 
   return (
     <nav
-      // CHANGED: bg-white -> bg-body, border-light -> border-secondary-subtle
+      // CHANGED: bg-body -> bg-body, border-secondary-subtle -> border-secondary-subtle
       className="d-none d-lg-flex flex-column vh-100 p-3 position-fixed top-0 left-0 bg-body gap-4"
       style={{
         width: "260px",
@@ -45,7 +45,7 @@ export default function NavigationPanel() {
       {/* Logo */}
       <Link
         href="/dashboard"
-        // CHANGED: text-dark -> text-body
+        // CHANGED: text-body -> text-body
         className="d-flex align-items-center mb-3 text-body text-decoration-none"
       >
         <div className="w-100">
@@ -65,7 +65,7 @@ export default function NavigationPanel() {
           <li className="nav-item" key={item.label}>
             <Link
               href={item.href}
-              // CHANGED: text-secondary -> text-body-secondary
+              // CHANGED: text-body-secondary -> text-body-secondary
               className={`nav-link d-flex align-items-center rounded-3 ${
                 pathname.startsWith(item.href)
                   ? "active text-white"
@@ -76,7 +76,7 @@ export default function NavigationPanel() {
               <i className={`bi ${item.icon} me-2`}></i>
               {item.label}
             </Link>
-            {/* CHANGED: border-light -> border-secondary-subtle */}
+            {/* CHANGED: border-secondary-subtle -> border-secondary-subtle */}
             <hr className="border-1 border-secondary-subtle my-2 mx-3 p-0 opacity-100" />
           </li>
         ))}

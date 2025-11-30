@@ -61,7 +61,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-bs-theme="dark">
+    <html lang="en" data-bs-theme="light">
       <head>
         {/* Remove or make the theme-color dynamic */}
         <meta name="theme-color" content="#0d6efd" />

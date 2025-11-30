@@ -108,10 +108,10 @@ function ForgotPasswordEmailForm() {
         className="w-100"
         style={{ maxWidth: "400px" }}
       >
-        <p className="fs-7 text-secondary mt-4 mb-0">
+        <p className="fs-7 text-body-secondary mt-4 mb-0">
           Enter the email address associated with your {userType} account.
         </p>
-        <p className="fs-7 text-secondary mb-4">
+        <p className="fs-7 text-body-secondary mb-4">
           We&apos;ll send you an OTP to reset your password.
         </p>
         <div className="floating-label mb-4">
@@ -138,7 +138,7 @@ function ForgotPasswordEmailForm() {
           </button>
           <Link
             href={userType === "student" ? "/student-login" : "/admin-login"}
-            className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm mb-4"
+            className="btn custom-btn fs-6 btn-lg text-body-secondary border shadow-sm mb-4"
           >
             Back to Login
           </Link>

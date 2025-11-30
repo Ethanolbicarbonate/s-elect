@@ -54,10 +54,10 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
   return (
     <>
       <nav
-        className="d-none d-lg-flex flex-column vh-100 p-3 position-fixed top-0 left-0 bg-white gap-4"
+        className="d-none d-lg-flex flex-column vh-100 p-3 position-fixed top-0 left-0 bg-body gap-4"
         style={{ width: "260px", zIndex: 1000, boxShadow: "0 0 15px rgba(0,0,0,0.1)" }}
       >
-        <Link href="/admin/dashboard" className="d-flex align-items-center mb-3 text-dark text-decoration-none">
+        <Link href="/admin/dashboard" className="d-flex align-items-center mb-3 text-body text-decoration-none">
           <div className="w-100">
             <Image
               src="/assets/logotext.svg"
@@ -75,18 +75,18 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
               <Link
                 href={item.href}
                 className={`nav-link d-flex align-items-center rounded-3 ${
-                  pathname.startsWith(item.href) ? "active bg-primary" : "text-secondary"
+                  pathname.startsWith(item.href) ? "active bg-primary" : "text-body-secondary"
                 }`}
               >
                 <i className={`bi ${item.icon} me-2 fs-5`}></i>
                 {item.label}
               </Link>
-              <hr className="border-1 border-light my-1 mx-3 p-0 opacity-100" />
+              <hr className="border-1 border-secondary-subtle my-1 mx-3 p-0 opacity-100" />
             </li>
           ))}
         </ul>
 
-        <div className="mt-auto pt-2 border-top border-light">
+        <div className="mt-auto pt-2 border-top border-secondary-subtle">
           <button
             onClick={handleLogout}
             className="nav-link text-danger d-flex align-items-center w-100 fs-7 fw-medium"

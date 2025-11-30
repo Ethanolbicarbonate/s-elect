@@ -97,11 +97,11 @@ export default function AdminCandidateList({
             key={partylistIdKey}
             className="mb-4 card rounded-3 pb-4 shadow-sm"
           >
-            <div className="card-header bg-light py-2 rounded-top-3 border-bottom-0">
-              <h5 className="mb-0 fw-normal fs-6 text-secondary">
+            <div className="card-header bg-body-tertiary py-2 rounded-top-3 border-bottom-0">
+              <h5 className="mb-0 fw-normal fs-6 text-body-secondary">
                 {groupName}
                 {partylistForHeader && (
-                  <small className="ms-2 text-muted">
+                  <small className="ms-2 text-body-secondary">
                     ({partylistForHeader.type}
                     {partylistForHeader.college
                       ? ` - ${partylistForHeader.college}`
@@ -120,33 +120,33 @@ export default function AdminCandidateList({
                     {/* Hide Photo on xs screens */}
                     <th
                       style={{ width: "5%" }}
-                      className="d-none d-sm-table-cell fw-normal fs-7 text-secondary"
+                      className="d-none d-sm-table-cell fw-normal fs-7 text-body-secondary"
                     >
                       Photo
                     </th>
                     <th
                       style={{ width: "30%" }}
-                      className="fw-normal fs-7 text-secondary"
+                      className="fw-normal fs-7 text-body-secondary"
                     >
                       Name
                     </th>
                     <th
                       style={{ width: "30%" }}
-                      className="fw-normal fs-7 text-secondary"
+                      className="fw-normal fs-7 text-body-secondary"
                     >
                       Position
                     </th>
                     {/* Hide Bio on screens smaller than md */}
                     <th
                       style={{ width: "25%" }}
-                      className="d-none d-md-table-cell fw-normal fs-7 text-secondary"
+                      className="d-none d-md-table-cell fw-normal fs-7 text-body-secondary"
                     >
                       Bio Snippet
                     </th>
                     {canManage && (
                       <th
                         style={{ width: "10%" }}
-                        className="text-end fw-normal fs-7 text-secondary"
+                        className="text-end fw-normal fs-7 text-body-secondary"
                       >
                         Actions
                       </th>
@@ -189,7 +189,7 @@ export default function AdminCandidateList({
                                 justifyContent: "center",
                               }}
                             >
-                              <i className="bi bi-person-fill text-muted fs-5"></i>
+                              <i className="bi bi-person-fill text-body-secondary fs-5"></i>
                             </div>
                           )}
                         </td>
@@ -205,7 +205,7 @@ export default function AdminCandidateList({
                         </td>
                         <td>
                           {candidate.position?.name || (
-                            <span className="text-secondary opacity-50">
+                            <span className="text-body-secondary opacity-50">
                               N/A
                             </span>
                           )}
@@ -216,7 +216,7 @@ export default function AdminCandidateList({
                           title={candidate.bio}
                         >
                           {candidate.bio || (
-                            <span className="text-secondary opacity-50">
+                            <span className="text-body-secondary opacity-50">
                               N/A
                             </span>
                           )}

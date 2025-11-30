@@ -158,7 +158,7 @@ export default async function AdminDashboardPage() {
                   generatedAt={activeElectionDetails.generatedAt}
                 />
               ) : (
-                <div className="card shadow-sm flex-grow-1 p-4 text-center text-muted">
+                <div className="card shadow-sm flex-grow-1 p-4 text-center text-body-secondary">
                   <i className="bi bi-bar-chart-line display-4 mb-3"></i>
                   <h5 className="mb-0">No Live Results</h5>
                   <p className="small mb-0">
@@ -187,9 +187,9 @@ export default async function AdminDashboardPage() {
         <div className="card shadow-sm p-0 text-center m-0">
           {" "}
           {/* Added mx-md-4 for centering/spacing */}
-          <i className="bi bi-exclamation-circle-fill display-4 text-muted mb-3"></i>
+          <i className="bi bi-exclamation-circle-fill display-4 text-body-secondary mb-3"></i>
           <h5 className="mb-3">No Election Data Available</h5>
-          <p className="text-muted">
+          <p className="text-body-secondary">
             There is currently no active, upcoming, or recently ended election
             to display on the dashboard.
           </p>

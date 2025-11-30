@@ -115,14 +115,13 @@ export default function ExtendElectionModal({
                 className="d-flex flex-column h-100"
               >
                 <div
-                  className="modal-header bg-white border-bottom-0"
+                  className="modal-header bg-body border-bottom-0"
                   style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundImage: "var(--bg-grid-subtle)",
                     backgroundSize: "6px 6px",
                   }}
                 >
-                  <h5 className="modal-title fw-normal text-secondary">
+                  <h5 className="modal-title fw-normal text-body-secondary">
                     Extend Election for Colleges: {formData.electionName}
                   </h5>
                   <button
@@ -139,7 +138,7 @@ export default function ExtendElectionModal({
                   <div className="mb-3">
                     <label
                       htmlFor="extend_endDate_modal"
-                      className="form-label fs-7 text-secondary ms-2"
+                      className="form-label fs-7 text-body-secondary ms-2"
                     >
                       New Extended End Date & Time
                     </label>
@@ -155,7 +154,7 @@ export default function ExtendElectionModal({
                     />
                   </div>
                   <div className="mb-3">
-                    <label className="form-label d-block mb-3 fs-7 text-secondary ms-2">
+                    <label className="form-label d-block mb-3 fs-7 text-body-secondary ms-2">
                       Select Colleges to Extend For:
                     </label>
                     <div
@@ -199,7 +198,7 @@ export default function ExtendElectionModal({
                   <div className="mb-3">
                     <label
                       htmlFor="extend_reason_modal"
-                      className="form-label fs-7 text-secondary ms-2"
+                      className="form-label fs-7 text-body-secondary ms-2"
                     >
                       Reason for Extension (Optional)
                     </label>
@@ -215,17 +214,16 @@ export default function ExtendElectionModal({
                   </div>
                 </div>
                 <div
-                  className="modal-footer bg-white border-top-0"
+                  className="modal-footer bg-body border-top-0"
                   style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundImage: "var(--bg-grid-subtle)",
                     backgroundSize: "6px 6px",
                     flexShrink: 0,
                   }}
                 >
                   <button
                     type="button"
-                    className="btn btn-light border text-secondary"
+                    className="btn btn-light border text-body-secondary"
                     onClick={onClose}
                     disabled={isLoading}
                   >

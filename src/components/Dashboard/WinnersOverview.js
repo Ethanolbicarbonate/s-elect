@@ -23,7 +23,7 @@ export default function WinnersOverview({ positionsResults }) {
 
   if (winnersToDisplay.length === 0) {
     return (
-      <div className="text-center text-muted small p-3">
+      <div className="text-center text-body-secondary small p-3">
         No winners declared for this scope yet.
       </div>
     );
@@ -61,17 +61,17 @@ export default function WinnersOverview({ positionsResults }) {
               />
             ) : (
               <div className="d-flex align-items-center justify-content-center w-100 h-100">
-                <i className="bi bi-person-fill fs-5 text-secondary opacity-50"></i>
+                <i className="bi bi-person-fill fs-5 text-body-secondary opacity-50"></i>
               </div>
             )}
           </div>
           {/* Winner Name and Position */}
           <div className="flex-grow-1">
-            <h6 className="mb-0 fw-medium small text-dark-emphasis">
+            <h6 className="mb-0 fw-medium small text-body-emphasis">
               {winner.firstName} {winner.lastName}
               {winner.nickname && ` (${winner.nickname})`}
             </h6>
-            <p className="mb-0 text-secondary fs-7">
+            <p className="mb-0 text-body-secondary fs-7">
               {winner.positionName}
               {winner.partylist && !winner.isIndependent && (
                 <span className="ms-1">

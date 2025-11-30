@@ -14,8 +14,8 @@ export default function ElectionListTable({
         className="card h-100 border-1 rounded-4 mt-4"
         style={{ minHeight: "46vh" }}
       >
-        <div className="card-header rounded-top-4 bg-light border-bottom-0">
-          <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
+        <div className="card-header rounded-top-4 bg-body-tertiary border-bottom-0">
+          <h5 className="mb-0 text-body-secondary">Manage Election Periods</h5>
         </div>
         <div className="card-body text-center py-4">
           <div
@@ -37,16 +37,15 @@ export default function ElectionListTable({
         style={{ minHeight: "46vh" }}
       >
         <div
-          className="card-header rounded-top-4 bg-white border-bottom-0"
+          className="card-header rounded-top-4 bg-body border-bottom-0"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundImage: "var(--bg-grid-subtle)",
             backgroundSize: "6px 6px",
           }}
         >
-          <h5 className="mb-0 text-secondary">Manage Election Periods</h5>
+          <h5 className="mb-0 text-body-secondary">Manage Election Periods</h5>
         </div>
-        <div className="card-body text-center text-muted py-4">
+        <div className="card-body text-center text-body-secondary py-4">
           No election periods found. Create one above.
         </div>
       </div>
@@ -59,14 +58,13 @@ export default function ElectionListTable({
       style={{ minHeight: "46vh" }}
     >
       <div
-        className="card-header rounded-top-4 border-bottom-0 bg-white"
+        className="card-header rounded-top-4 border-bottom-0 bg-body"
         style={{
-          backgroundImage:
-            "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+          backgroundImage: "var(--bg-grid-subtle)",
           backgroundSize: "6px 6px",
         }}
       >
-        <h5 className="mb-0 text-secondary fw-normal">
+        <h5 className="mb-0 text-body-secondary fw-normal">
           Manage Election Periods
         </h5>
       </div>
@@ -77,21 +75,21 @@ export default function ElectionListTable({
             {/* Added align-middle for better vertical alignment */}
             <thead>
               <tr>
-                <th className="fw-normal fs-7 text-secondary">Name</th>
+                <th className="fw-normal fs-7 text-body-secondary">Name</th>
                 {/* Hide Start/End Dates on very small screens, show on sm and up */}
-                <th className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
+                <th className="d-none d-sm-table-cell fw-normal fs-7 text-body-secondary">
                   Start
                 </th>
-                <th className="d-none d-sm-table-cell fw-normal fs-7 text-secondary">
+                <th className="d-none d-sm-table-cell fw-normal fs-7 text-body-secondary">
                   End
                 </th>
-                <th className="fw-normal fs-7 text-secondary">Status</th>
+                <th className="fw-normal fs-7 text-body-secondary">Status</th>
                 {/* Hide Extensions on small screens, show on md and up */}
-                <th className="d-none d-md-table-cell fw-normal fs-7 text-secondary">
+                <th className="d-none d-md-table-cell fw-normal fs-7 text-body-secondary">
                   Extensions
                 </th>
                 <th
-                  className="fw-normal fs-7 text-end text-secondary"
+                  className="fw-normal fs-7 text-end text-body-secondary"
                   style={{
                     minWidth: "80px",
                     padding: "0.25rem 3.25rem 0.25rem 0.25rem",
@@ -140,7 +138,7 @@ export default function ElectionListTable({
                           ? "info"
                           : election.status === "ENDED" ||
                             election.status === "ARCHIVED"
-                          ? "dark"
+                          ? "secondary"
                           : "secondary" // PAUSED case
                       }`}
                     >
@@ -152,7 +150,7 @@ export default function ElectionListTable({
                       ? election.extensions.map((ext) => (
                           <span
                             key={ext.id}
-                            className="badge bg-light text-dark fw-medium me-1 mb-1 p-1 border d-block d-xl-inline-block"
+                            className="badge bg-body-tertiary text-body fw-medium me-1 mb-1 p-1 border d-block d-xl-inline-block"
                           >
                             {/* Stack on md, inline on xl */}
                             {ext.college}:{" "}

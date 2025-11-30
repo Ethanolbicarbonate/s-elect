@@ -108,8 +108,8 @@ function VerifyForm() {
 
   return (
     <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
-      <p className="mt-4 mb-0 text-secondary fs-6">Student Signup - step 2</p>
-      <p className="mb-4text-center text-muted fs-7 opacity-75">
+      <p className="mt-4 mb-0 text-body-secondary fs-6">Student Signup - step 2</p>
+      <p className="mb-4text-center text-body-secondary fs-7 opacity-75">
         A verification code was sent to{" "}
         <span className="text-primary">{email || "your email"}</span>.
       </p>
@@ -196,7 +196,7 @@ function VerifyForm() {
             {isLoading ? "Verifying..." : "Complete Sign Up"}
           </button>
           <div>
-            <p className="fs-7 text-secondary mt-2 mb-0 opacity-75">
+            <p className="fs-7 text-body-secondary mt-2 mb-0 opacity-75">
               Already have an account?{" "}
               <Link
                 href="/student-login"
@@ -207,7 +207,7 @@ function VerifyForm() {
             </p>
             <Link
               href="/student-signup"
-              className="fs-7 text-secondary text-decoration-none mb-4 opacity-75"
+              className="fs-7 text-body-secondary text-decoration-none mb-4 opacity-75"
             >
               Need to resend code or change email?
             </Link>

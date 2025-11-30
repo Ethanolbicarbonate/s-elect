@@ -303,14 +303,13 @@ export default function CandidateForm({
           <div className="modal-content border-0 rounded-4">
             <form onSubmit={handleSubmit} className="d-flex flex-column h-100">
               <div
-                className="modal-header bg-white border-bottom-0"
+                className="modal-header bg-body border-bottom-0"
                 style={{
-                  backgroundImage:
-                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundImage: "var(--bg-grid-subtle)",
                   backgroundSize: "6px 6px",
                 }}
               >
-                <h5 className="modal-title fw-normal text-secondary">
+                <h5 className="modal-title fw-normal text-body-secondary">
                   {initialData ? "Edit Candidate" : "Add New Candidate"}
                 </h5>
                 <button
@@ -330,7 +329,7 @@ export default function CandidateForm({
                   <div className="col-md-4 mb-3">
                     <label
                       htmlFor="cand_firstName"
-                      className="form-label fs-7 ms-2 text-secondary"
+                      className="form-label fs-7 ms-2 text-body-secondary"
                     >
                       First Name <span className="text-danger">*</span>
                     </label>
@@ -348,7 +347,7 @@ export default function CandidateForm({
                   <div className="col-md-4 mb-3">
                     <label
                       htmlFor="cand_middleName"
-                      className="form-label fs-7 ms-2 text-secondary"
+                      className="form-label fs-7 ms-2 text-body-secondary"
                     >
                       Middle Name (Optional)
                     </label>
@@ -365,7 +364,7 @@ export default function CandidateForm({
                   <div className="col-md-4 mb-3">
                     <label
                       htmlFor="cand_lastName"
-                      className="form-label fs-7 ms-2 text-secondary"
+                      className="form-label fs-7 ms-2 text-body-secondary"
                     >
                       Last Name <span className="text-danger">*</span>
                     </label>
@@ -384,7 +383,7 @@ export default function CandidateForm({
                 <div className="mb-3">
                   <label
                     htmlFor="cand_nickname"
-                    className="form-label fs-7 ms-2 text-secondary"
+                    className="form-label fs-7 ms-2 text-body-secondary"
                   >
                     Nickname (Optional)
                   </label>
@@ -402,10 +401,10 @@ export default function CandidateForm({
                 <div className="mb-3">
                   <label
                     htmlFor="cand_photoFile"
-                    className="form-label fs-7 ms-1 text-secondary"
+                    className="form-label fs-7 ms-1 text-body-secondary"
                   >
                     Candidate Photo{" "}
-                    <span className="text-muted fs-8">
+                    <span className="text-body-secondary fs-8">
                       (Optional - Max 5MB, 1:1 recommended)
                     </span>
                   </label>
@@ -424,7 +423,7 @@ export default function CandidateForm({
                       className="mt-2 text-center"
                       style={{ maxWidth: "150px", margin: "auto" }}
                     >
-                      <p className="small text-muted mb-1">Photo Preview:</p>
+                      <p className="small text-body-secondary mb-1">Photo Preview:</p>
                       <Image
                         src={photoPreview || formData.photoUrl} // Use photoPreview (new file) or formData.photoUrl (existing)
                         alt="Candidate Photo Preview"
@@ -450,11 +449,11 @@ export default function CandidateForm({
                     </div>
                   )}
                 </div>
-                
+
                 <div className="mb-3">
                   <label
                     htmlFor="cand_positionId"
-                    className="form-label fs-7 ms-2 text-secondary"
+                    className="form-label fs-7 ms-2 text-body-secondary"
                   >
                     Running for Position <span className="text-danger">*</span>
                   </label>
@@ -483,7 +482,7 @@ export default function CandidateForm({
                   )}
                 </div>
 
-                <div className="form-check mb-3 text-secondary">
+                <div className="form-check mb-3 text-body-secondary">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -505,7 +504,7 @@ export default function CandidateForm({
                   <div className="mb-3">
                     <label
                       htmlFor="cand_partylistId"
-                      className="form-label fs-7 ms-2 text-secondary"
+                      className="form-label fs-7 ms-2 text-body-secondary"
                     >
                       Affiliated Partylist{" "}
                       <span className="text-danger">*</span>
@@ -543,7 +542,7 @@ export default function CandidateForm({
                 <div className="mb-3">
                   <label
                     htmlFor="cand_bio"
-                    className="form-label fs-7 ms-2 text-secondary"
+                    className="form-label fs-7 ms-2 text-body-secondary"
                   >
                     Short Bio/Profile (Optional)
                   </label>
@@ -560,7 +559,7 @@ export default function CandidateForm({
                 <div className="mb-3">
                   <label
                     htmlFor="cand_platformPoints"
-                    className="form-label fs-7 ms-2 text-secondary"
+                    className="form-label fs-7 ms-2 text-body-secondary"
                   >
                     Platform Points (Optional, comma-separated)
                   </label>
@@ -577,16 +576,15 @@ export default function CandidateForm({
                 </div>
               </div>
               <div
-                className="modal-footer bg-white border-top-0"
+                className="modal-footer bg-body border-top-0"
                 style={{
-                  backgroundImage:
-                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundImage: "var(--bg-grid-subtle)",
                   backgroundSize: "6px 6px",
                 }}
               >
                 <button
                   type="button"
-                  className="btn btn-light border text-secondary"
+                  className="btn btn-light border text-body-secondary"
                   onClick={onClose}
                   disabled={totalLoading}
                 >

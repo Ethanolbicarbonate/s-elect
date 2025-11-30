@@ -139,12 +139,12 @@ export default function AdminNotificationManager() {
         {/* flex-column */}
         {/* Create New Notification Form */}
         <div className="mb-4 pb-3 border-bottom flex-shrink-0">
-          <h6 className="fw-medium text-secondary mb-2">Create New</h6>
+          <h6 className="fw-medium text-body-secondary mb-2">Create New</h6>
           <form onSubmit={handleCreateNotification}>
             <div className="mb-2">
               <label
                 htmlFor="new-notif-title"
-                className="form-label fs-7 text-secondary ms-2 mb-1"
+                className="form-label fs-7 text-body-secondary ms-2 mb-1"
               >
                 Title (Optional)
               </label>
@@ -161,7 +161,7 @@ export default function AdminNotificationManager() {
             <div className="mb-2">
               <label
                 htmlFor="new-notif-content"
-                className="form-label fs-7 text-secondary ms-2 mb-1"
+                className="form-label fs-7 text-body-secondary ms-2 mb-1"
               >
                 Content <span className="text-danger">*</span>
               </label>
@@ -194,7 +194,7 @@ export default function AdminNotificationManager() {
         <div className="flex-grow-1 overflow-auto pe-2">
           {" "}
           {/* List area fills remaining space and scrolls */}
-          <h6 className="fw-medium text-secondary mb-2">
+          <h6 className="fw-medium text-body-secondary mb-2">
             Existing Notifications
           </h6>
           {isLoading ? (
@@ -203,14 +203,14 @@ export default function AdminNotificationManager() {
                 className="spinner-border spinner-border-sm text-primary"
                 role="status"
               ></div>
-              <p className="small text-muted mt-2 mb-0">
+              <p className="small text-body-secondary mt-2 mb-0">
                 Loading notifications...
               </p>
             </div>
           ) : error ? (
             <div className="alert alert-danger small py-2">{error}</div> // Use general error for fetch
           ) : notifications.length === 0 ? (
-            <div className="text-center text-secondary opacity-50 small p-3">
+            <div className="text-center text-body-secondary opacity-50 small p-3">
               No notifications have been published yet.
             </div>
           ) : (
@@ -221,11 +221,11 @@ export default function AdminNotificationManager() {
                   className="list-group-item d-flex align-items-start px-0 py-2 border-bottom"
                 >
                   <div className="flex-grow-1 me-2">
-                    <strong className="text-dark-emphasis small">
+                    <strong className="text-body-emphasis small">
                       {notif.title || "Notification"}
                     </strong>
                     <p
-                      className="mb-0 small text-muted"
+                      className="mb-0 small text-body-secondary"
                       style={{
                         whiteSpace: "pre-wrap",
                         wordBreak: "break-word",
@@ -233,7 +233,7 @@ export default function AdminNotificationManager() {
                     >
                       {notif.content}
                     </p>
-                    <span className="text-muted fs-8">
+                    <span className="text-body-secondary fs-8">
                       {format(
                         new Date(notif.createdAt),
                         "MMM dd, yyyy hh:mm a"

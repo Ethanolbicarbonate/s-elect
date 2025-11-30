@@ -45,7 +45,7 @@ export default function ElectionViewTabs({
   }
 
   return (
-    <div className="bg-white border rounded-4">
+    <div className="bg-body border rounded-4">
       <ul
         className="nav nav-tabs nav-fill mb-3"
         id="electionScopeTabs"
@@ -56,8 +56,8 @@ export default function ElectionViewTabs({
             <button
               className={`nav-link rounded-3 border-0 ${
                 activeTab === "USC"
-                  ? "active text-dark"
-                  : "text-secondary opacity-75"
+                  ? "active text-body"
+                  : "text-body-secondary opacity-75"
               }`}
               id="usc-tab"
               data-bs-toggle="tab" // For Bootstrap JS if you use it, otherwise just for state
@@ -80,8 +80,8 @@ export default function ElectionViewTabs({
             <button
               className={`nav-link rounded-3 border-0 ${
                 activeTab === "CSC"
-                  ? "active text-dark"
-                  : "text-secondary opacity-75"
+                  ? "active text-body"
+                  : "text-body-secondary opacity-75"
               }`}
               id="csc-tab"
               data-bs-toggle="tab"

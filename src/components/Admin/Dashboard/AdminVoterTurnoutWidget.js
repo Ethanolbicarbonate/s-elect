@@ -22,7 +22,7 @@ export default function AdminVoterTurnoutWidget({
     eligibleVoters <= 0
   ) {
     return (
-      <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column justify-content-center align-items-center p-3 text-center text-muted">
+      <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column justify-content-center align-items-center p-3 text-center text-body-secondary">
         <i className="bi bi-people display-4 mb-3"></i>
         <p className="mb-0">
           Eligible voter data not available or zero for this scope ({scopeType}
@@ -117,13 +117,13 @@ export default function AdminVoterTurnoutWidget({
           <Doughnut data={chartData} options={chartOptions} />
         </div>
         <div className="text-center mt-3">
-          <p className="mb-1 small text-muted">
+          <p className="mb-1 small text-body-secondary">
             Eligible Voters:{" "}
-            <span className="fw-medium text-dark">{eligibleVoters}</span>
+            <span className="fw-medium text-body">{eligibleVoters}</span>
           </p>
-          <p className="mb-1 small text-muted">
+          <p className="mb-1 small text-body-secondary">
             Votes Cast:{" "}
-            <span className="fw-medium text-dark">{votesCastInScope}</span>
+            <span className="fw-medium text-body">{votesCastInScope}</span>
           </p>
         </div>
         <Link

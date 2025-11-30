@@ -152,7 +152,7 @@ export default async function DashboardPage() {
               studentCollege={session?.user?.college} // Pass student's college for CSC filtering
             />
           ) : (
-            <div className="card shadow-sm p-4 text-center text-secondary text-opacity-50 rounded-4">
+            <div className="card shadow-sm p-4 text-center text-body-secondary text-opacity-50 rounded-4">
               <i className="bi bi-bar-chart-fill display-4 mb-3"></i>
               <h5 className="mb-0">Election Results Coming Soon</h5>
               <p className="small mb-0">

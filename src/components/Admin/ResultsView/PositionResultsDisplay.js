@@ -6,7 +6,7 @@ export default function PositionResultsDisplay({ positionResult }) {
   if (!positionResult || !positionResult.candidates) {
     return (
       <div className="card shadow-sm mb-4">
-        <div className="card-body text-muted text-center">
+        <div className="card-body text-body-secondary text-center">
           Result data for this position is incomplete or unavailable.
         </div>
       </div>
@@ -23,15 +23,15 @@ export default function PositionResultsDisplay({ positionResult }) {
 
   return (
     <div className="card shadow-sm mb-4 rounded-3 overflow-hidden">
-      <div className="card-header bg-white py-3 border-bottom-0">
+      <div className="card-header bg-body py-3 border-bottom-0">
         {" "}
         <div className="d-flex justify-content-between align-items-center">
-          <h4 className="h5 mb-0 text-muted fw-medium">{positionName}</h4>
+          <h4 className="h5 mb-0 text-body-secondary fw-medium">{positionName}</h4>
           <div className="text-end">
-            <small className="text-muted d-block">
+            <small className="text-body-secondary d-block">
               (Select {maxVotesAllowed})
             </small>
-            <small className="text-muted d-block">
+            <small className="text-body-secondary d-block">
               Total Votes for Position:{" "}
               <span className="fw-medium">
                 {totalVotesCastForPosition.toLocaleString()}
@@ -48,10 +48,10 @@ export default function PositionResultsDisplay({ positionResult }) {
             <table className="table table-striped table-hover mb-0 align-middle">
               <thead className="table-white">
                 <tr>
-                  <th className="fw-normal fs-7 text-secondary" style={{ width: "50px" }}>Photo</th>
-                  <th className="fw-normal fs-7 text-secondary">Candidate & Affiliation</th>
-                  <th className="fw-normal fs-7 text-secondary text-end">Votes</th>
-                  <th className="fw-normal fs-7 text-secondary" style={{ width: "30%" }}>Vote Share</th>
+                  <th className="fw-normal fs-7 text-body-secondary" style={{ width: "50px" }}>Photo</th>
+                  <th className="fw-normal fs-7 text-body-secondary">Candidate & Affiliation</th>
+                  <th className="fw-normal fs-7 text-body-secondary text-end">Votes</th>
+                  <th className="fw-normal fs-7 text-body-secondary" style={{ width: "30%" }}>Vote Share</th>
                 </tr>
               </thead>
               <tbody>
@@ -67,7 +67,7 @@ export default function PositionResultsDisplay({ positionResult }) {
             </table>
           </div>
         ) : (
-          <div className="p-4 text-center text-muted">
+          <div className="p-4 text-center text-body-secondary">
             No candidates ran for this position, or no votes were cast.
           </div>
         )}

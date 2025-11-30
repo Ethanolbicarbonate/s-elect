@@ -103,7 +103,7 @@ export default function StudentLoginForm() {
 
   return (
     <div className="scroll-container flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
-      <p className="my-4 text-secondary fs-6">Student Login</p>
+      <p className="my-4 text-body-secondary fs-6">Student Login</p>
       <form
         onSubmit={handleSubmit}
         className="w-100"
@@ -149,7 +149,7 @@ export default function StudentLoginForm() {
         <p className="text-end fs-7">
           <Link
             href="/forgot-password?type=student"
-            className="text-secondary opacity-75 text-decoration-none"
+            className="text-body-secondary opacity-75 text-decoration-none"
           >
             Forgot Password?
           </Link>
@@ -176,11 +176,11 @@ export default function StudentLoginForm() {
           </button>
           <Link
             href="/"
-            className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm"
+            className="btn custom-btn fs-6 btn-lg text-body-secondary border shadow-sm"
           >
             Back to Role Selection
           </Link>
-          <p className="fs-7 text-secondary mt-2 mb-4 opacity-75">
+          <p className="fs-7 text-body-secondary mt-2 mb-4 opacity-75">
             Don&apos;t have an account yet?{" "}
             <Link
               href="/student-signup"

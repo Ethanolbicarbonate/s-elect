@@ -55,7 +55,7 @@ export default function ConfirmationModal({
       ></div>
 
       {/* Modal Dialog */}
-      
+
       <div
         className="modal fade show d-block"
         tabIndex="-1"
@@ -72,10 +72,9 @@ export default function ConfirmationModal({
         >
           <div className="modal-content shadow-lg rounded-3 border-0">
             <div
-              className="modal-header rounded-top-3 bg-white border-bottom-0"
+              className="modal-header rounded-top-3 bg-body border-bottom-0"
               style={{
-                backgroundImage:
-                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundImage: "var(--bg-grid-subtle)",
                 backgroundSize: "6px 6px",
               }}
             >
@@ -94,16 +93,15 @@ export default function ConfirmationModal({
               <p className="mb-0">{bodyText}</p>
             </div>
             <div
-              className="modal-footer rounded-bottom-3 bg-white border-top-0"
+              className="modal-footer rounded-bottom-3 bg-body border-top-0"
               style={{
-                backgroundImage:
-                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundImage: "var(--bg-grid-subtle)",
                 backgroundSize: "6px 6px",
               }}
             >
               <button
                 type="button"
-                className="btn custom-btn btn-md text-secondary border"
+                className="btn custom-btn btn-md text-body-secondary border"
                 onClick={onClose}
                 disabled={isConfirming}
               >

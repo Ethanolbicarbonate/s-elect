@@ -221,14 +221,14 @@ export default function PositionForm({
         >
           <div className="modal-content border-0 rounded-4">
             <form onSubmit={handleSubmit} className="d-flex flex-column h-100">
-              <div className="modal-header bg-white border-bottom-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
-                <h5 className="modal-title fw-normal text-secondary">
+              <div
+                className="modal-header bg-body border-bottom-0"
+                style={{
+                  backgroundImage: "var(--bg-grid-subtle)",
+                  backgroundSize: "6px 6px",
+                }}
+              >
+                <h5 className="modal-title fw-normal text-body-secondary">
                   {initialData ? "Edit Position" : "Create New Position"}
                 </h5>
                 <button
@@ -247,7 +247,10 @@ export default function PositionForm({
 
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <label htmlFor="pos_type" className="form-label fs-7 ms-2 text-secondary">
+                    <label
+                      htmlFor="pos_type"
+                      className="form-label fs-7 ms-2 text-body-secondary"
+                    >
                       Type <span className="text-danger">*</span>
                     </label>
                     <select
@@ -299,7 +302,7 @@ export default function PositionForm({
                 <div className="mb-3">
                   <label
                     htmlFor="pos_name_select"
-                    className="form-label fs-7 ms-2 text-secondary"
+                    className="form-label fs-7 ms-2 text-body-secondary"
                   >
                     Position Name <span className="text-danger">*</span>
                   </label>
@@ -349,7 +352,7 @@ export default function PositionForm({
                     {/* Changed from col-md-4 */}
                     <label
                       htmlFor="pos_maxVotesAllowed"
-                      className="form-label fs-7 ms-2 text-secondary"
+                      className="form-label fs-7 ms-2 text-body-secondary"
                     >
                       Max Votes Allowed <span className="text-danger">*</span>
                     </label>
@@ -364,7 +367,7 @@ export default function PositionForm({
                       min="1"
                       disabled={isLoading}
                     />
-                    <div className="form-text fs-7 ms-1 text-secondary opacity-75 text-end">
+                    <div className="form-text fs-7 ms-1 text-body-secondary opacity-75 text-end">
                       Single-seat: 1 · Multi-seat: num of seats
                     </div>
                   </div>
@@ -373,7 +376,7 @@ export default function PositionForm({
                     {/* Changed from col-md-4 */}
                     <label
                       htmlFor="pos_minVotesRequired"
-                      className="form-label fs-7 ms-2 text-secondary"
+                      className="form-label fs-7 ms-2 text-body-secondary"
                     >
                       Min Votes Required
                     </label>
@@ -387,7 +390,7 @@ export default function PositionForm({
                       min="0"
                       disabled={isLoading}
                     />
-                    <div className="form-text fs-7 ms-1 text-secondary opacity-75 text-end">
+                    <div className="form-text fs-7 ms-1 text-body-secondary opacity-75 text-end">
                       Usually 0 (voter can skip)
                     </div>
                   </div>
@@ -396,7 +399,7 @@ export default function PositionForm({
                 <div className="mb-3">
                   <label
                     htmlFor="pos_description"
-                    className="form-label fs-7 ms-1 ms-2 text-secondary"
+                    className="form-label fs-7 ms-1 ms-2 text-body-secondary"
                   >
                     Description (Optional)
                   </label>
@@ -411,17 +414,17 @@ export default function PositionForm({
                   ></textarea>
                 </div>
               </div>
-              <div className="modal-footer bg-white border-top-0"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                >
+              <div
+                className="modal-footer bg-body border-top-0"
+                style={{
+                  backgroundImage: "var(--bg-grid-subtle)",
+                  backgroundSize: "6px 6px",
+                }}
+              >
                 {/* ... buttons ... */}
                 <button
                   type="button"
-                  className="btn btn-light border text-secondary"
+                  className="btn btn-light border text-body-secondary"
                   onClick={onClose}
                   disabled={isLoading}
                 >

@@ -36,14 +36,14 @@ export default function CreateElectionForm({
 
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm">
-      <div className="card-header rounded-top-4 bg-white border-bottom-0"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
-              backgroundSize: "6px 6px",
-            }}
-          >
-        <h5 className="mb-0 text-secondary fw-normal">
+      <div
+        className="card-header rounded-top-4 bg-body border-bottom-0"
+        style={{
+          backgroundImage: "var(--bg-grid-subtle)",
+          backgroundSize: "6px 6px",
+        }}
+      >
+        <h5 className="mb-0 text-body-secondary fw-normal">
           Create New Election Period
         </h5>
       </div>
@@ -55,7 +55,7 @@ export default function CreateElectionForm({
               <div className="mb-2">
                 <label
                   htmlFor="name"
-                  className="form-label fs-7 text-secondary ms-2"
+                  className="form-label fs-7 text-body-secondary ms-2"
                 >
                   Election Name
                 </label>
@@ -74,7 +74,7 @@ export default function CreateElectionForm({
                 <div className="col-md-6 mb-2">
                   <label
                     htmlFor="startDate"
-                    className="form-label fs-7 text-secondary ms-2"
+                    className="form-label fs-7 text-body-secondary ms-2"
                   >
                     Start Date & Time
                   </label>
@@ -92,7 +92,7 @@ export default function CreateElectionForm({
                 <div className="col-md-6">
                   <label
                     htmlFor="endDate"
-                    className="form-label fs-7 text-secondary ms-2"
+                    className="form-label fs-7 text-body-secondary ms-2"
                   >
                     End Date & Time
                   </label>
@@ -113,7 +113,7 @@ export default function CreateElectionForm({
               <div>
                 <label
                   htmlFor="description"
-                  className="form-label fs-7 text-secondary ms-2"
+                  className="form-label fs-7 text-body-secondary ms-2"
                 >
                   Description (Optional)
                 </label>
@@ -135,7 +135,7 @@ export default function CreateElectionForm({
             <div className="col-12 col-md-auto ms-auto">
               <button
                 type="submit"
-                className="btn custom-btn fs-6 btn-lg text-secondary border rounded-2 bg-light w-100"
+                className="btn custom-btn fs-6 btn-lg text-body-secondary border rounded-2 bg-body-tertiary w-100"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating..." : "Create Election Period"}

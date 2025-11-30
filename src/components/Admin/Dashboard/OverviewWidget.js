@@ -6,7 +6,7 @@ import { format } from "date-fns";
 export default function OverviewWidget({ election }) {
   if (!election) {
     return (
-      <div className="card h-100 shadow-sm flex-grow-1 p-3 text-center text-muted">
+      <div className="card h-100 shadow-sm flex-grow-1 p-3 text-center text-body-secondary">
         <i className="bi bi-info-circle display-4 mb-3"></i>
         <p className="mb-0">No election details to display.</p>
       </div>
@@ -29,9 +29,9 @@ export default function OverviewWidget({ election }) {
       : effectiveStatus === "UPCOMING"
       ? "info"
       : effectiveStatus === "ENDED"
-      ? "dark"
+      ? "secondary" // CHANGED: 'dark' -> 'secondary' (Visible on dark backgrounds)
       : effectiveStatus === "PAUSED"
-      ? "warning text-dark"
+      ? "warning text-dark" // CHANGED: 'text-body' -> 'text-dark' (Black text on yellow is always readable)
       : "secondary";
 
   const formattedStartDate = format(new Date(startDate), "MMM dd, yyyy");
@@ -39,19 +39,20 @@ export default function OverviewWidget({ election }) {
 
   return (
     <div className="card h-100 shadow-sm flex-grow-1 rounded-4 overflow-hidden">
-      <div className="card-header bg-primary text-white py-2 "
-          style={{
-            backgroundImage:
-              "radial-gradient(circle,rgba(241, 241, 241, 0.23) 1px, transparent 1px)",
-            backgroundSize: "6px 6px",
-          }}
-        >
+      <div
+        className="card-header bg-primary text-white py-2 "
+        style={{
+          backgroundImage:
+            "radial-gradient(circle,rgba(241, 241, 241, 0.23) 1px, transparent 1px)",
+          backgroundSize: "6px 6px",
+        }}
+      >
         <h5 className="mb-0 h6">Current Election Overview</h5>
       </div>
       <div className="card-body d-flex flex-column">
         <h4 className="card-title mb-2 text-primary">{name}</h4>
         <div className="d-flex justify-content-between align-items-center mb-2">
-          <p className="mb-0 small text-muted">
+          <p className="mb-0 small text-body-secondary">
             Period: {formattedStartDate} - {formattedEndDate}
           </p>
           <span className={`badge fw-medium bg-${statusColor}`}>
@@ -61,7 +62,7 @@ export default function OverviewWidget({ election }) {
 
         {description && (
           <p
-            className="card-text small text-muted text-truncate mb-3"
+            className="card-text small text-body-secondary text-truncate mb-3"
             style={{ maxHeight: "3em", overflow: "hidden" }}
             title={description}
           >
@@ -69,7 +70,7 @@ export default function OverviewWidget({ election }) {
           </p>
         )}
 
-        <div className="mt-auto pt-3 border-top border-light">
+        <div className="mt-auto pt-3 border-top border-secondary-subtle">
           <Link
             href={`/admin/election-entities?scope=${scope.type}${
               scope.college ? `&college=${scope.college}` : ""

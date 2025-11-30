@@ -95,14 +95,13 @@ export default function ElectionCalendarWidget({ electionPeriod = null }) {
     <div className="card h-100 border-1 rounded-4 shadow-sm">
       <div className="card-body d-flex flex-column p-0">
         <div
-          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white rounded-top-4"
+          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-body rounded-top-4"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundImage: "var(--bg-grid-subtle)",
             backgroundSize: "6px 6px",
           }}
         >
-          <h6 className="card-title text-secondary mb-0">
+          <h6 className="card-title text-body-secondary mb-0">
             {electionPeriod
               ? `${electionPeriod.name} Calendar`
               : "Election Calendar"}{" "}
@@ -114,7 +113,7 @@ export default function ElectionCalendarWidget({ electionPeriod = null }) {
           >
             <i
               className={`bi bi-circle-fill ${
-                electionPeriod ? "text-primary" : "text-secondary"
+                electionPeriod ? "text-primary" : "text-body-secondary"
               }`}
             ></i>
           </span>

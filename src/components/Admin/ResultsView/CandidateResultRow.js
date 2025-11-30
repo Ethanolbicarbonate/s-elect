@@ -42,7 +42,7 @@ export default function CandidateResultRow({
             height: "40px",
             overflow: "hidden",
             position: "relative",
-            border: "2px solid #dee2e6",
+            border: "2px solid var(--bs-border-color)",
             backgroundColor: "#f8f9fa",
             margin: "0 auto",
           }}
@@ -67,28 +67,28 @@ export default function CandidateResultRow({
               className="d-flex align-items-center justify-content-center w-100 h-100"
               title={`${candidate.firstName} ${candidate.lastName} (No photo)`}
             >
-              <i className="bi bi-person-fill fs-5 text-secondary opacity-50"></i>
+              <i className="bi bi-person-fill fs-5 text-body-secondary opacity-50"></i>
             </div>
           )}
         </div>
       </td>
       <td>
-        <div className="fw-medium text-dark-emphasis">
+        <div className="fw-medium text-body-emphasis">
           {candidate.firstName} {candidate.lastName}
           {candidate.nickname ? (
-            <span className="text-muted small"> ({candidate.nickname})</span>
+            <span className="text-body-secondary small"> ({candidate.nickname})</span>
           ) : (
             ""
           )}
           {isWinner && (
             <i
-              className="bi bi-trophy-fill ms-2 text-warning bg-white rounded-5"
+              className="bi bi-trophy-fill ms-2 text-warning bg-body rounded-5"
               style={{ fontSize: "0.7rem", padding: "0.2rem 0.3rem" }}
               title="Winner"
             ></i>
           )}
         </div>
-        <div className="small text-muted">
+        <div className="small text-body-secondary">
           {candidate.isIndependent
             ? "Independent"
             : candidate.partylistName || "N/A"}
@@ -102,7 +102,7 @@ export default function CandidateResultRow({
       </td>
       <td style={{ width: "30%" }}>
         <div
-          className="progress bg-light border"
+          className="progress bg-body-tertiary border"
           role="progressbar"
           aria-label={`Votes for ${candidate.firstName}`}
           aria-valuenow={percentage}

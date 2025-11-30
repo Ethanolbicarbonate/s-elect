@@ -98,7 +98,7 @@ function ActualResetPasswordForm() {
 
   return (
     <div className="flex-grow-1 d-flex flex-column align-items-center px-4 overflow-auto">
-      <p className="my-4 text-secondary fs-6">Reset Your Password</p>
+      <p className="my-4 text-body-secondary fs-6">Reset Your Password</p>
       {(message || error) && (
         <div
           className={`alert ${
@@ -185,7 +185,7 @@ function ActualResetPasswordForm() {
                 ? "/admin-login"
                 : "/"
             }
-            className="btn custom-btn fs-6 btn-lg text-secondary border shadow-sm mb-4"
+            className="btn custom-btn fs-6 btn-lg text-body-secondary border shadow-sm mb-4"
           >
             Back to Login
           </Link>

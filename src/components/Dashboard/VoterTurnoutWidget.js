@@ -13,7 +13,7 @@ const ProgressBar = ({ percentage, label, color = "primary" }) => {
     <div className="mb-2">
       {label && (
         <div className="d-flex justify-content-between small mb-1">
-          <span className="text-secondary">{label}</span>
+          <span className="text-body-secondary">{label}</span>
           <span className={`fw-medium text-${color}`}>
             <CountUp
               key={validPercentage} // Re-animate on value change
@@ -96,7 +96,7 @@ export default function VoterTurnoutWidget({ electionId }) {
   const renderContent = () => {
     if (!electionId) {
       return (
-        <p className="text-muted text-center small p-3">
+        <p className="text-body-secondary text-center small p-3">
           No active election selected to display turnout.
         </p>
       );
@@ -123,7 +123,7 @@ export default function VoterTurnoutWidget({ electionId }) {
     if (!turnoutData || !turnoutData.overallUscTurnout) {
       // Check for essential data
       return (
-        <p className="text-secondary opacity-50 text-center small p-3 w-100">
+        <p className="text-body-secondary opacity-50 text-center small p-3 w-100">
           Voter turnout data is currently unavailable
         </p>
       );
@@ -132,7 +132,7 @@ export default function VoterTurnoutWidget({ electionId }) {
     return (
       <>
         <div className="border p-3 rounded-3 w-100">
-          <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+          <h6 className="text-body-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
             USC Turnout by College
           </h6>
           <div
@@ -159,7 +159,7 @@ export default function VoterTurnoutWidget({ electionId }) {
         <div className="d-flex flex-column w-100 gap-4">
           {/* USC Turnout */}
           <div className="border p-3 rounded-3 w-100">
-            <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+            <h6 className="text-body-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
               USC Overall Turnout
             </h6>
             <ProgressBar
@@ -171,7 +171,7 @@ export default function VoterTurnoutWidget({ electionId }) {
           {turnoutData.specificCscTurnout &&
             turnoutData.specificCscTurnout.college === studentCollege && (
               <div className="p-3 border rounded-2 w-100">
-                <h6 className="text-dark-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
+                <h6 className="text-body-emphasis fw-medium fs-7 border-bottom pb-1 mb-2">
                   {studentCollege} CSC Turnout
                 </h6>
                 <ProgressBar
@@ -190,19 +190,18 @@ export default function VoterTurnoutWidget({ electionId }) {
     <div className="card h-100 border-1 rounded-4 shadow-sm">
       <div className="card-body d-flex flex-column p-0">
         <div
-          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white rounded-top-4"
+          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-body rounded-top-4"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundImage: "var(--bg-grid-subtle)",
             backgroundSize: "6px 6px",
           }}
         >
-          <h6 className="card-title text-secondary mb-0 fw-medium">
+          <h6 className="card-title text-body-secondary mb-0 fw-medium">
             Voter Turnout
           </h6>
           {/* Refresh button (manual) */}
           <button
-            className="btn btn-sm btn-link text-secondary p-0 badge bg-secondary-subtle rounded-circle p-1 d-flex align-items-center justify-content-center"
+            className="btn btn-sm btn-link text-body-secondary p-0 badge bg-secondary-subtle rounded-circle p-1 d-flex align-items-center justify-content-center"
             onClick={fetchTurnoutData}
             disabled={isLoading}
             title="Refresh turnout data"
@@ -220,10 +219,9 @@ export default function VoterTurnoutWidget({ electionId }) {
         </div>
         {lastRefreshed && turnoutData && (
           <div
-            className="card-footer border-top-0 text-end text-secondary opacity-75 px-3 bg-white rounded-bottom-4"
+            className="card-footer border-top-0 text-end text-body-secondary opacity-75 px-3 bg-body rounded-bottom-4"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >
