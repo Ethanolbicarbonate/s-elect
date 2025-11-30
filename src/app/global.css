@@ -3,6 +3,24 @@
 
 :root {
   --font-outfit: "Outfit", sans-serif;
+  /* Default (Light Mode) Variables */
+  --nav-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  --soft-bg-opacity: 0.1;
+  --input-bg: #fff;
+  --input-border: #dee2e6;
+  --input-text: #212529;
+}
+
+[data-bs-theme="dark"] {
+  --nav-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Darker shadow */
+  --soft-bg-opacity: 0.25; /* Higher opacity for visibility on dark bg */
+  --input-bg: #2b3035;
+  --input-border: #495057;
+  --input-text: #dee2e6;
+}
+
+[data-bs-theme="dark"] .logo-color {
+  filter: brightness(0) invert(1);
 }
 
 body {
@@ -65,7 +83,8 @@ button,
   overflow: hidden;
   font-weight: 400;
   cursor: pointer;
-  background: #fff;
+  background: var(--bs-body-bg); /* Changed from #fff */
+  color: var(--bs-body-color); /* Adaptive text color */
 }
 
 .custom-btn:hover {
@@ -79,6 +98,9 @@ button,
 }
 
 .thin-input {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-color: var(--input-border);
   padding: 0.4rem 0.8rem;
   font-size: 1rem;
   border-width: 1px;
@@ -88,6 +110,8 @@ button,
 
 .floating-label {
   position: relative;
+  color: var(--bs-secondary-color); /* Changed from #6c757d */
+  background-color: transparent; /* Ensure label doesn't block lines if needed */
 }
 
 .floating-label label {
@@ -154,21 +178,12 @@ button,
 }
 
 .bg-success-soft {
-  background-color: rgba(
-    25,
-    135,
-    84,
-    0.1
-  ) !important; /* Added !important for specificity if needed */
+  background-color: rgba(25, 135, 84, var(--soft-bg-opacity)) !important;
 }
 .bg-danger-soft {
-  background-color: rgba(
-    220,
-    53,
-    69,
-    0.1
-  ) !important; /* Added !important for specificity if needed */
+  background-color: rgba(220, 53, 69, var(--soft-bg-opacity)) !important;
 }
+
 .badge.rounded-circle.p-1 {
   display: inline-flex;
   align-items: center;
@@ -188,11 +203,16 @@ button,
 }
 
 .bg-primary-soft {
-  background-color: rgba(13, 110, 253, 0.1);
+  background-color: rgba(13, 110, 253, var(--soft-bg-opacity));
 }
 .bg-info-soft {
-  background-color: rgba(13, 202, 240, 0.1);
+  background-color: rgba(13, 202, 240, var(--soft-bg-opacity));
 }
+
+.text-secondary {
+  color: var(--bs-secondary-color) !important;
+}
+
 .card-header {
   border-bottom: 0;
 }

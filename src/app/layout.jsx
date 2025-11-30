@@ -1,10 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
 import "./global.css";
-import BootstrapClient from '@/components/BootstrapClient.js';
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import AuthProvider from '@/components/AuthProvider';
+import BootstrapClient from "@/components/BootstrapClient.js";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import AuthProvider from "@/components/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,29 +22,29 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "sELECT"
+    title: "sELECT",
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
       {
-        rel: 'android-chrome-192x192',
-        url: '/android-chrome-192x192.png',
-        sizes: '192x192',
-        type: 'image/png',
+        rel: "android-chrome-192x192",
+        url: "/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
       },
       {
-        rel: 'android-chrome-512x512',
-        url: '/android-chrome-512x512.png',
-        sizes: '512x512',
-        type: 'image/png',
+        rel: "android-chrome-512x512",
+        url: "/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
       },
     ],
   },
@@ -56,22 +56,23 @@ export const viewport = {
   maximumScale: 1,
   userScalable: false,
   orientation: "portrait",
-  themeColor: "#ffffff"
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" data-bs-theme="dark">
       <head>
-        <meta name="theme-color" content="#ffffff" />
+        {/* Remove or make the theme-color dynamic */}
+        <meta name="theme-color" content="#0d6efd" />
         <link rel="manifest" href="/manifest.json" />
         <style>
           {`
             @media (display-mode: standalone) {
               body {
-                background-color: #ffffff;
+                /* Use Bootstrap's variable instead of hardcoded #ffffff */
+                background-color: var(--bs-body-bg);
               }
-              /* Prevent flash of unstyled content */
               body:not(:defined) {
                 display: none;
               }
