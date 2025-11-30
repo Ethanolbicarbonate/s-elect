@@ -56,7 +56,7 @@ export default function ElectionViewTabs({
             <button
               className={`nav-link rounded-3 border-0 ${
                 activeTab === "USC"
-                  ? "active text-body"
+                  ? "active text-body-secondary"
                   : "text-body-secondary opacity-75"
               }`}
               id="usc-tab"
@@ -80,7 +80,7 @@ export default function ElectionViewTabs({
             <button
               className={`nav-link rounded-3 border-0 ${
                 activeTab === "CSC"
-                  ? "active text-body"
+                  ? "active text-body-secondary"
                   : "text-body-secondary opacity-75"
               }`}
               id="csc-tab"

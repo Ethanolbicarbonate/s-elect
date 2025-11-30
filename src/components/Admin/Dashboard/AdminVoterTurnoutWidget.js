@@ -119,11 +119,11 @@ export default function AdminVoterTurnoutWidget({
         <div className="text-center mt-3">
           <p className="mb-1 small text-body-secondary">
             Eligible Voters:{" "}
-            <span className="fw-medium text-body">{eligibleVoters}</span>
+            <span className="fw-medium text-body-secondary">{eligibleVoters}</span>
           </p>
           <p className="mb-1 small text-body-secondary">
             Votes Cast:{" "}
-            <span className="fw-medium text-body">{votesCastInScope}</span>
+            <span className="fw-medium text-body-secondary">{votesCastInScope}</span>
           </p>
         </div>
         <Link

@@ -57,7 +57,7 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
         className="d-none d-lg-flex flex-column vh-100 p-3 position-fixed top-0 left-0 bg-body gap-4"
         style={{ width: "260px", zIndex: 1000, boxShadow: "0 0 15px rgba(0,0,0,0.1)" }}
       >
-        <Link href="/admin/dashboard" className="d-flex align-items-center mb-3 text-body text-decoration-none">
+        <Link href="/admin/dashboard" className="d-flex align-items-center mb-3 text-body-secondary text-decoration-none">
           <div className="w-100">
             <Image
               src="/assets/logotext.svg"

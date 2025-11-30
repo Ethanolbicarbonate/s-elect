@@ -96,14 +96,14 @@ export default function StudentLayout({ children }) {
             <nav aria-label="breadcrumb" className="d-none d-md-block">
               <ol className="breadcrumb mb-0 d-flex align-items-center">
                 <li className="breadcrumb-item"><Link href="/dashboard" className="text-decoration-none"><i className="bi bi-house-door-fill text-body-secondary"></i></Link></li>
-                <li className="breadcrumb-item active text-body text-body-secondary opacity-75" aria-current="page">{currentPageName}</li>
+                <li className="breadcrumb-item active text-body-secondary text-body-secondary opacity-75" aria-current="page">{currentPageName}</li>
               </ol>
             </nav>
-            <div className="d-md-none text-body fw-thin">{currentPageName}</div>
+            <div className="d-md-none text-body-secondary fw-thin">{currentPageName}</div>
           </div>
 
           <div className="d-flex align-items-center">
-            <span className="me-2 text-body d-none d-sm-inline">{userName}</span>
+            <span className="me-2 text-body-secondary d-none d-sm-inline">{userName}</span>
             <span className={`badge p-2 fs-6 fw-medium ${getCollegeBadgeClasses(userCollege)}`}>{userCollege}</span>
             
             <button

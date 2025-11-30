@@ -91,7 +91,7 @@ export default function RecentActivityWidget({ userRole }) {
                 </div>
                 <div className="flex-grow-1 text-truncate pe-2 min-w-0">
                   <p
-                    className="mb-0 fw-medium text-body fs-7 text-truncate"
+                    className="mb-0 fw-medium text-body-secondary fs-7 text-truncate"
                     title={log.actionType.replace(/_/g, " ")}
                   >
                     {log.actionType.replace(/_/g, " ")}
@@ -117,7 +117,7 @@ export default function RecentActivityWidget({ userRole }) {
                 <div
                   className="text-end flex-shrink-0"
                 >
-                  <span className="badge fw-medium bg-body-tertiary text-body smaller py-1 px-2">
+                  <span className="badge fw-medium bg-body-tertiary text-body-secondary smaller py-1 px-2">
                     {format(new Date(log.timestamp), "MMM d, hh:mm a")}
                   </span>
                 </div>

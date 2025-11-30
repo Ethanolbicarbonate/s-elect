@@ -93,7 +93,7 @@ export default function PositionDetailedResults({ position, candidates }) {
                   {/* Candidate Info and Progress Bar */}
                   <div className="flex-grow-1">
                     <div className="d-flex justify-content-between align-items-center mb-1">
-                      <span className="fw-medium text-body small">
+                      <span className="fw-medium text-body-secondary small">
                         {candidate.firstName} {candidate.lastName}
                         {candidate.nickname && ` (${candidate.nickname})`}
                         {candidate.partylist && !candidate.isIndependent && (

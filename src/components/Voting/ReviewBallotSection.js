@@ -52,7 +52,7 @@ export default function ReviewBallotSection({
             selectionDisplay = (
               <ul className="list-unstyled mb-0 ps-3">
                 {selectedCandidateIds.map((candId) => (
-                  <li key={candId} className="fw-medium text-body">
+                  <li key={candId} className="fw-medium text-body-secondary">
                     <i className="bi bi-check-circle-fill fs-7 text-success"></i>{" "}
                     {findNameById(candId, scopeCandidates, "firstName")}{" "}
                     {findNameById(candId, scopeCandidates, "lastName")}
@@ -164,7 +164,7 @@ export default function ReviewBallotSection({
             backgroundSize: "6px 6px",
           }}
         >
-          <h4 className="h5 mb-0 text-body">
+          <h4 className="h5 mb-0 text-body-secondary">
             University Student Council (USC)
           </h4>
           <button
@@ -194,7 +194,7 @@ export default function ReviewBallotSection({
               backgroundSize: "6px 6px",
             }}
           >
-            <h4 className="h5 mb-0 text-body">
+            <h4 className="h5 mb-0 text-body-secondary">
               College Student Council ({studentCollegeName || "CSC"})
             </h4>
             <button

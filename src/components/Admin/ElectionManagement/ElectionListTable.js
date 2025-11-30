@@ -150,7 +150,7 @@ export default function ElectionListTable({
                       ? election.extensions.map((ext) => (
                           <span
                             key={ext.id}
-                            className="badge bg-body-tertiary text-body fw-medium me-1 mb-1 p-1 border d-block d-xl-inline-block"
+                            className="badge bg-body-tertiary text-body-secondary fw-medium me-1 mb-1 p-1 border d-block d-xl-inline-block"
                           >
                             {/* Stack on md, inline on xl */}
                             {ext.college}:{" "}

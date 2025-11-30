@@ -6,15 +6,15 @@ import { format } from "date-fns";
 const getActorTypeBadgeColor = (actorType) => {
   switch (actorType) {
     case "ADMIN":
-      return "bg-warning text-body";
+      return "bg-warning text-body-secondary";
     case "SYSTEM":
-      return "bg-info text-body";
+      return "bg-info text-body-secondary";
     case "STUDENT":
       return "bg-success";
     case "UNKNOWN":
       return "bg-secondary";
     default:
-      return "bg-body-tertiary text-body border";
+      return "bg-body-tertiary text-body-secondary border";
   }
 };
 
@@ -25,7 +25,7 @@ const getStatusBadgeColor = (status) => {
     case "FAILURE":
       return "bg-danger";
     default:
-      return "bg-body-tertiary text-body border";
+      return "bg-body-tertiary text-body-secondary border";
   }
 };
 

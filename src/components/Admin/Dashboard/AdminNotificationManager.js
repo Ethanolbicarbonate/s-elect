@@ -221,7 +221,7 @@ export default function AdminNotificationManager() {
                   className="list-group-item d-flex align-items-start px-0 py-2 border-bottom"
                 >
                   <div className="flex-grow-1 me-2">
-                    <strong className="text-body small">
+                    <strong className="text-body-secondary small">
                       {notif.title || "Notification"}
                     </strong>
                     <p

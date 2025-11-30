@@ -86,10 +86,10 @@ export default function AdminLayout({ children }) {
             <nav aria-label="breadcrumb" className="d-none d-md-block">
               <ol className="breadcrumb mb-0 d-flex align-items-center">
                 <li className="breadcrumb-item"><Link href="/admin/dashboard" className="text-decoration-none"><i className="bi bi-house-door-fill text-body-secondary"></i></Link></li>
-                <li className="breadcrumb-item active text-body text-body-secondary opacity-75" aria-current="page">{currentPageName}</li>
+                <li className="breadcrumb-item active text-body-secondary text-body-secondary opacity-75" aria-current="page">{currentPageName}</li>
               </ol>
             </nav>
-            <div className="d-md-none text-body fw-normal">{currentPageName}</div>
+            <div className="d-md-none text-body-secondary fw-normal">{currentPageName}</div>
           </div>
           <div className="d-flex align-items-center">
             <div className="px-3 d-none d-md-block">{adminName}</div>

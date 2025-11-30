@@ -26,10 +26,10 @@ const NotificationListDisplay = ({ notifications, title }) => {
             className="list-group-item px-0 py-2 border-bottom d-flex flex-column"
           >
             <div className="d-flex justify-content-between align-items-start mb-1">
-              <span className="text-body fw-medium small">
+              <span className="text-body-secondary fw-medium small">
                 {notif.title || "Election Notification"}
               </span>
-              <span className="badge fw-medium bg-body-tertiary text-body small text-nowrap ms-2">
+              <span className="badge fw-medium bg-body-tertiary text-body-secondary small text-nowrap ms-2">
                 {format(new Date(notif.createdAt), "MMM d, hh:mm a")}
               </span>
             </div>

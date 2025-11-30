@@ -45,8 +45,8 @@ export default function NavigationPanel() {
       {/* Logo */}
       <Link
         href="/dashboard"
-        // CHANGED: text-body -> text-body
-        className="d-flex align-items-center mb-3 text-body text-decoration-none"
+        // CHANGED: text-body-secondary -> text-body
+        className="d-flex align-items-center mb-3 text-body-secondary text-decoration-none"
       >
         <div className="w-100">
           <Image
