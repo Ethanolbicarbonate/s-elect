@@ -8,6 +8,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/UI/ThemeToggle"; // Import the new component
 
 // Simplified for desktop-only view. Mobile logic is now in AdminBottomNavBar.
 export default function AdminNavigationPanel({ userRole, userCollege }) {
@@ -132,6 +133,10 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
         </ul>
 
         <div className="mt-auto pt-2 border-top border-secondary-subtle">
+          
+        <div className="px-3 pb-2">
+           <ThemeToggle />
+        </div>
           <button
             onClick={handleLogout}
             className="nav-link text-danger d-flex align-items-center w-100 fs-7 fw-medium"

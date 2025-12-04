@@ -8,6 +8,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/UI/ThemeToggle";
 
 // This component is now a desktop-only sidebar.
 // All mobile-related logic has been removed.
@@ -33,12 +34,10 @@ export default function NavigationPanel() {
 
   return (
     <nav
-      // CHANGED: bg-body -> bg-body, border-secondary-subtle -> border-secondary-subtle
       className="d-none d-lg-flex flex-column vh-100 p-3 position-fixed top-0 left-0 bg-body gap-4"
       style={{
         width: "260px",
         zIndex: 1000,
-        // CHANGED: Use a CSS variable for shadow (defined below) instead of hardcoded rgba
         boxShadow: "var(--nav-shadow)",
       }}
     >
@@ -84,6 +83,9 @@ export default function NavigationPanel() {
 
       {/* Logout Button */}
       <div className="px-3 py-1 border-top border-secondary-subtle">
+        <div className="px-0 py-2">
+          <ThemeToggle />
+        </div>
         <button
           onClick={handleLogout}
           className="nav-link text-danger d-flex align-items-center w-100"
