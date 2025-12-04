@@ -27,7 +27,7 @@ export default function PositionDetailedResults({ position, candidates }) {
     <div className="card h-100 border-0 d-flex flex-column">
       {" "}
       {/* Ensure card takes available height */}
-      <h5 className="card-title small mb-3 text-secondary text-center">
+      <h5 className="card-title small mb-3 text-body-secondary text-center">
         {position.name}
       </h5>
       <div className="flex-grow-1 overflow-auto pe-2" style={{height: "180px"}}>
@@ -85,7 +85,7 @@ export default function PositionDetailedResults({ position, candidates }) {
                       />
                     ) : (
                       <div className="d-flex align-items-center justify-content-center w-100 h-100">
-                        <i className="bi bi-person-fill fs-5 text-secondary opacity-50"></i>
+                        <i className="bi bi-person-fill fs-5 text-body-secondary opacity-50"></i>
                       </div>
                     )}
                   </div>
@@ -93,7 +93,7 @@ export default function PositionDetailedResults({ position, candidates }) {
                   {/* Candidate Info and Progress Bar */}
                   <div className="flex-grow-1">
                     <div className="d-flex justify-content-between align-items-center mb-1">
-                      <span className="fw-medium text-dark-emphasis small">
+                      <span className="fw-medium text-body-secondary small">
                         {candidate.firstName} {candidate.lastName}
                         {candidate.nickname && ` (${candidate.nickname})`}
                         {candidate.partylist && !candidate.isIndependent && (
@@ -136,7 +136,7 @@ export default function PositionDetailedResults({ position, candidates }) {
             })}
           </ul>
         ) : (
-          <div className="text-center text-muted small p-3">
+          <div className="text-center text-body-secondary small p-3">
             No candidates found for this position.
           </div>
         )}

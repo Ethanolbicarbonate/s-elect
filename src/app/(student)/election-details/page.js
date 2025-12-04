@@ -119,9 +119,9 @@ export default async function ElectionDetailsPage() {
       <div className="container py-5 text-center">
         <div className="card shadow-sm">
           <div className="card-body p-5">
-            <i className="bi bi-calendar-x fs-1 text-muted mb-3"></i>
+            <i className="bi bi-calendar-x fs-1 text-body-secondary mb-3"></i>
             <h4 className="card-title">No Active or Upcoming Election</h4>
-            <p className="card-text text-muted">
+            <p className="card-text text-body-secondary">
               There are currently no active or upcoming elections scheduled.
               Please check back later or visit your student dashboard for any
               announcements.
@@ -154,7 +154,7 @@ export default async function ElectionDetailsPage() {
           <h2 className="mb-0 h4">{electionDetails.name}</h2>
         </div>
         <div className="card-body">
-          <p className="card-text text-secondary">
+          <p className="card-text text-body-secondary">
             Status:
             <span
               className={`ms-2 fw-normal badge bg-${
@@ -168,7 +168,7 @@ export default async function ElectionDetailsPage() {
               {electionDetails.effectiveStatusForStudent?.replace("_", " ")}
             </span>
           </p>
-          <p className="card-text text-secondary">
+          <p className="card-text text-body-secondary">
             Period:{" "}
             {formatDateRange(
               electionDetails.startDate,
@@ -177,9 +177,9 @@ export default async function ElectionDetailsPage() {
           </p>
           {electionDetails.description && (
             <>
-              <h5 className="mt-3 text-secondary fs-6 fw-normal">Description:</h5>
+              <h5 className="mt-3 text-body-secondary fs-6 fw-normal">Description:</h5>
               <p
-                className="card-text fst-italic text-muted fs-7 opacity-75 px-2"
+                className="card-text fst-italic text-body-secondary fs-7 opacity-75 px-2"
                 style={{ whiteSpace: "pre-wrap" }}
               >
                 {electionDetails.description}

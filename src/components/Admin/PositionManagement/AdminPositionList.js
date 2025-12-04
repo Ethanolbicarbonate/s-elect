@@ -24,22 +24,22 @@ export default function AdminPositionList({
       <table className="table table-hover table-sm small align-middle">
         <thead>
           <tr>
-            <th style={{ width: "5%" }} className="fw-normal fs-7 text-secondary text-truncate">Order</th>
-            <th style={{ width: "25%" }} className="fw-normal fs-7 text-secondary text-truncate">Position</th>
-            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">Type</th>
-            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
+            <th style={{ width: "5%" }} className="fw-normal fs-7 text-body-secondary text-truncate">Order</th>
+            <th style={{ width: "25%" }} className="fw-normal fs-7 text-body-secondary text-truncate">Position</th>
+            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-body-secondary text-truncate">Type</th>
+            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-body-secondary text-truncate">
               College
             </th>
-            <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary text-truncate">Max Votes</th>
-            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
+            <th style={{ width: "10%" }} className="fw-normal fs-7 text-body-secondary text-truncate">Max Votes</th>
+            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-body-secondary text-truncate">
               Min Votes
             </th>
             {/* Hide Description on screens smaller than md */}
-            <th style={{ width: "20%" }} className="d-none d-md-table-cell fw-normal fs-7 text-secondary text-truncate">
+            <th style={{ width: "20%" }} className="d-none d-md-table-cell fw-normal fs-7 text-body-secondary text-truncate">
               Description
             </th>
             {canManage && (
-              <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-secondary text-truncate">
+              <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-body-secondary text-truncate">
                 Actions
               </th>
             )}
@@ -62,7 +62,7 @@ export default function AdminPositionList({
                   </span>
                 </td>
                 <td className="d-none d-sm-table-cell">
-                  {pos.type === "CSC" ? pos.college : <span className="text-secondary opacity-50">N/A</span>}
+                  {pos.type === "CSC" ? pos.college : <span className="text-body-secondary opacity-50">N/A</span>}
                 </td>
                 <td>{pos.maxVotesAllowed}</td>
                 <td className="d-none d-sm-table-cell">
@@ -73,7 +73,7 @@ export default function AdminPositionList({
                   style={{ maxWidth: "150px" }}
                   title={pos.description}
                 >
-                  {pos.description || <span className="text-secondary opacity-50">N/A</span>}
+                  {pos.description || <span className="text-body-secondary opacity-50">N/A</span>}
                 </td>
                 {canManage && (
                   <td className="text-end">

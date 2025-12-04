@@ -6,13 +6,12 @@ export default function HomePage() {
     <main
       className="d-flex h-100 justify-content-center align-items-center"
       style={{
-        backgroundImage:
-          "radial-gradient(circle,rgba(116, 204, 248, 0.2) 1px, transparent 1px)",
+        backgroundImage: "var(--bg-grid-pattern)",
         backgroundSize: "6px 6px",
         overflowY: "auto",
       }}
     >
-      <div className="h-75 w-100 custom-width-sm-min container-md text-center m-0 p-0 rounded-3 shadow border overflow-hidden justify-content-center align-items-center noshadow-sm-max noborder-sm-max bg-white">
+      <div className="h-75 w-100 custom-width-sm-min container-md text-center m-0 p-0 rounded-3 shadow border overflow-hidden justify-content-center align-items-center noshadow-sm-max noborder-sm-max bg-body">
         <div className="m-0 p-0 row justify-content-center h-100 overflow-hidden">
           <div
             className="m-0 p-0 col d-none d-lg-block bg-img-r"
@@ -29,7 +28,7 @@ export default function HomePage() {
                   className="w-100 h-100 object-fit-contain logo-color"
                 />
               </div>
-              <p className="text-secondary">
+              <p className="text-body-secondary">
                 Welcome to{" "}
                 <span className="logo-font text-primary">select</span>
                 <br />

@@ -95,14 +95,13 @@ export default function ElectionCalendarWidget({ electionPeriod = null }) {
     <div className="card h-100 border-1 rounded-4 shadow-sm">
       <div className="card-body d-flex flex-column p-0">
         <div
-          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white rounded-top-4"
+          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-body rounded-top-4"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundImage: "var(--bg-grid-subtle)",
             backgroundSize: "6px 6px",
           }}
         >
-          <h6 className="card-title text-secondary mb-0">
+          <h6 className="card-title text-body-secondary mb-0">
             {electionPeriod
               ? `${electionPeriod.name} Calendar`
               : "Election Calendar"}{" "}
@@ -114,7 +113,7 @@ export default function ElectionCalendarWidget({ electionPeriod = null }) {
           >
             <i
               className={`bi bi-circle-fill ${
-                electionPeriod ? "text-primary" : "text-secondary"
+                electionPeriod ? "text-primary" : "text-body-secondary"
               }`}
             ></i>
           </span>
@@ -140,131 +139,121 @@ export default function ElectionCalendarWidget({ electionPeriod = null }) {
           />
         </div>
       </div>
-
       <style jsx global>{`
+        /* 1. Override default white background of the library */
+        .react-calendar {
+          background: none !important;
+          border: none !important;
+          font-family: var(--font-outfit) !important;
+          width: 100%;
+        }
+
+        /* 2. Navigation Arrows (< >) */
         .election-calendar-custom .react-calendar__navigation__arrow {
-          font-size: 1rem; /* Arrow size */
-          color: rgba(108, 117, 125, 0.75); /* Secondary color for arrows */
-          min-width: 30px; /* Ensure arrows have some space */
+          font-size: 1rem;
+          color: var(--bs-secondary-color); /* Adaptive Grey */
+          min-width: 30px;
           padding: 0.25rem 0.5rem;
           background-color: transparent;
-          border: none;
+          border: 1px solid transparent;
           border-radius: 0.5rem;
-          border: 1px solid rgba(108, 117, 125, 0);
         }
-        .react-cale ndar__navigation button:enabled:hover,
+
+        /* Hover state for arrows */
+        .react-calendar__navigation button:enabled:hover,
         .react-calendar__navigation button:enabled:focus {
-          background-color: transparent;
-          border: 1px solid rgba(138, 138, 138, 0.48);
+          background-color: var(--bs-tertiary-bg); /* Adaptive hover bg */
+          border: 1px solid var(--bs-border-color); /* Adaptive border */
         }
 
+        /* 3. Month/Year Label (e.g., "June 2025") */
         .election-calendar-custom .react-calendar__navigation__label {
-          font-size: 1rem; /* Match image's month/year font size */
-          color: rgb(107, 107, 107); /* Default day color */
-          flex-grow: 1 !important; /* Allow label to take space */
-          pointer-events: none; /* Not clickable */
+          font-size: 1rem;
+          color: var(--bs-body-color); /* White in dark mode, Black in light */
+          font-weight: 500;
+          flex-grow: 1 !important;
+          pointer-events: none;
         }
 
+        /* 4. Weekdays (Mon, Tue, Wed) */
         .election-calendar-custom .react-calendar__month-view__weekdays {
           text-align: center;
-          font-weight: normal; /* Medium weight */
-          font-size: 0.75rem; /* Smaller font for MON, TUE */
-          color: #6c757d; /* Bootstrap secondary color */
-          margin-bottom: 0.5rem; /* Space between weekdays and days */
+          font-weight: normal;
+          font-size: 0.75rem;
+          color: var(--bs-secondary-color); /* Adaptive secondary text */
+          text-decoration: none !important;
+          margin-bottom: 0.5rem;
         }
-        .election-calendar-custom
-          .react-calendar__month-view__weekdays__weekday {
-          padding: 0.25em 0; /* Adjust padding */
-          text-decoration: none; /* Remove underline from abbr */
-        }
+
         .election-calendar-custom
           .react-calendar__month-view__weekdays__weekday
-          abbr[title] {
-          text-decoration: none; /* Ensure no underline on abbr */
-          border-bottom: none; /* Remove any default border */
+          abbr {
+          text-decoration: none !important;
+          border: none !important;
+          cursor: default;
         }
 
+        /* 5. Day Tiles (The numbers) */
         .election-calendar-custom .react-calendar__tile {
           background: none;
-          color: rgb(107, 107, 107); /* Default day color */
+          color: var(--bs-body-color); /* White in dark mode */
           border-radius: 0.75rem;
-        }
-        .election-calendar-custom .react-calendar__tile:enabled:hover,
-        .election-calendar-custom .react-calendar__tile:enabled:focus {
-          background-color: transparent; /* Darker green on hover/focus */
+          border: 1px solid transparent; /* Prevent jump on hover */
+          font-size: 0.9rem;
+          padding: 0.75rem 0.5rem;
         }
 
-        /* Today's Date Highlight (Blue Circle) */
+        /* Hover on days */
+        .election-calendar-custom .react-calendar__tile:enabled:hover,
+        .election-calendar-custom .react-calendar__tile:enabled:focus {
+          background-color: var(
+            --bs-tertiary-bg
+          ); /* Adaptive light grey/dark grey */
+          color: var(--bs-primary);
+        }
+
+        /* Today's Date Highlight (Circle Border) */
         .election-calendar-custom .react-calendar__tile.today-highlight {
-          background-color: transparent;
-          border: 1px solid rgba(138, 138, 138, 0.48);
+          border: 1px solid var(--bs-primary) !important;
+          color: var(--bs-primary) !important;
+          font-weight: 600;
         }
 
         /* Election Day Highlight (Green Circle) */
         .election-calendar-custom .react-calendar__tile.election-day-highlight {
-          background-color: #198754; /* Bootstrap success green */
-          color: white;
+          background-color: var(--bs-success) !important;
+          color: white !important;
+          border: 1px solid var(--bs-success) !important;
         }
+
         .election-calendar-custom
-          .react-calendar__tile.election-day-highlight:enabled:hover,
-        .election-calendar-custom
-          .react-calendar__tile.election-day-highlight:enabled:focus {
-          background-color: #157347; /* Darker green on hover/focus */
+          .react-calendar__tile.election-day-highlight:enabled:hover {
+          background-color: #157347 !important; /* Darker green */
         }
 
-        /* Election Day Dot Styling */
-        .election-dot {
-          margin: 0rem 1rem;
-          width: 0.5rem; /* Size of the dot */
-          height: 0.5rem; /* Size of the dot */
-          background-color: #198754; /* Bootstrap success green for the dot */
-          border-radius: 5rem;
-        }
-
-        /* In ElectionCalendarWidget.js <style jsx global> or global.css */
-        .election-dot-small {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          margin: 0 1px; /* Space between dots if multiple */
-        }
-
+        /* Dots */
         .election-dot-single {
-          /* New style for the single dot */
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          /* margin: 0 auto; Centered */
-          /* background-color: #0d6efd; Primary color for the dot */
         }
 
-        /* Example: Add a subtle background to voting days (optional) */
+        /* 6. Voting Range Background 
+           Uses the variable we defined in global.css to handle opacity
+        */
         .election-calendar-custom .react-calendar__tile.voting-day {
-          background-color: rgba(
-            13,
-            110,
-            253,
-            0.05
-          ); /* Light primary background */
-        }
-        .election-calendar-custom
-          .react-calendar__tile.voting-day:enabled:hover,
-        .election-calendar-custom
-          .react-calendar__tile.voting-day:enabled:focus {
-          background-color: rgba(13, 110, 253, 0.1); /* Slightly darker hover */
+          background-color: rgba(13, 110, 253, var(--soft-bg-opacity));
+          color: var(--bs-primary);
         }
 
-        /* Ensure today highlight works correctly with voting-day */
         .election-calendar-custom
-          .react-calendar__tile.voting-day.today-highlight {
-          /* Maintain both styles */
-          border: 1px solid rgba(13, 110, 253, 0.5) !important; /* Today border */
+          .react-calendar__tile.voting-day:enabled:hover {
           background-color: rgba(
             13,
             110,
             253,
-            0.05
-          ); /* Voting day background */
+            0.3
+          ); /* Slightly more visible on hover */
         }
       `}</style>
     </div>

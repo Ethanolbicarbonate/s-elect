@@ -6,7 +6,7 @@ export default function VoterTurnoutDisplay({ turnoutData }) {
   if (!turnoutData) {
     return (
       <div className="card shadow-sm mb-4">
-        <div className="card-body text-center text-muted">
+        <div className="card-body text-center text-body-secondary">
           Voter turnout data is not available.
         </div>
       </div>
@@ -28,7 +28,7 @@ export default function VoterTurnoutDisplay({ turnoutData }) {
           <div className="col-md-8">
             <div className="mb-3">
               <div className="d-flex justify-content-between align-items-baseline border-bottom pb-1">
-                <span className="text-secondary fw-normal">
+                <span className="text-body-secondary fw-normal">
                   Total Votes Cast:
                 </span>
                 <span className="h4 mb-0 text-primary fw-medium">
@@ -40,10 +40,10 @@ export default function VoterTurnoutDisplay({ turnoutData }) {
                 </span>
               </div>
               <div className="d-flex justify-content-between align-items-baseline border-bottom py-1">
-                <span className="text-secondary fw-normal">
+                <span className="text-body-secondary fw-normal">
                   Eligible Voters:
                 </span>
-                <span className="h5 mb-0 text-muted fw-medium">
+                <span className="h5 mb-0 text-body-secondary fw-medium">
                   <CountUp end={eligibleVoters} duration={1.5} separator="," />
                 </span>
               </div>
@@ -81,7 +81,7 @@ export default function VoterTurnoutDisplay({ turnoutData }) {
                 suffix="%"
               />
             </div>
-            <div className="text-muted fw-medium">Turnout Rate</div>
+            <div className="text-body-secondary fw-medium">Turnout Rate</div>
           </div>
         </div>
       </div>

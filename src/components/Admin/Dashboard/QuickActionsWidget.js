@@ -73,7 +73,7 @@ export default function QuickActionsWidget({
               <i className="bi bi-calendar-plus-fill me-3 fs-5 text-primary"></i>
               <div>
                 <h6 className="mb-0 fw-medium">Create New Election</h6>
-                <p className="mb-0 small text-secondary opacity-75">
+                <p className="mb-0 small text-body-secondary opacity-75">
                   Set up a new election period.
                 </p>
               </div>
@@ -87,7 +87,7 @@ export default function QuickActionsWidget({
               <i className="bi bi-stack me-3 fs-5 text-primary"></i>
               <div>
                 <h6 className="mb-0 fw-medium">Manage Election Entities</h6>
-                <p className="mb-0 small text-secondary opacity-75">
+                <p className="mb-0 small text-body-secondary opacity-75">
                   Positions, Partylists, Candidates.
                 </p>
               </div>
@@ -101,7 +101,7 @@ export default function QuickActionsWidget({
               <i className="bi bi-bar-chart-line-fill me-3 fs-5 text-primary"></i>
               <div>
                 <h6 className="mb-0 fw-medium">View Election Results</h6>
-                <p className="mb-0 small text-secondary opacity-75">
+                <p className="mb-0 small text-body-secondary opacity-75">
                   Live tallies and final outcomes.
                 </p>
               </div>
@@ -115,7 +115,7 @@ export default function QuickActionsWidget({
               <i className="bi bi-journal-check me-3 fs-5 text-primary"></i>
               <div>
                 <h6 className="mb-0 fw-medium">View Audit Log</h6>
-                <p className="mb-0 small text-secondary opacity-75">
+                <p className="mb-0 small text-body-secondary opacity-75">
                   Review system activity timeline.
                 </p>
               </div>
@@ -125,7 +125,7 @@ export default function QuickActionsWidget({
 
         <div className="mt-auto pt-3 text-center">
           {" "}
-          <p className="small text-secondary opacity-75 mb-0">
+          <p className="small text-body-secondary opacity-75 mb-0">
             For full control, use the navigation panel on the left.
           </p>
         </div>

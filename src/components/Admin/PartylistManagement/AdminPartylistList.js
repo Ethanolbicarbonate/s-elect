@@ -25,20 +25,20 @@ export default function AdminPartylistList({
       <table className="table table-hover table-sm small align-middle">
         <thead>
           <tr>
-            <th style={{ width: "5%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
+            <th style={{ width: "5%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-body-secondary text-truncate">
               Logo
             </th>
-            <th style={{ width: "25%" }} className="fw-normal fs-7 text-secondary text-truncate">Name</th>
-            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-secondary text-truncate">
+            <th style={{ width: "25%" }} className="fw-normal fs-7 text-body-secondary text-truncate">Name</th>
+            <th style={{ width: "10%" }} className="d-none d-sm-table-cell fw-normal fs-7 text-body-secondary text-truncate">
               Acronym
             </th>
-            <th style={{ width: "10%" }} className="fw-normal fs-7 text-secondary text-truncate">Type</th>
-            <th style={{ width: "15%" }} className="fw-normal fs-7 text-secondary text-truncate">College</th>
-            <th style={{ width: "25%" }} className="d-none d-md-table-cell fw-normal fs-7 text-secondary text-truncate">
+            <th style={{ width: "10%" }} className="fw-normal fs-7 text-body-secondary text-truncate">Type</th>
+            <th style={{ width: "15%" }} className="fw-normal fs-7 text-body-secondary text-truncate">College</th>
+            <th style={{ width: "25%" }} className="d-none d-md-table-cell fw-normal fs-7 text-body-secondary text-truncate">
               Platform Snippet
             </th>
             {canManage && (
-              <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-secondary text-truncate">
+              <th style={{ width: "10%" }} className="text-end fw-normal fs-7 text-body-secondary text-truncate">
                 Actions
               </th>
             )}
@@ -69,12 +69,12 @@ export default function AdminPartylistList({
                       justifyContent: "center",
                     }}
                   >
-                    <i className="bi bi-card-image text-muted"></i>
+                    <i className="bi bi-card-image text-body-secondary"></i>
                   </div>
                 )}
               </td>
               <td>{pl.name}</td>
-              <td className="d-none d-sm-table-cell">{pl.acronym || <span className="text-secondary opacity-50">N/A</span>}</td>
+              <td className="d-none d-sm-table-cell">{pl.acronym || <span className="text-body-secondary opacity-50">N/A</span>}</td>
               <td>
                 <span
                   className={`opacity-75 fw-normal badge bg-${
@@ -84,13 +84,13 @@ export default function AdminPartylistList({
                   {pl.type}
                 </span>
               </td>
-              <td>{pl.type === "CSC" ? pl.college : <span className="text-secondary opacity-50">N/A</span>}</td>
+              <td>{pl.type === "CSC" ? pl.college : <span className="text-body-secondary opacity-50">N/A</span>}</td>
               <td
                 className="text-truncate d-none d-md-table-cell"
                 style={{ maxWidth: "200px" }}
                 title={pl.platform}
               >
-                {pl.platform || <span className="text-secondary opacity-50">N/A</span>}
+                {pl.platform || <span className="text-body-secondary opacity-50">N/A</span>}
               </td>
               {canManage && (
                 <td className="text-end">

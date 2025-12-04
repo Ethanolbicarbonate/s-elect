@@ -131,14 +131,13 @@ export default function EditGeneralElectionModal({
                 className="d-flex flex-column h-100"
               >
                 <div
-                  className="modal-header bg-white border-bottom-0"
+                  className="modal-header bg-body border-bottom-0"
                   style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundImage: "var(--bg-grid-subtle)",
                     backgroundSize: "6px 6px",
                   }}
                 >
-                  <h5 className="modal-title fw-normal text-secondary">
+                  <h5 className="modal-title fw-normal text-body-secondary">
                     Edit Election: {formData.name}
                   </h5>
                   <button
@@ -155,7 +154,7 @@ export default function EditGeneralElectionModal({
                   <div className="mb-3">
                     <label
                       htmlFor="edit_name"
-                      className="form-label fs-7 text-secondary ms-2"
+                      className="form-label fs-7 text-body-secondary ms-2"
                     >
                       Election Name
                     </label>
@@ -173,7 +172,7 @@ export default function EditGeneralElectionModal({
                   <div className="mb-3">
                     <label
                       htmlFor="edit_description"
-                      className="form-label fs-7 text-secondary ms-2"
+                      className="form-label fs-7 text-body-secondary ms-2"
                     >
                       Description (Optional)
                     </label>
@@ -191,7 +190,7 @@ export default function EditGeneralElectionModal({
                     <div className="col-md-6 mb-3">
                       <label
                         htmlFor="edit_startDate"
-                        className="form-label fs-7 text-secondary ms-2"
+                        className="form-label fs-7 text-body-secondary ms-2"
                       >
                         Start Date & Time
                       </label>
@@ -209,7 +208,7 @@ export default function EditGeneralElectionModal({
                     <div className="col-md-6 mb-3">
                       <label
                         htmlFor="edit_endDate"
-                        className="form-label fs-7 text-secondary ms-2"
+                        className="form-label fs-7 text-body-secondary ms-2"
                       >
                         End Date & Time
                       </label>
@@ -228,7 +227,7 @@ export default function EditGeneralElectionModal({
                   <div className="mb-3">
                     <label
                       htmlFor="edit_status"
-                      className="form-label fs-7 text-secondary ms-2"
+                      className="form-label fs-7 text-body-secondary ms-2"
                     >
                       Status
                     </label>
@@ -246,23 +245,23 @@ export default function EditGeneralElectionModal({
                         </option>
                       ))}
                     </select>
-                    <div className="form-text text-muted px-1">
+                    <div className="form-text text-body-secondary px-1">
                       Changing status of an ended election to ONGOING/UPCOMING
                       will re-open it.
                     </div>
                   </div>
                 </div>
-                <div className="modal-footer bg-white border-top-0"
+                <div
+                  className="modal-footer bg-body border-top-0"
                   style={{
-                    backgroundImage:
-                      "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                    backgroundImage: "var(--bg-grid-subtle)",
                     backgroundSize: "6px 6px",
-                    flexShrink: 0
+                    flexShrink: 0,
                   }}
                 >
                   <button
                     type="button"
-                    className="btn btn-light border text-secondary"
+                    className="btn btn-light border text-body-secondary"
                     onClick={onClose}
                     disabled={isLoading}
                   >

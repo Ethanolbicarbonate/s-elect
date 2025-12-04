@@ -69,10 +69,9 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
             {" "}
             {/* Added overflow-hidden for better rounded corners with image */}
             <div
-              className="modal-header py-3 px-4 bg-white border-bottom-0"
+              className="modal-header py-3 px-4 bg-body border-bottom-0"
               style={{
-                backgroundImage:
-                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundImage: "var(--bg-grid-subtle)",
                 backgroundSize: "6px 6px",
               }}
             >
@@ -124,27 +123,27 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
                       />
                     ) : (
                       <div
-                        className="d-flex align-items-center justify-content-center bg-light"
+                        className="d-flex align-items-center justify-content-center bg-body-tertiary"
                         style={{
                           width: "100%",
                           height: "100%",
                           // borderRadius: "50%", // Not needed here as parent clips
                         }}
                       >
-                        <i className="bi bi-person-fill display-1 text-secondary opacity-25"></i>
+                        <i className="bi bi-person-fill display-1 text-body-secondary opacity-25"></i>
                       </div>
                     )}
                   </div>
                   <div className="mt-2">
                     {" "}
                     {/* Grouped info below image */}
-                    <p className="text-muted mb-1 fs-7 text-uppercase">
+                    <p className="text-body-secondary mb-1 fs-7 text-uppercase">
                       Running for
                     </p>
                     <h5 className="mb-2 h6 fw-medium text-primary">
                       {runningFor}
                     </h5>
-                    <p className="text-muted mb-1 fs-7 text-uppercase">
+                    <p className="text-body-secondary mb-1 fs-7 text-uppercase">
                       Affiliation
                     </p>
                     <h5 className={`fw-medium h6 text-primary`}>
@@ -159,7 +158,7 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
                         Profile
                       </h5>
                       <p
-                        className="text-secondary lh-lg px-3" // Increased line-height
+                        className="text-body-secondary lh-lg px-3" // Increased line-height
                         style={{ whiteSpace: "pre-wrap" }}
                       >
                         {bio}
@@ -186,7 +185,7 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
                             {/* No borders, custom padding */}
                             <i className="bi bi-check-circle-fill text-success me-3 mt-1 fs-7"></i>{" "}
                             {/* Larger icon */}
-                            <span className="text-secondary">{point}</span>
+                            <span className="text-body-secondary">{point}</span>
                           </li>
                         ))}
                       </ul>
@@ -194,9 +193,9 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
                   )}
 
                   {!bio && (!platformPoints || platformPoints.length === 0) && (
-                    <div className="text-center p-4 border rounded-3 bg-light mt-3">
-                      <i className="bi bi-info-circle fs-2 text-muted mb-2"></i>
-                      <p className="text-muted mb-0">
+                    <div className="text-center p-4 border rounded-3 bg-body-tertiary mt-3">
+                      <i className="bi bi-info-circle fs-2 text-body-secondary mb-2"></i>
+                      <p className="text-body-secondary mb-0">
                         No detailed profile or platform has been provided by
                         this candidate.
                       </p>
@@ -206,10 +205,9 @@ export default function CandidateDetailModal({ show, onClose, candidate }) {
               </div>
             </div>
             <div
-              className="modal-footer rounded-bottom-4 py-3 px-4 bg-white border-top-0"
+              className="modal-footer rounded-bottom-4 py-3 px-4 bg-body border-top-0"
               style={{
-                backgroundImage:
-                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundImage: "var(--bg-grid-subtle)",
                 backgroundSize: "6px 6px",
               }}
             >

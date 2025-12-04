@@ -167,13 +167,13 @@ export default function AuditLogPage() {
               <div className="col-lg-4 col-md-6 col-sm-12">
                 {" "}
                 {/* Responsive column sizing */}
-                <h6 className="mb-3 fw-medium text-secondary">
+                <h6 className="mb-3 fw-medium text-body-secondary">
                   Actor & Action
                 </h6>
                 <div className="mb-2">
                   <label
                     htmlFor="actorTypeFilter"
-                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                    className="form-label form-label-sm fs-7 text-body-secondary ms-2"
                   >
                     Actor Type
                   </label>
@@ -195,7 +195,7 @@ export default function AuditLogPage() {
                 <div className="mb-2">
                   <label
                     htmlFor="actionTypeFilter"
-                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                    className="form-label form-label-sm fs-7 text-body-secondary ms-2"
                   >
                     Action Type
                   </label>
@@ -217,7 +217,7 @@ export default function AuditLogPage() {
                 <div className="mb-2">
                   <label
                     htmlFor="actorEmailFilter"
-                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                    className="form-label form-label-sm fs-7 text-body-secondary ms-2"
                   >
                     Actor Email
                   </label>
@@ -234,13 +234,13 @@ export default function AuditLogPage() {
               </div>
               {/* --- Column 2: Entity Info --- */}
               <div className="col-lg-4 col-md-6 col-sm-12">
-                <h6 className="mb-3 fw-medium text-secondary">
+                <h6 className="mb-3 fw-medium text-body-secondary">
                   Entity & Status
                 </h6>
                 <div className="mb-2">
                   <label
                     htmlFor="entityTypeFilter"
-                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                    className="form-label form-label-sm fs-7 text-body-secondary ms-2"
                   >
                     Entity Type
                   </label>
@@ -265,7 +265,7 @@ export default function AuditLogPage() {
                 <div className="mb-2">
                   <label
                     htmlFor="entityIdFilter"
-                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                    className="form-label form-label-sm fs-7 text-body-secondary ms-2"
                   >
                     Entity ID
                   </label>
@@ -282,7 +282,7 @@ export default function AuditLogPage() {
                 <div className="mb-2">
                   <label
                     htmlFor="statusFilter"
-                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                    className="form-label form-label-sm fs-7 text-body-secondary ms-2"
                   >
                     Status
                   </label>
@@ -304,11 +304,13 @@ export default function AuditLogPage() {
               </div>
               {/* --- Column 3: Date Range --- */}
               <div className="col-lg-4 col-md-12 col-sm-12">
-                <h6 className="mb-3 fw-medium text-secondary">Date Range</h6>
+                <h6 className="mb-3 fw-medium text-body-secondary">
+                  Date Range
+                </h6>
                 <div className="mb-2">
                   <label
                     htmlFor="dateStartFilter"
-                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                    className="form-label form-label-sm fs-7 text-body-secondary ms-2"
                   >
                     Date From
                   </label>
@@ -324,7 +326,7 @@ export default function AuditLogPage() {
                 <div className="mb-2">
                   <label
                     htmlFor="dateEndFilter"
-                    className="form-label form-label-sm fs-7 text-secondary ms-2"
+                    className="form-label form-label-sm fs-7 text-body-secondary ms-2"
                   >
                     Date To
                   </label>
@@ -342,10 +344,9 @@ export default function AuditLogPage() {
           </form>
         </div>
         <div
-          className="card-footer border-top-0 p-3 bg-white"
+          className="card-footer border-top-0 p-3 bg-body"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundImage: "var(--bg-grid-subtle)",
             backgroundSize: "6px 6px",
           }}
         >
@@ -376,10 +377,9 @@ export default function AuditLogPage() {
         </div>
         {!isLoading && logs.length > 0 && pagination.totalPages > 1 && (
           <div
-            className="card-footer border-top-0 bg-white"
+            className="card-footer border-top-0 bg-body"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >

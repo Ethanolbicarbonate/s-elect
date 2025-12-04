@@ -25,7 +25,7 @@ export default function ReviewBallotSection({
   ) => {
     if (!scopePositions || scopePositions.length === 0) {
       return (
-        <div className="mb-3 text-muted fst-italic">
+        <div className="mb-3 text-body-secondary fst-italic">
           No positions were available for {scopeTitle}.
         </div>
       );
@@ -46,13 +46,13 @@ export default function ReviewBallotSection({
 
           if (selectedCandidateIds.length === 0) {
             selectionDisplay = (
-              <span className="text-muted fst-italic">No selection made</span>
+              <span className="text-body-secondary fst-italic">No selection made</span>
             );
           } else {
             selectionDisplay = (
-              <ul className="list-unstyled mb-0 ps-3">                
+              <ul className="list-unstyled mb-0 ps-3">
                 {selectedCandidateIds.map((candId) => (
-                  <li key={candId} className="fw-medium text-dark-emphasis">
+                  <li key={candId} className="fw-medium text-body-secondary">
                     <i className="bi bi-check-circle-fill fs-7 text-success"></i>{" "}
                     {findNameById(candId, scopeCandidates, "firstName")}{" "}
                     {findNameById(candId, scopeCandidates, "lastName")}
@@ -64,7 +64,9 @@ export default function ReviewBallotSection({
 
           return (
             <div key={position.id} className="mb-3 pb-3 border-bottom">
-              <h6 className="fw-medium text-secondary mb-1">{position.name}</h6>
+              <h6 className="fw-medium text-body-secondary mb-1">
+                {position.name}
+              </h6>
               {selectionDisplay}
             </div>
           );
@@ -147,7 +149,7 @@ export default function ReviewBallotSection({
     <div className="review-ballot-section my-4">
       <div className="text-center mb-4">
         <h3 className="text-primary">Review Your Ballot</h3>
-        <p className="lead text-muted">
+        <p className="lead text-body-secondary">
           Please carefully review your selections below. You can edit your
           choices before submitting.
         </p>
@@ -156,18 +158,17 @@ export default function ReviewBallotSection({
       {/* USC Selections */}
       <div className="card mb-4 shadow-sm rounded-3">
         <div
-          className="card-header border-bottom-0 bg-light d-flex justify-content-between align-items-center rounded-top-3 bg-white"
+          className="card-header border-bottom-0 bg-body-tertiary d-flex justify-content-between align-items-center rounded-top-3 bg-body"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundImage: "var(--bg-grid-subtle)",
             backgroundSize: "6px 6px",
           }}
         >
-          <h4 className="h5 mb-0 text-dark-emphasis">
+          <h4 className="h5 mb-0 text-body-secondary">
             University Student Council (USC)
           </h4>
           <button
-            className="btn custom-btn btn-sm text-secondary border rounded-3"
+            className="btn custom-btn btn-sm text-body-secondary border rounded-3"
             onClick={onEditUSC}
           >
             <i className="bi bi-pencil-square me-1"></i> Edit USC
@@ -187,18 +188,17 @@ export default function ReviewBallotSection({
       {electionData?.cscPositions && electionData.cscPositions.length > 0 && (
         <div className="card mb-4 shadow-sm">
           <div
-            className="card-header border-bottom-0 border-bottom-0 bg-light d-flex justify-content-between align-items-center bg-white"
+            className="card-header border-bottom-0 border-bottom-0 bg-body-tertiary d-flex justify-content-between align-items-center bg-body"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >
-            <h4 className="h5 mb-0 text-dark-emphasis">
+            <h4 className="h5 mb-0 text-body-secondary">
               College Student Council ({studentCollegeName || "CSC"})
             </h4>
             <button
-              className="btn custom-btn btn-sm text-secondary border rounded-3"
+              className="btn custom-btn btn-sm text-body-secondary border rounded-3"
               onClick={onEditCSC}
             >
               <i className="bi bi-pencil-square me-1"></i> Edit CSC
@@ -225,7 +225,7 @@ export default function ReviewBallotSection({
       <div className="mt-4 pt-4 border-top d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
         <button
           type="button"
-          className="btn custom-btn btn-md text-secondary"
+          className="btn custom-btn btn-md text-body-secondary"
           onClick={handleDownloadSelections}
           title="Download your current selections for your records (before submission)"
         >

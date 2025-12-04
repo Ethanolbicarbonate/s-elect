@@ -21,7 +21,7 @@ const Stepper = ({ currentStep, steps }) => {
             className={`breadcrumb-item ${
               currentStep === step.id
                 ? "active fw-medium text-primary"
-                : "text-secondary opacity-75"
+                : "text-body-secondary opacity-75"
             } ${
               index < steps.findIndex((s) => s.id === currentStep)
                 ? "text-success"
@@ -352,7 +352,7 @@ export default function VotePage() {
                   Please review candidates carefully. You will be able to review
                   all your selections before final submission.
                 </p>
-                <p className="small text-muted">
+                <p className="small text-body-secondary">
                   Election Period:{" "}
                   {new Date(electionData.startDate).toLocaleDateString()} -{" "}
                   {new Date(
@@ -396,7 +396,7 @@ export default function VotePage() {
             {currentStep === "USC" && (
               <div className="d-flex flex-column flex-md-row justify-content-between mt-4 gap-2">
                 <button
-                  className="btn custom-btn fs-5 btn-lg text-secondary border"
+                  className="btn custom-btn fs-5 btn-lg text-body-secondary border"
                   onClick={() => proceedToStep("CSC")} // "Back" now goes to CSC
                 >
                   <i className="bi bi-arrow-left"></i> Back to CSC Ballot

@@ -89,21 +89,21 @@ export default function StudentLayout({ children }) {
 
       <div className="flex-grow-1 d-flex flex-column transition-margin-lg" style={{ marginLeft: "0px" }}>
         <header
-          className="d-flex justify-content-between align-items-center p-3 bg-white sticky-top shadow-sm"
-          style={{ height: "60px", borderBottom: "1px solid #dee2e6", zIndex: "100" }}
+          className="d-flex justify-content-between align-items-center p-3 bg-body sticky-top shadow-sm"
+          style={{ height: "60px", borderBottom: "1px solid var(--bs-border-color)", zIndex: "100" }}
         >
           <div className="d-flex align-items-center">
             <nav aria-label="breadcrumb" className="d-none d-md-block">
               <ol className="breadcrumb mb-0 d-flex align-items-center">
-                <li className="breadcrumb-item"><Link href="/dashboard" className="text-decoration-none"><i className="bi bi-house-door-fill text-secondary"></i></Link></li>
-                <li className="breadcrumb-item active text-dark text-secondary opacity-75" aria-current="page">{currentPageName}</li>
+                <li className="breadcrumb-item"><Link href="/dashboard" className="text-decoration-none"><i className="bi bi-house-door-fill text-body-secondary"></i></Link></li>
+                <li className="breadcrumb-item active text-body-secondary text-body-secondary opacity-75" aria-current="page">{currentPageName}</li>
               </ol>
             </nav>
-            <div className="d-md-none text-dark fw-thin">{currentPageName}</div>
+            <div className="d-md-none text-body-secondary fw-thin">{currentPageName}</div>
           </div>
 
           <div className="d-flex align-items-center">
-            <span className="me-2 text-dark d-none d-sm-inline">{userName}</span>
+            <span className="me-2 text-body-secondary d-none d-sm-inline">{userName}</span>
             <span className={`badge p-2 fs-6 fw-medium ${getCollegeBadgeClasses(userCollege)}`}>{userCollege}</span>
             
             <button
@@ -118,7 +118,7 @@ export default function StudentLayout({ children }) {
           </div>
         </header>
 
-        <main className="flex-grow-1 p-4 bg-light main-content-mobile-padding" style={{ backgroundImage: "radial-gradient(circle,rgba(116, 204, 248, 0.2) 1px, transparent 1px)", backgroundSize: "6px 6px", overflowY: "auto" }}>
+        <main className="flex-grow-1 p-4 bg-body-tertiary main-content-mobile-padding" style={{ backgroundImage: "var(--bg-grid-pattern)", backgroundSize: "6px 6px", overflowY: "auto" }}>
           {children}
         </main>
       </div>
@@ -172,8 +172,8 @@ export default function StudentLayout({ children }) {
             left: 0;
             width: 100%;
             height: 70px;
-            background-color: #ffffff;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            background-color: var(--bs-body-bg);
+            box-shadow: var(--nav-shadow);
             z-index: 1030;
           }
           .nav-list {

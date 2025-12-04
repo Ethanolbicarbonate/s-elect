@@ -236,14 +236,13 @@ export default function PartylistForm({
           <div className="modal-content border-0 rounded-4">
             <form onSubmit={handleSubmit} className="d-flex flex-column">
               <div
-                className="modal-header bg-white border-bottom-0"
+                className="modal-header bg-body border-bottom-0"
                 style={{
-                  backgroundImage:
-                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundImage: "var(--bg-grid-subtle)",
                   backgroundSize: "6px 6px",
                 }}
               >
-                <h5 className="modal-title fw-normal text-secondary">
+                <h5 className="modal-title fw-normal text-body-secondary">
                   {initialData ? "Edit Partylist" : "Create New Partylist"}
                 </h5>
                 <button
@@ -262,7 +261,7 @@ export default function PartylistForm({
                 <div className="mb-3">
                   <label
                     htmlFor="pl_name"
-                    className="form-label fs-7 ms-2 text-secondary"
+                    className="form-label fs-7 ms-2 text-body-secondary"
                   >
                     Partylist Name <span className="text-danger">*</span>
                   </label>
@@ -282,7 +281,7 @@ export default function PartylistForm({
                   <div className="col-md-6">
                     <label
                       htmlFor="pl_type"
-                      className="form-label fs-7 ms-2 text-secondary"
+                      className="form-label fs-7 ms-2 text-body-secondary"
                     >
                       Type <span className="text-danger">*</span>
                     </label>
@@ -305,7 +304,7 @@ export default function PartylistForm({
                     <div className="col-md-6">
                       <label
                         htmlFor="pl_college"
-                        className="form-label fs-7 ms-2 text-secondary"
+                        className="form-label fs-7 ms-2 text-body-secondary"
                       >
                         College <span className="text-danger">*</span>
                       </label>
@@ -335,7 +334,7 @@ export default function PartylistForm({
                 <div className="mb-3">
                   <label
                     htmlFor="pl_acronym"
-                    className="form-label fs-7 ms-2 text-secondary"
+                    className="form-label fs-7 ms-2 text-body-secondary"
                   >
                     Acronym (Optional)
                   </label>
@@ -371,7 +370,7 @@ export default function PartylistForm({
                       className="mt-2 text-center"
                       style={{ maxWidth: "150px", margin: "auto" }}
                     >
-                      <p className="small text-muted mb-1">Logo Preview:</p>
+                      <p className="small text-body-secondary mb-1">Logo Preview:</p>
                       <Image
                         src={logoPreview || formData.logoUrl} // Use logoPreview (new file) or formData.logoUrl (existing)
                         alt="Logo Preview"
@@ -402,7 +401,7 @@ export default function PartylistForm({
                 <div className="mb-3">
                   <label
                     htmlFor="pl_platform"
-                    className="form-label fs-7 ms-2 text-secondary"
+                    className="form-label fs-7 ms-2 text-body-secondary"
                   >
                     Platform/Tagline (Optional)
                   </label>
@@ -418,16 +417,15 @@ export default function PartylistForm({
                 </div>
               </div>
               <div
-                className="modal-footer bg-white border-top-0"
+                className="modal-footer bg-body border-top-0"
                 style={{
-                  backgroundImage:
-                    "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                  backgroundImage: "var(--bg-grid-subtle)",
                   backgroundSize: "6px 6px",
                 }}
               >
                 <button
                   type="button"
-                  className="btn btn-light border text-secondary"
+                  className="btn btn-light border text-body-secondary"
                   onClick={onClose}
                   disabled={totalLoading}
                 >

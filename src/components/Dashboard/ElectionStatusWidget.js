@@ -11,37 +11,30 @@ export default function ElectionStatusWidget({
   let statusText = status;
   let finalMessage = message;
 
-  switch (
-    status?.toUpperCase() // Use toUpperCase for case-insensitivity
-  ) {
+  switch (status?.toUpperCase()) {
     case "ONGOING":
       statusColor = "success";
-      iconName = "bi-play-circle-fill"; // Icon suggesting activity
+      iconName = "bi-play-circle-fill";
       statusText = "Ongoing";
-      // if (electionEndDate) {
-      //   finalMessage = `${message} (Ends: ${new Date(electionEndDate).toLocaleDateString()})`;
-      // }
       break;
     case "UPCOMING":
       statusColor = "info";
-      iconName = "bi-alarm-fill"; // Icon suggesting future event
+      iconName = "bi-alarm-fill";
       statusText = "Upcoming";
-      // if (electionStartDate) {
-      //   finalMessage = `${message} (Starts: ${new Date(electionStartDate).toLocaleDateString()})`;
-      // }
       break;
     case "ENDED":
-      statusColor = "dark";
-      iconName = "bi-stop-circle-fill"; // Icon suggesting completion
+      statusColor = "secondary"; // CHANGED: 'dark' -> 'secondary'
+      iconName = "bi-stop-circle-fill";
       statusText = "Ended";
       break;
     case "PAUSED":
       statusColor = "warning";
+      // Note: We keep 'warning' here because text-warning (yellow) is visible in dark mode.
       iconName = "bi-pause-circle-fill";
       statusText = "Paused";
       break;
     case "ARCHIVED":
-      statusColor = "secondary"; // Or a very muted color
+      statusColor = "secondary";
       iconName = "bi-archive-fill";
       statusText = "Archived";
       break;
@@ -53,20 +46,20 @@ export default function ElectionStatusWidget({
       finalMessage = message || "Election status is currently unavailable.";
       break;
   }
-
   return (
     <div className="card h-100 border-1 rounded-4 shadow-sm overflow-hidden d-flex flex-column flex-md-row">
       <div className={`bg-${statusColor}`} style={{ padding: "0.1rem" }}></div>
       <div className="card-body d-flex flex-column p-0 justify-content-evenly">
         <div
-          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white"
+          className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-body"
           style={{
-            backgroundImage:
-              "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+            backgroundImage: "var(--bg-grid-subtle)",
             backgroundSize: "6px 6px",
           }}
         >
-          <h6 className="card-title text-secondary m-0 p-0">Election Status</h6>
+          <h6 className="card-title text-body-secondary m-0 p-0">
+            Election Status
+          </h6>
           <span
             className={`badge bg-${statusColor}-soft rounded-circle p-1 d-flex align-items-center justify-content-center`}
           >
@@ -80,10 +73,9 @@ export default function ElectionStatusWidget({
             {statusText}
           </h3>
           <p
-            className="card-footer border-top-0 text-muted small opacity-75 text-center text-md-start m-0 py-2 px-3 bg-white"
+            className="card-footer border-top-0 text-body-secondary small opacity-75 text-center text-md-start m-0 py-2 px-3 bg-body"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >

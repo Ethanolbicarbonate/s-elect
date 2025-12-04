@@ -9,14 +9,16 @@ const NotificationListDisplay = ({ notifications, title }) => {
   if (!notifications || notifications.length === 0) {
     return (
       <div className="text-center my-auto">
-        <p className="small text-secondary opacity-50 m-0">No recent notifications</p>
+        <p className="small text-body-secondary opacity-50 m-0">
+          No recent notifications
+        </p>
       </div>
     );
   }
 
   return (
     <div>
-      {title && <h6 className="fw-medium text-secondary mb-2">{title}</h6>}
+      {title && <h6 className="fw-medium text-body-secondary mb-2">{title}</h6>}
       <ul className="list-group list-group-flush">
         {notifications.map((notif) => (
           <li
@@ -24,15 +26,15 @@ const NotificationListDisplay = ({ notifications, title }) => {
             className="list-group-item px-0 py-2 border-bottom d-flex flex-column"
           >
             <div className="d-flex justify-content-between align-items-start mb-1">
-              <span className="text-dark-emphasis fw-medium small">
+              <span className="text-body-secondary fw-medium small">
                 {notif.title || "Election Notification"}
               </span>
-              <span className="badge fw-medium bg-light text-dark-emphasis small text-nowrap ms-2">
+              <span className="badge fw-medium bg-body-tertiary text-body-secondary small text-nowrap ms-2">
                 {format(new Date(notif.createdAt), "MMM d, hh:mm a")}
               </span>
             </div>
             <p
-              className="mb-0 small text-muted"
+              className="mb-0 small text-body-secondary"
               style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
             >
               {notif.content}
@@ -139,7 +141,7 @@ export default function ElectionNotificationWidget() {
                 <div className="modal-header py-2">
                   {" "}
                   {/* Smaller header */}
-                  <h5 className="modal-title small fw-medium text-secondary">
+                  <h5 className="modal-title small fw-medium text-body-secondary">
                     Election Notifications
                   </h5>
                   <button
@@ -181,14 +183,13 @@ export default function ElectionNotificationWidget() {
   return (
     <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column rounded-4 overflow-hidden">
       <div
-        className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-white"
+        className="card-header border-bottom-0 d-flex justify-content-between align-items-center bg-body"
         style={{
-          backgroundImage:
-            "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+          backgroundImage: "var(--bg-grid-subtle)",
           backgroundSize: "6px 6px",
         }}
       >
-        <h6 className="card-title text-secondary mb-0">Notifications</h6>
+        <h6 className="card-title text-body-secondary mb-0">Notifications</h6>
         <span
           className={`badge bg-warning bg-opacity-25 rounded-circle p-1 d-flex align-items-center justify-content-center`}
         >
@@ -204,7 +205,7 @@ export default function ElectionNotificationWidget() {
               className="spinner-border spinner-border-sm text-primary"
               role="status"
             ></div>
-            <p className="small text-muted mt-2 mb-0">
+            <p className="small text-body-secondary mt-2 mb-0">
               Loading notifications...
             </p>
           </div>

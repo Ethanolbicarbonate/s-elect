@@ -33,7 +33,7 @@ const ProgressBar = ({ percentage, label, color = "primary" }) => {
     <div className="mb-2">
       {label && (
         <div className="d-flex justify-content-between small mb-1">
-          <span className="text-secondary">{label}</span>
+          <span className="text-body-secondary">{label}</span>
           <span className={`fw-medium text-${color}`}>
             {validPercentage.toFixed(1)}%
           </span>
@@ -122,8 +122,8 @@ export default function ResultsDashboardWidget({
       datasets: [
         {
           data: [voted, notVoted],
-          backgroundColor: ["#0d6efd", "#dee2e6"],
-          borderWidth: 0,
+          borderColor: ["var(--bs-card-bg)", "var(--bs-card-bg)"],
+          borderWidth: 1,
         },
       ],
     };
@@ -147,7 +147,7 @@ export default function ResultsDashboardWidget({
               family: "Outfit",
               size: 12,
             },
-            color: "#495057",
+            color: "var(--bs-body-color)",
           },
         },
         title: {
@@ -156,6 +156,7 @@ export default function ResultsDashboardWidget({
             resultsData?.turnout?.overall?.percentage?.toFixed(2) || 0
           }%`,
           font: { size: 16, weight: "bold" },
+          color: "var(--bs-body-color)",
         },
         tooltip: {
           callbacks: {
@@ -219,7 +220,7 @@ export default function ResultsDashboardWidget({
     electionDetails.effectiveStatusForStudent !== "ENDED"
   ) {
     return (
-      <div className="card shadow-sm p-4 text-center text-muted rounded-4">
+      <div className="card shadow-sm p-4 text-center text-body-secondary rounded-4">
         <i className="bi bi-bar-chart-fill display-4 mb-3"></i>
         <h5 className="mb-0">Election Results Coming Soon</h5>
         <p className="small mb-0">
@@ -233,7 +234,7 @@ export default function ResultsDashboardWidget({
   // Show loading spinner if data is not yet available
   if (isLoading && !resultsData) {
     return (
-      <div className="card shadow-sm p-4 text-center text-muted h-100 d-flex align-items-center justify-content-center">
+      <div className="card shadow-sm p-4 text-center text-body-secondary h-100 d-flex align-items-center justify-content-center">
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading results...</span>
         </div>
@@ -259,7 +260,7 @@ export default function ResultsDashboardWidget({
     !resultsData.partylistResults
   ) {
     return (
-      <div className="card shadow-sm p-4 text-center text-muted h-100 d-flex align-items-center justify-content-center">
+      <div className="card shadow-sm p-4 text-center text-body-secondary h-100 d-flex align-items-center justify-content-center">
         <i className="bi bi-info-circle display-4 mb-3"></i>
         <h5 className="mb-0">No Election Results Available</h5>
         <p className="small mb-0">
@@ -276,17 +277,16 @@ export default function ResultsDashboardWidget({
   return (
     <div className="card shadow-sm h-100 d-flex flex-column rounded-4 overflow-hidden pb-4">
       <div
-        className="card-header bg-white border-bottom-0"
+        className="card-header bg-body border-bottom-0"
         style={{
-          backgroundImage:
-            "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+          backgroundImage: "var(--bg-grid-subtle)",
           backgroundSize: "6px 6px",
         }}
       >
-        <h3 className="fs-6 mb-0 text-secondary fw-medium mb-1">
+        <h3 className="fs-6 mb-0 text-body-secondary fw-medium mb-1">
           Election Results: {election.name}
         </h3>
-        <p className="text-secondary fw-normal fs-7 border-top pt-1">
+        <p className="text-body-secondary fw-normal fs-7 border-top pt-1">
           Final results as of {new Date(election.endDate).toLocaleString()}.
         </p>
       </div>
@@ -295,7 +295,9 @@ export default function ResultsDashboardWidget({
           <li className="nav-item">
             <button
               className={`nav-link border-0 bg-transparent ${
-                activeTab === "USC" ? "active" : "text-secondary opacity-75"
+                activeTab === "USC"
+                  ? "active"
+                  : "text-body-secondary opacity-75"
               }`}
               onClick={() => {
                 setActiveTab("USC");
@@ -311,7 +313,9 @@ export default function ResultsDashboardWidget({
             <li className="nav-item">
               <button
                 className={`nav-link border-0 bg-transparent ${
-                  activeTab === "CSC" ? "active" : "text-secondary opacity-75"
+                  activeTab === "CSC"
+                    ? "active"
+                    : "text-body-secondary opacity-75"
                 }`}
                 onClick={() => {
                   setActiveTab("CSC");
@@ -352,7 +356,7 @@ export default function ResultsDashboardWidget({
                   />
                 </div>
               ) : (
-                <p className="text-muted small text-center mt-3">
+                <p className="text-body-secondary small text-center mt-3">
                   Turnout data unavailable.
                 </p>
               )}
@@ -360,7 +364,7 @@ export default function ResultsDashboardWidget({
 
             {/* Winners Overview - NEW Section */}
             <div className="flex-grow-1 d-flex flex-column border rounded-3 p-2 m-0 pt-3">
-              <h4 className="fs-6 text-center text-secondary pb-1">
+              <h4 className="fs-6 text-center text-body-secondary pb-1">
                 Elected Officials
               </h4>
               <div
@@ -384,7 +388,7 @@ export default function ResultsDashboardWidget({
               className="mb-4 flex-shrink-0 border p-3 rounded-3"
               style={{ minHeight: "150px" }}
             >
-              <h4 className="fs-7 mb-3 text-secondary border-bottom pb-1">
+              <h4 className="fs-7 mb-3 text-body-secondary border-bottom pb-1">
                 Partylist Standing
               </h4>
               <OverallPartylistResultsChart
@@ -401,10 +405,12 @@ export default function ResultsDashboardWidget({
             <div className="flex-grow-1 d-flex flex-column border rounded-3 p-3">
               {/* --- UPDATED HEADER WITH DROPDOWN --- */}
               <div className="d-flex justify-content-between align-items-center border-bottom mb-3 pb-1">
-                <h4 className="fs-7 text-secondary mb-0">Candidate Standing</h4>
+                <h4 className="fs-7 text-body-secondary mb-0">
+                  Candidate Standing
+                </h4>
                 {currentPositions.length > 0 && (
                   <select
-                    className="form-select form-select-sm w-auto fs-7 py-0 border-0 text-secondary"
+                    className="form-select form-select-sm w-auto fs-7 py-0 border-0 text-body-secondary"
                     value={currentPositionIndex}
                     onChange={(e) =>
                       setCurrentPositionIndex(Number(e.target.value))
@@ -437,7 +443,7 @@ export default function ResultsDashboardWidget({
                     >
                       <i className="bi bi-chevron-left me-1"></i> Previous
                     </button>
-                    <span className="text-muted small align-self-center">
+                    <span className="text-body-secondary small align-self-center">
                       Position {currentPositionIndex + 1} of{" "}
                       {currentPositions.length}
                     </span>

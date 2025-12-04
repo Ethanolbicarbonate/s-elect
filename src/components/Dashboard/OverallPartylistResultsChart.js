@@ -11,7 +11,7 @@ export default function OverallPartylistResultsChart({ partylistResults }) {
 
   if (!partylistResults || partylistResults.length === 0) {
     return (
-      <div className="text-center text-muted small p-3">
+      <div className="text-center text-body-secondary small p-3">
         No partylist data available for this scope.
       </div>
     );
@@ -48,10 +48,10 @@ export default function OverallPartylistResultsChart({ partylistResults }) {
                 />
               ) : (
                 <div
-                  className="d-flex align-items-center justify-content-center bg-light rounded-circle"
+                  className="d-flex align-items-center justify-content-center bg-body-tertiary rounded-circle"
                   style={{ width: "40px", height: "40px" }}
                 >
-                  <i className="bi bi-flag fs-6 text-secondary opacity-50"></i>
+                  <i className="bi bi-flag fs-6 text-body-secondary opacity-50"></i>
                 </div>
               )}
             </div>
@@ -59,7 +59,7 @@ export default function OverallPartylistResultsChart({ partylistResults }) {
             {/* Partylist Name & Progress Bar */}
             <div className="flex-grow-1">
               <div className="d-flex justify-content-between align-items-center">
-                <span className="fw-normal text-secondary small">
+                <span className="fw-normal text-body-secondary small">
                   {partylist.name} {partylist.acronym}
                 </span>
                 <span className="fw-medium text-primary small">

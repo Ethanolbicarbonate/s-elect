@@ -8,6 +8,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/UI/ThemeToggle";
 
 // This component is now a desktop-only sidebar.
 // All mobile-related logic has been removed.
@@ -22,24 +23,29 @@ export default function NavigationPanel() {
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: "bi-grid-fill" },
-    { href: "/election-details", label: "Election Details", icon: "bi-collection-fill" },
+    {
+      href: "/election-details",
+      label: "Election Details",
+      icon: "bi-collection-fill",
+    },
     { href: "/vote", label: "Vote", icon: "bi-check-square-fill" },
     { href: "/about-help", label: "About/Help", icon: "bi-info-circle-fill" },
   ];
 
   return (
     <nav
-      className="d-none d-lg-flex flex-column vh-100 p-3 position-fixed top-0 left-0 bg-white gap-4"
+      className="d-none d-lg-flex flex-column vh-100 p-3 position-fixed top-0 left-0 bg-body gap-4"
       style={{
         width: "260px",
         zIndex: 1000,
-        boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+        boxShadow: "var(--nav-shadow)",
       }}
     >
       {/* Logo */}
       <Link
         href="/dashboard"
-        className="d-flex align-items-center mb-3 text-dark text-decoration-none"
+        // CHANGED: text-body-secondary -> text-body
+        className="d-flex align-items-center mb-3 text-body-secondary text-decoration-none"
       >
         <div className="w-100">
           <Image
@@ -51,28 +57,35 @@ export default function NavigationPanel() {
           />
         </div>
       </Link>
-      
+
       {/* Navigation Links */}
       <ul className="nav nav-pills flex-column mb-auto gap-1">
         {navItems.map((item) => (
           <li className="nav-item" key={item.label}>
             <Link
               href={item.href}
+              // CHANGED: text-body-secondary -> text-body-secondary
               className={`nav-link d-flex align-items-center rounded-3 ${
-                pathname.startsWith(item.href) ? "active text-white" : "text-secondary"
+                pathname.startsWith(item.href)
+                  ? "active text-white"
+                  : "text-body-secondary"
               }`}
               aria-current={pathname.startsWith(item.href) ? "page" : undefined}
             >
               <i className={`bi ${item.icon} me-2`}></i>
               {item.label}
             </Link>
-            <hr className="border-1 border-light my-2 mx-3 p-0 opacity-100" />
+            <hr className="border-1 border-secondary-subtle my-2"></hr>
+            {/* CHANGED: border-secondary-subtle -> border-secondary-subtle */}
           </li>
         ))}
       </ul>
-      
+
       {/* Logout Button */}
-      <div className="px-3 py-1 border-top border-light">
+      <div className="px-3 py-1 border-top border-secondary-subtle">
+        <div className="px-0 py-2">
+          <ThemeToggle />
+        </div>
         <button
           onClick={handleLogout}
           className="nav-link text-danger d-flex align-items-center w-100"

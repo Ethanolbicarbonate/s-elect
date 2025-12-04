@@ -12,7 +12,7 @@ export default function VotingSection({
 }) {
   if (!positions || positions.length === 0) {
     return (
-      <div className="my-4 p-3 text-center text-muted border rounded">
+      <div className="my-4 p-3 text-center text-body-secondary border rounded">
         No positions available for this section of the ballot.
       </div>
     );
@@ -41,15 +41,14 @@ export default function VotingSection({
             className="position-group mb-5 card shadow-sm rounded-3"
           >
             <div
-              className="card-header bg-light rounded-top-3 bg-white border-bottom-0"
+              className="card-header bg-body-tertiary rounded-top-3 bg-body border-bottom-0"
               style={{
-                backgroundImage:
-                  "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+                backgroundImage: "var(--bg-grid-subtle)",
                 backgroundSize: "6px 6px",
               }}
             >
-              <h4 className="h5 mb-0 fw-normal text-muted">{position.name}</h4>
-              <small className="text-secondary opacity-75">
+              <h4 className="h5 mb-0 fw-normal text-body-secondary">{position.name}</h4>
+              <small className="text-body-secondary opacity-75">
                 (Select
                 {position.maxVotesAllowed > 1
                   ? ` up to ${position.maxVotesAllowed}`
@@ -59,7 +58,7 @@ export default function VotingSection({
                 )
               </small>
             </div>
-            <div className="card-body bg-light rounded-bottom-3">
+            <div className="card-body bg-body-tertiary rounded-bottom-3">
               {candidatesForPosition.length > 0 ? (
                 <div className="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 justify-content-center">
                   {candidatesForPosition.map((candidate) => (
@@ -84,7 +83,7 @@ export default function VotingSection({
                   ))}
                 </div>
               ) : (
-                <p className="text-muted fst-italic p-3 text-center">
+                <p className="text-body-secondary fst-italic p-3 text-center">
                   No candidates are running for this position.
                 </p>
               )}

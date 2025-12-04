@@ -106,7 +106,7 @@ export default function LiveTallyWidget({
 
   if (!electionId) {
     return (
-      <div className="card shadow-sm flex-grow-1 p-4 text-center text-muted">
+      <div className="card shadow-sm flex-grow-1 p-4 text-center text-body-secondary">
         <i className="bi bi-bar-chart-line display-4 mb-3"></i>
         <h5 className="mb-0">No Election Selected</h5>
         <p className="small mb-0">Select an election to view its results.</p>
@@ -165,7 +165,7 @@ export default function LiveTallyWidget({
       <div className="card-body p-3 d-flex flex-column">
         {error && <div className="alert alert-danger small py-2">{error}</div>}
         {!livePositionsResults || livePositionsResults.length === 0 ? (
-          <div className="text-center p-4 text-muted flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+          <div className="text-center p-4 text-body-secondary flex-grow-1 d-flex flex-column justify-content-center align-items-center">
             <i className="bi bi-box-seam display-4 mb-3"></i>
             <p className="mb-0">
               No results data available for this election and scope.
@@ -173,13 +173,13 @@ export default function LiveTallyWidget({
           </div>
         ) : (
           <div className="flex-grow-1 d-flex flex-column">
-            <p className="small text-muted mb-3 text-end flex-shrink-0">
+            <p className="small text-body-secondary mb-3 text-end flex-shrink-0">
               Last Updated:{" "}
               {lastRefreshed ? format(lastRefreshed, "hh:mm:ss a") : "N/A"}
             </p>
             {totalVotesOverall > 0 && (
               <div className="mb-3 flex-shrink-0 border p-2 rounded-3">
-                <h6 className="fw-medium text-secondary-emphasis fs-7 mb-1">
+                <h6 className="fw-medium text-body-secondary fs-7 mb-1">
                   Total Votes Counted
                 </h6>
                 <p className="fs-4 fw-medium text-primary mb-0">
@@ -196,9 +196,9 @@ export default function LiveTallyWidget({
                   key={position.id}
                   className="position-summary mb-3 p-2 border rounded-3"
                 >
-                  <h6 className="fw-medium text-dark-emphasis mb-2 fs-7 d-flex justify-content-between align-items-center">
+                  <h6 className="fw-medium text-body-secondary mb-2 fs-7 d-flex justify-content-between align-items-center">
                     <span>{position.name}</span>
-                    <span className="badge fw-medium bg-secondary-subtle text-secondary-emphasis rounded-pill">
+                    <span className="badge fw-medium bg-secondary-subtle text-body-secondary rounded-pill">
                       {position.totalVotesCastForPosition} votes
                     </span>
                   </h6>
@@ -234,13 +234,13 @@ export default function LiveTallyWidget({
                                 }}
                               />
                             ) : (
-                              <div className="bg-light rounded-circle d-flex align-items-center justify-content-center w-100 h-100 fs-8">
-                                <i className="bi bi-person-fill text-muted"></i>
+                              <div className="bg-body-tertiary rounded-circle d-flex align-items-center justify-content-center w-100 h-100 fs-8">
+                                <i className="bi bi-person-fill text-body-secondary"></i>
                               </div>
                             )}
                           </div>
                           <div className="flex-grow-1 text-truncate">
-                            <span className="fw-medium text-dark-emphasis">
+                            <span className="fw-medium text-body-secondary">
                               {candidate.firstName} {candidate.lastName}
                             </span>
                             {isWinner && (
@@ -258,7 +258,7 @@ export default function LiveTallyWidget({
                     })}
                   </ul>
                   {position.candidates.length > 3 && (
-                    <p className="text-end text-muted small mt-1 mb-0">
+                    <p className="text-end text-body-secondary small mt-1 mb-0">
                       and {position.candidates.length - 3} more...
                     </p>
                   )}

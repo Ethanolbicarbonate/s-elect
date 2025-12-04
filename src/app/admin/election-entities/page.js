@@ -7,7 +7,7 @@ import {
   useSearchParams,
   useRouter, // Using useRouter to potentially update URL for better state sharing/bookmarking if desired
 } from "next/navigation";
-import Link from 'next/link';
+import Link from "next/link";
 
 // Import Child Components (will be created later)
 import AdminPositionList from "@/components/Admin/PositionManagement/AdminPositionList";
@@ -127,7 +127,7 @@ export default function ElectionEntitiesPage() {
 
   useEffect(() => {
     if (selectedElectionId && elections.length > 0) {
-      const election = elections.find(e => e.id === selectedElectionId);
+      const election = elections.find((e) => e.id === selectedElectionId);
       // We use the `status` from the fetched election list.
       // This list's status is dynamically calculated in the `/api/admin/elections` route.
       if (election) {
@@ -501,11 +501,11 @@ export default function ElectionEntitiesPage() {
       )}
 
       {/* Election Selector */}
-      <div className="p-3 bg-white rounded-4 border shadow-sm">
+      <div className="p-3 bg-body rounded-4 border shadow-sm">
         <div className="mb-3">
           <label
             htmlFor="electionSelect"
-            className="form-label fs-7 text-secondary ms-2"
+            className="form-label fs-7 text-body-secondary ms-2"
           >
             Select Election Period
           </label>
@@ -543,7 +543,7 @@ export default function ElectionEntitiesPage() {
             <div className="col-md-4">
               <label
                 htmlFor="scopeTypeSelect"
-                className="form-label fs-7 text-secondary ms-2"
+                className="form-label fs-7 text-body-secondary ms-2"
               >
                 Manage Scope Type
               </label>
@@ -569,7 +569,7 @@ export default function ElectionEntitiesPage() {
               <div className="col-md-4">
                 <label
                   htmlFor="collegeScopeSelect"
-                  className="form-label fs-7 text-secondary ms-2"
+                  className="form-label fs-7 text-body-secondary ms-2"
                 >
                   Target College (for CSC):
                 </label>
@@ -598,16 +598,15 @@ export default function ElectionEntitiesPage() {
       </div>
 
       {selectedElectionId && managementScope.type && (
-        <div className="bg-white mt-4 rounded-4 border flex-grow-1 shadow-sm">
+        <div className="bg-body mt-4 rounded-4 border flex-grow-1 shadow-sm">
           <div
-            className="px-3 py-3 rounded-top-4 bg-white"
+            className="px-3 py-3 rounded-top-4 bg-body"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >
-            <h4 className="text-secondary fs-4 fw-normal">
+            <h4 className="text-body-secondary fs-4 fw-normal">
               {managementScope.type}
               {managementScope.type === PositionTypeEnum.CSC &&
               managementScope.college
@@ -615,33 +614,35 @@ export default function ElectionEntitiesPage() {
                 : ""}{" "}
               Entities
             </h4>
-            <p className="text-secondary fs-7 mb-0">
+            <p className="text-body-secondary fs-7 mb-0">
               For Election: {selectedElection?.name || "N/A"}
             </p>
           </div>
 
           {isEditingDisabled && (
             <div className="alert alert-warning rounded-0 border-start-0 border-end-0 mb-0 d-flex align-items-center">
-                <i className="bi bi-lock-fill me-2"></i>
-                <div>
-                    <strong>Editing is locked.</strong> This election is currently ONGOING. To make changes, an admin must first change the election status to UPCOMING or PAUSED in <Link href="/admin/election-settings">Election Settings</Link>.
-                </div>
+              <i className="bi bi-lock-fill me-2"></i>
+              <div>
+                <strong>Editing is locked.</strong> This election is currently
+                ONGOING. To make changes, an admin must first change the
+                election status to UPCOMING or PAUSED in{" "}
+                <Link href="/admin/election-settings">Election Settings</Link>.
+              </div>
             </div>
           )}
 
           {/* Tabs */}
           <ul
-            className="nav nav-tabs px-3  bg-white"
+            className="nav nav-tabs px-3  bg-body"
             style={{
-              backgroundImage:
-                "radial-gradient(circle,rgb(241, 241, 241) 1px, transparent 1px)",
+              backgroundImage: "var(--bg-grid-subtle)",
               backgroundSize: "6px 6px",
             }}
           >
             <li className="nav-item">
               <button
                 className={`nav-link ${
-                  activeTab === "positions" ? "active" : "text-secondary"
+                  activeTab === "positions" ? "active" : "text-body-secondary"
                 }`}
                 onClick={() => setActiveTab("positions")}
               >
@@ -651,7 +652,7 @@ export default function ElectionEntitiesPage() {
             <li className="nav-item">
               <button
                 className={`nav-link ${
-                  activeTab === "partylists" ? "active" : "text-secondary"
+                  activeTab === "partylists" ? "active" : "text-body-secondary"
                 }`}
                 onClick={() => setActiveTab("partylists")}
               >
@@ -661,7 +662,7 @@ export default function ElectionEntitiesPage() {
             <li className="nav-item">
               <button
                 className={`nav-link ${
-                  activeTab === "candidates" ? "active" : "text-secondary"
+                  activeTab === "candidates" ? "active" : "text-body-secondary"
                 }`}
                 onClick={() => setActiveTab("candidates")}
               >
@@ -698,7 +699,7 @@ export default function ElectionEntitiesPage() {
                     setShowPositionModal(true);
                   }}
                   onDelete={handleDeletePosition}
-                  canManage={canManageCurrentScope() && !isEditingDisabled} 
+                  canManage={canManageCurrentScope() && !isEditingDisabled}
                 />
               </>
             )}

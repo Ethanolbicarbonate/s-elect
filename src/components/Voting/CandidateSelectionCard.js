@@ -53,7 +53,7 @@ export default function CandidateSelectionCard({
     selectButtonText = "Max Reached";
     selectButtonIcon = "bi-slash-circle";
   } else {
-    cardClasses += " border-light";
+    cardClasses += " border-secondary-subtle";
     selectButtonClasses += " btn-outline-primary";
   }
 
@@ -83,7 +83,7 @@ export default function CandidateSelectionCard({
             style={{
               width: "80px", // Explicit square dimensions for the wrapper
               height: "80px",
-              border: "2px solid #dee2e6",
+              border: "2px solid var(--bs-border-color)",
               overflow: "hidden", // Crucial: clips the image to the circular wrapper
               position: "relative", // Important for next/image with layout="fill"
               backgroundColor: "#f8f9fa", // Fallback background if image fails to load initially
@@ -111,18 +111,18 @@ export default function CandidateSelectionCard({
                 className="d-flex align-items-center justify-content-center w-100 h-100" // Fill the wrapper
                 title={displayName || "No photo available"}
               >
-                <i className="bi bi-person-fill fs-1 text-secondary opacity-50"></i>
+                <i className="bi bi-person-fill fs-1 text-body-secondary opacity-50"></i>
               </div>
             )}
           </div>
-          <h6 className="card-title h6 mb-1 fw-medium text-dark-emphasis">
+          <h6 className="card-title h6 mb-1 fw-medium text-body-secondary">
             {displayName}
           </h6>
           <p className={`card-text small mb-2 text-primary`}>{affiliation}</p>
           {/* Optional "View Details" button, or make the whole card clickable for details too */}
           <button
             type="button"
-            className="btn btn-sm btn-link text-decoration-none p-0 mb-2 text-secondary opacity-75"
+            className="btn btn-sm btn-link text-decoration-none p-0 mb-2 text-body-secondary opacity-75"
             onClick={(e) => {
               e.stopPropagation(); // Prevent card click from also toggling selection
               onViewDetails();
