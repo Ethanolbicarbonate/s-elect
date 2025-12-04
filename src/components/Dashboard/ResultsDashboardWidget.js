@@ -122,8 +122,8 @@ export default function ResultsDashboardWidget({
       datasets: [
         {
           data: [voted, notVoted],
-          backgroundColor: ["#0d6efd", "var(--bs-border-color)"],
-          borderWidth: 0,
+          borderColor: ["var(--bs-card-bg)", "var(--bs-card-bg)"],
+          borderWidth: 1,
         },
       ],
     };
@@ -147,7 +147,7 @@ export default function ResultsDashboardWidget({
               family: "Outfit",
               size: 12,
             },
-            color: "#495057",
+            color: "var(--bs-body-color)",
           },
         },
         title: {
@@ -156,6 +156,7 @@ export default function ResultsDashboardWidget({
             resultsData?.turnout?.overall?.percentage?.toFixed(2) || 0
           }%`,
           font: { size: 16, weight: "bold" },
+          color: "var(--bs-body-color)",
         },
         tooltip: {
           callbacks: {

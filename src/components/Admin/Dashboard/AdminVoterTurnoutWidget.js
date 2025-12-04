@@ -1,10 +1,13 @@
+// src/components/Admin/Dashboard/AdminVoterTurnoutWidget.js
+
 "use client";
 
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+// ADDED: 'Title' to imports and register so the title actually displays
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import Link from "next/link";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 export default function AdminVoterTurnoutWidget({
   electionId,
@@ -12,9 +15,9 @@ export default function AdminVoterTurnoutWidget({
   votesCastInScope,
   turnoutPercentage,
   scopeType,
-  college, // Will be null for USC scope
+  college,
 }) {
-  // Handle case where data might not be available or 0 eligible voters
+  // ... (Keep existing check for undefined/null eligibleVoters) ...
   if (
     eligibleVoters === undefined ||
     eligibleVoters === null ||
@@ -22,6 +25,7 @@ export default function AdminVoterTurnoutWidget({
     eligibleVoters <= 0
   ) {
     return (
+      // CHANGED: text-muted -> text-body-secondary
       <div className="card h-100 shadow-sm flex-grow-1 d-flex flex-column justify-content-center align-items-center p-3 text-center text-body-secondary">
         <i className="bi bi-people display-4 mb-3"></i>
         <p className="mb-0">
@@ -47,22 +51,25 @@ export default function AdminVoterTurnoutWidget({
     datasets: [
       {
         data: [votesCastInScope, notVoted],
-        backgroundColor: ["#0d6efd", "#adb5bd"], // Primary for voted, secondary for not voted
-        borderColor: ["#fff", "#fff"],
-        borderWidth: 1,
+        backgroundColor: ["#0d6efd", "#adb5bd"],
+        // CHANGED: '#fff' -> 'var(--bs-card-bg)'
+        // This makes the border match the card background (white or dark grey)
+        borderColor: ["var(--bs-card-bg)", "var(--bs-card-bg)"],
+        borderWidth: 2, // Increased slightly for cleaner look
       },
     ],
   };
 
   const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Allows chart to resize within its container
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
         labels: {
           boxWidth: 15,
           font: {
+            color: "var(--bs-body-color)",
             size: 12,
           },
         },
@@ -70,9 +77,11 @@ export default function AdminVoterTurnoutWidget({
       title: {
         display: true,
         text: `Voter Turnout: ${turnoutPercentage.toFixed(2)}%`,
+        // ADDED: Adaptive text color
         font: {
           size: 16,
           weight: "bold",
+          color: "var(--bs-body-color)",
         },
         padding: {
           top: 10,
@@ -99,38 +108,35 @@ export default function AdminVoterTurnoutWidget({
 
   return (
     <div className="card h-100 shadow-sm flex-grow-1 rounded-4 overflow-hidden">
-      <div className="card-header bg-primary text-white py-2 "
-          style={{
-            backgroundImage:
-              "radial-gradient(circle,rgba(241, 241, 241, 0.23) 1px, transparent 1px)",
-            backgroundSize: "6px 6px",
-          }}
-        >
-        <h5 className="mb-0 h6">
-          Voter Turnout
-        </h5>
+      <div
+        className="card-header bg-primary text-white py-2"
+        style={{
+          backgroundImage: "var(--bg-grid-pattern)", // CHANGED: Use your new variable
+          backgroundSize: "6px 6px",
+        }}
+      >
+        <h5 className="mb-0 h6">Voter Turnout</h5>
       </div>
       <div className="card-body d-flex flex-column align-items-center justify-content-center">
         <div style={{ height: "200px", width: "100%", maxWidth: "300px" }}>
-          {" "}
-          {/* Constrain chart size */}
           <Doughnut data={chartData} options={chartOptions} />
         </div>
         <div className="text-center mt-3">
+          {/* CHANGED: text-muted -> text-body-secondary, text-dark -> text-body */}
           <p className="mb-1 small text-body-secondary">
             Eligible Voters:{" "}
-            <span className="fw-medium text-body-secondary">{eligibleVoters}</span>
+            <span className="fw-medium text-body">{eligibleVoters}</span>
           </p>
           <p className="mb-1 small text-body-secondary">
             Votes Cast:{" "}
-            <span className="fw-medium text-body-secondary">{votesCastInScope}</span>
+            <span className="fw-medium text-body">{votesCastInScope}</span>
           </p>
         </div>
         <Link
           href={`/admin/results?electionId=${electionId}&scopeType=${scopeType}${
             college ? `&college=${college}` : ""
           }`}
-          className="btn btn-sm btn-outline-primary mt-auto w-100" // mt-auto pushes to bottom
+          className="btn btn-sm btn-outline-primary mt-auto w-100"
         >
           <i className="bi bi-bar-chart-line me-2"></i>View Full Results
         </Link>

@@ -18,32 +18,68 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
     await signOut({ redirect: false });
     router.push("/");
   };
-  
+
   // This logic remains to build the navigation list for the sidebar
   const getNavItemsForRole = (role, adminCollegeContext) => {
     let items = [];
     const entityManagementPath = "/admin/election-entities";
 
-    items.push({ href: "/admin/dashboard", label: "Dashboard", icon: "bi-grid-fill" });
+    items.push({
+      href: "/admin/dashboard",
+      label: "Dashboard",
+      icon: "bi-grid-fill",
+    });
 
     if (role === "SUPER_ADMIN") {
       items.push(
-        { href: "/admin/election-settings", label: "Election Settings", icon: "bi-calendar-event-fill" },
-        { href: entityManagementPath, label: "Manage Election Entities", icon: "bi-stack" },
-        { href: "/admin/results", label: "View All Results", icon: "bi-bar-chart-line-fill" },
-        { href: "/admin/audit-log", label: "Audit Log", icon: "bi-pencil-square" }
+        {
+          href: "/admin/election-settings",
+          label: "Election Settings",
+          icon: "bi-calendar-event-fill",
+        },
+        {
+          href: entityManagementPath,
+          label: "Manage Election Entities",
+          icon: "bi-stack",
+        },
+        {
+          href: "/admin/results",
+          label: "View All Results",
+          icon: "bi-bar-chart-line-fill",
+        },
+        {
+          href: "/admin/audit-log",
+          label: "Audit Log",
+          icon: "bi-pencil-square",
+        }
       );
     } else if (role === "MODERATOR") {
-      const commonPath = adminCollegeContext ? `${entityManagementPath}?scope=CSC&college=${adminCollegeContext}` : `${entityManagementPath}?scope=USC`;
-      const label = adminCollegeContext ? `Manage ${adminCollegeContext} CSC Entities` : "Manage USC Entities";
+      const commonPath = adminCollegeContext
+        ? `${entityManagementPath}?scope=CSC&college=${adminCollegeContext}`
+        : `${entityManagementPath}?scope=USC`;
+      const label = adminCollegeContext
+        ? `Manage ${adminCollegeContext} CSC Entities`
+        : "Manage USC Entities";
       items.push(
         { href: commonPath, label: label, icon: "bi-diagram-3-fill" },
-        { href: "/admin/results", label: "View Results", icon: "bi-bar-chart-line-fill" }
+        {
+          href: "/admin/results",
+          label: "View Results",
+          icon: "bi-bar-chart-line-fill",
+        }
       );
     } else if (role === "AUDITOR") {
       items.push(
-        { href: "/admin/audit-log", label: "Audit Log", icon: "bi-pencil-square" },
-        { href: "/admin/results", label: "View All Results", icon: "bi-bar-chart-line-fill" }
+        {
+          href: "/admin/audit-log",
+          label: "Audit Log",
+          icon: "bi-pencil-square",
+        },
+        {
+          href: "/admin/results",
+          label: "View All Results",
+          icon: "bi-bar-chart-line-fill",
+        }
       );
     }
     return items;
@@ -55,9 +91,16 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
     <>
       <nav
         className="d-none d-lg-flex flex-column vh-100 p-3 position-fixed top-0 left-0 bg-body gap-4"
-        style={{ width: "260px", zIndex: 1000, boxShadow: "0 0 15px rgba(0,0,0,0.1)" }}
+        style={{
+          width: "260px",
+          zIndex: 1000,
+          boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+        }}
       >
-        <Link href="/admin/dashboard" className="d-flex align-items-center mb-3 text-body-secondary text-decoration-none">
+        <Link
+          href="/admin/dashboard"
+          className="d-flex align-items-center mb-3 text-body-secondary text-decoration-none"
+        >
           <div className="w-100">
             <Image
               src="/assets/logotext.svg"
@@ -75,12 +118,15 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
               <Link
                 href={item.href}
                 className={`nav-link d-flex align-items-center rounded-3 ${
-                  pathname.startsWith(item.href) ? "active bg-primary" : "text-body-secondary"
+                  pathname.startsWith(item.href)
+                    ? "active bg-primary"
+                    : "text-body-secondary"
                 }`}
               >
                 <i className={`bi ${item.icon} me-2 fs-5`}></i>
                 {item.label}
               </Link>
+              <hr className="border-1 border-secondary-subtle my-2"></hr>
             </li>
           ))}
         </ul>
@@ -89,7 +135,12 @@ export default function AdminNavigationPanel({ userRole, userCollege }) {
           <button
             onClick={handleLogout}
             className="nav-link text-danger d-flex align-items-center w-100 fs-7 fw-medium"
-            style={{ background: "none", border: "none", textAlign: "left", padding: "0.5rem 0.75rem" }}
+            style={{
+              background: "none",
+              border: "none",
+              textAlign: "left",
+              padding: "0.5rem 0.75rem",
+            }}
           >
             <i className="bi bi-door-closed-fill me-2 fs-5"></i>
             Logout

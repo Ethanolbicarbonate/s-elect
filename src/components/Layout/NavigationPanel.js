@@ -76,6 +76,7 @@ export default function NavigationPanel() {
               <i className={`bi ${item.icon} me-2`}></i>
               {item.label}
             </Link>
+            <hr className="border-1 border-secondary-subtle my-2"></hr>
             {/* CHANGED: border-secondary-subtle -> border-secondary-subtle */}
           </li>
         ))}
